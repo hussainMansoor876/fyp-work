@@ -20,13 +20,13 @@ class Header extends Component {
     }
 
     showSignup(){
-        $('#exampleModalCenter').modal('hide');
-        $('#signupModalCenter').modal('show');
+        window.$('#exampleModalCenter').modal('hide');
+        window.$('#signupModalCenter').modal('show');
     }
 
     showLogin(){
-        $('#signupModalCenter').modal('hide');
-        $('#exampleModalCenter').modal('show');
+        window.$('#signupModalCenter').modal('hide');
+        window.$('#exampleModalCenter').modal('show');
     }
     
     login(){
@@ -118,7 +118,7 @@ class Header extends Component {
                           <li>  <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} onClick={()=>this.scrollToElement('Categories')}>CATEGORIES</button></li>
                           <li>   <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} onClick={()=>this.scrollToElement('AboutUs')}>ABOUT US</button></li>
                           <li>  <Link to="/PrivacyPolicy">   <button  style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }}>PRIVACY POLICY</button></Link></li>
-                          <li>  <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} data-toggle="modal" data-target="#exampleModalCenter">LOGIN / SIGNUP</button></li>
+                          <li>  <button type="button" style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} data-toggle="modal" data-target="#exampleModalCenter" >LOGIN / SIGNUP</button></li>
                           <li>  <Link to="/OwnerDashboard"> <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }}>Owner</button></Link></li>
                           <li>  <Link to="/AdminDashboard"><button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} >Admin</button></Link></li>
                          
