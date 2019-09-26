@@ -19,7 +19,8 @@
     "react-scroll": "^1.7.12",
     "react-slick": "^0.24.0",
     "react-social-login-buttons": "^2.3.1",
-    "react-tabs": "^3.0.0"
+    "react-tabs": "^3.0.0",
+    "sweetalert": "^2.1.2"
   },
   "scripts": {
     "start": "react-scripts start",
