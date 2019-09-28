@@ -17,11 +17,15 @@ import RegisterIcon from '@material-ui/icons/AddCircle'
 import Message from '@material-ui/icons/Message';
 import UserIcon from '@material-ui/icons/AccountCircle';
 import DotsIcon from '@material-ui/icons/MoreVert';
-import { mainListItems , secondaryListItems } from './listItems';
+import { mainListItems, secondaryListItems } from './listItems';
 import { Link } from 'react-router-dom';
 import Deposits from './Deposits';
 import Orders from './Orders';
 import { Button } from '@material-ui/core';
+import 'antd/dist/antd.css';
+import { Card, Pagination, Col, Row } from 'antd';
+
+const { Meta } = Card;
 
 const drawerWidth = 240;
 
@@ -44,7 +48,7 @@ const useStyles = makeStyles(theme => ({
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
       duration: theme.transitions.duration.leavingScreen,
-      
+
     }),
   },
   appBarShift: {
@@ -101,7 +105,7 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
   },
   fixedHeight: {
-    height: 240,
+    height: 440,
   },
 }));
 
@@ -114,7 +118,7 @@ export default function Dashboard() {
   };
   const handleDrawerClose = () => {
     document.getElementById("dot_icon").style.display = "none";
-     setOpen(false);
+    setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
@@ -122,7 +126,7 @@ export default function Dashboard() {
     <div className={classes.root}>
       <CssBaseline />
       <AppBar style={{ background: '#3c3c3c' }} position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-        <Toolbar  className={classes.toolbar}>
+        <Toolbar className={classes.toolbar}>
           <IconButton
             edge="start"
             color="inherit"
@@ -130,40 +134,40 @@ export default function Dashboard() {
             onClick={handleDrawerOpen}
             className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
           >
-          
+
             <MenuIcon />
           </IconButton>
-         
-         
+
+
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-         
-         <Link> <DotsIcon id="dot_icon" onClick={handleDrawerClose} style={{color:'white'}}/></Link>
-          &nbsp;
-           Owner Dashboard
+
+            <Link> <DotsIcon id="dot_icon" onClick={handleDrawerClose} style={{ color: 'white' }} /></Link>
+            &nbsp;
+             Owner Dashboard
           </Typography>
-          <Button style={{color:'white'}}>Browse Venue</Button>
-          <Button style={{color:'white'}}>Manage Venues</Button>
-          <Button style={{color:'white'}}>Logout</Button>
-         
-          <IconButton style={{color:'#ffffff'}} title="Message">
-          <Message/>
+          <Button style={{ color: 'white' }}>Browse Venue</Button>
+          <Button style={{ color: 'white' }}>Manage Venues</Button>
+          <Button style={{ color: 'white' }}>Logout</Button>
+
+          <IconButton style={{ color: '#ffffff' }} title="Message">
+            <Message />
           </IconButton>
 
-        <Link to="/RegisterHall"> 
-         <IconButton style={{color:'#ffffff'}} title="Register Hall">
-          <RegisterIcon/>
-          </IconButton>
+          <Link to="/RegisterHall">
+            <IconButton style={{ color: '#ffffff' }} title="Register Hall">
+              <RegisterIcon />
+            </IconButton>
           </Link>
 
-        
+
           <IconButton color="inherit" title="Profile">
-          <UserIcon/>
+            <UserIcon />
           </IconButton>
 
 
         </Toolbar>
       </AppBar>
-     
+
       <Drawer
         variant="permanent"
         classes={{
@@ -171,21 +175,21 @@ export default function Dashboard() {
         }}
         open={open}
       >
-       <Divider/>
-       <div>
-       <img style={{width:'60px', height:'60px'}} src={require('../../../resources/images/final.png')} />
-        <h3 className="ml-5 font_righteous" style={{marginTop:'-30px'}}>Venue Club</h3></div>
-       <Divider className="mt-2"/>
-       <div className="my-3">
-       <List >{mainListItems}</List>
-       </div>
+        <Divider />
+        <div>
+          <img style={{ width: '60px', height: '60px' }} src={require('../../../resources/images/final.png')} />
+          <h3 className="ml-5 font_righteous" style={{ marginTop: '-30px' }}>Venue Club</h3></div>
+        <Divider className="mt-2" />
+        <div className="my-3">
+          <List >{mainListItems}</List>
+        </div>
 
-       <Divider />
+        <Divider />
 
-       
-       <div className="my-4">
-       <List >{secondaryListItems}</List>
-       </div>
+
+        <div className="my-4">
+          <List >{secondaryListItems}</List>
+        </div>
 
       </Drawer>
       <main className={classes.content}>
@@ -195,9 +199,45 @@ export default function Dashboard() {
             {/* Chart */}
             <Grid item xs={12} md={8} lg={9}>
               <Paper className={fixedHeightPaper}>
-                <div style={{textAlign:'center',marginTop:'80px'}}>
-               <p style={{fontSize:'22px'}} title="Register Hall">Click <Link to="/RegisterHall"><RegisterIcon/></Link>   to register your hall</p>
+                <div style={{ background: '#ECECEC', padding: '30px' }}>
+                  <Row gutter={16}>
+                    <Col span={8}>
+                      <Card
+                        hoverable
+                        cover={<img alt="example" style={{ height: 200 }} src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
+                      >
+                        <Meta title="Europe Street beat" description="www.instagram.com" />
+                      </Card>
+                    </Col>
+                    <Col span={8}>
+                      <Card
+                        hoverable
+                        cover={<img alt="example" style={{ height: 200 }} src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
+                      >
+                        <Meta title="Europe Street beat" description="www.instagram.com" />
+                      </Card>
+                    </Col>
+                    <Col span={8}>
+                      <Card
+                        hoverable
+                        cover={<img alt="example" style={{ height: 200 }} src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" />}
+                      >
+                        <Meta title="Europe Street beat" description="www.instagram.com" />
+                      </Card>
+                    </Col>
+                  </Row>
+                  <br />
+                  <Pagination
+                    style={{ textAlign: 'right' }}
+                    defaultCurrent={1}
+                    defaultPageSize={4} //default size of page
+                    // onChange={this.handleChange}
+                    total={110} //total number of card data available
+                  />
                 </div>
+                {/* <div style={{textAlign:'center',marginTop:'80px'}}>
+               <p style={{fontSize:'22px'}} title="Register Hall">Click <Link to="/RegisterHall"><RegisterIcon/></Link>   to register your hall</p>
+                </div> */}
               </Paper>
             </Grid>
             {/* Recent Deposits */}
@@ -214,7 +254,7 @@ export default function Dashboard() {
             </Grid>
           </Grid>
         </Container>
-        
+
       </main>
     </div>
   );
