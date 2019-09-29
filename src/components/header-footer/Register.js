@@ -2,12 +2,16 @@ import React, { Component } from 'react';
 import '../../resources/bootstrap.min.css';
 import Header from '../header-footer/FixedHeader';
 import Footer from '../header-footer/Footer';
+import firebase from '../../config/firebase'
+import swal from 'sweetalert'
+
 class Register extends Component {
   constructor(props) {
     super(props)
 
     this.state = {
       disable: '',
+      user: '',
       data: {
         hallName: '',
         address: '',
@@ -19,6 +23,9 @@ class Register extends Component {
 
   componentWillMount() {
     const user = JSON.parse(sessionStorage.getItem('user'))
+    this.setState({
+      user: user
+    })
     console.log(user)
   }
 
@@ -31,6 +38,28 @@ class Register extends Component {
         [name]: value
       }
     })
+  }
+
+  addData() {
+    const { data, user } = this.state
+    if (data.hallName == '' || data.address == '' || data.capacity == '' || data.price == '') {
+      swal('Fill All textfield(s)')
+    }
+    else {
+      this.setState({ disable: true })
+      firebase.database().ref('user').child(`${user.uid}/hallData`).push(data)
+        .then(() => {
+          this.setState({
+            data: {
+              hallName: '',
+              address: '',
+              capacity: '',
+              price: ''
+            },
+            disable: false
+          })
+        })
+    }
   }
 
   render() {
@@ -74,7 +103,7 @@ class Register extends Component {
           <br />
 
           <div style={{ textAlign: 'center' }}>
-            <button type="submit" className="btn btn-success">Register</button>
+            <button type="submit" className="btn btn-success" onClick={() => this.addData()} disabled={this.state.disable} >Register</button>
           </div>
 
         </div>
