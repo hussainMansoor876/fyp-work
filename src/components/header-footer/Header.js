@@ -19,6 +19,7 @@ class Header extends Component {
             headerShow: false,
             email: '',
             password: '',
+            disable: false,
             obj: {
                 fName: '',
                 lName: '',
@@ -41,23 +42,30 @@ class Header extends Component {
         window.$('#exampleModalCenter').modal('show');
     }
 
-    login() {
+    async login() {
         const { email, password } = this.state
 
         if (email == '' || password == '') {
-            alert('Enter both textfield(s)')
+            swal('Enter both textfield(s)')
         }
         else {
-            firebase.auth().signInWithEmailAndPassword(email, password)
-                .then((userResponse) => {
-                    document.getElementById('email').value = '';
-                    document.getElementById('password').value = '';
-                    console.log(userResponse)
+            this.setState({
+                disable: true
+            })
+            await firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((res) => {
+                    console.log(res)
+                    firebase.database().ref('users').child(`${res.user.uid}`).once('value', (value) => {
+                        console.log(value.val())
+                        sessionStorage.setItem('user', JSON.stringify(value.val()))
+                        swal('login successfull')
+                        window.$('#exampleModalCenter').modal('hide');
+                    })
                     this.setState({
                         email: '',
-                        password: ''
+                        password: '',
+                        disable: false
                     })
-                    alert('login successfull')
                 })
                 .catch((error) => {
                     alert('something went wrong' + error);
@@ -71,10 +79,13 @@ class Header extends Component {
         if (obj.email == '' || obj.password == '' || obj.fName == '' || obj.lName == '' || obj.email == '' || obj.password == '' || obj.phoneNumber == '' || obj.confirmPassword == '' || obj.accountType == '') {
             swal('Fill All textfield(s)')
         }
-        else if(obj.password !== obj.confirmPassword){
+        else if (obj.password !== obj.confirmPassword) {
             swal("Password did not match")
         }
         else {
+            this.setState({
+                disable: true
+            })
             firebase.auth().createUserWithEmailAndPassword(obj.email, obj.password).then((res) => {
                 obj['uid'] = res.user.uid
                 delete obj.password
@@ -90,8 +101,10 @@ class Header extends Component {
                 }
                 console.log(res)
                 firebase.database().ref('users').child(`${res.user.uid}/`).set(obj)
-                this.setState({ obj: obj1 })
+                sessionStorage.setItem('user', JSON.stringify(obj))
+                this.setState({ obj: obj1, disable: false })
                 swal('Signup successfull' + res);
+                window.$('#signupModalCenter').modal('hide');
             })
                 .catch((error) => {
                     alert('something went wrong' + error);
@@ -217,7 +230,7 @@ class Header extends Component {
                                 <div className="modal-footer d-flex justify-content-center" style={{ textAlign: 'center' }}>
                                     <div>
                                         <br />
-                                        <button type="button" className="btn btn-success" onClick={() => this.login()}>Login</button>
+                                        <button type="button" disabled={this.state.disable} className="btn btn-success" onClick={() => this.login()}>Login</button>
                                         <br />
                                         <br />
                                         <p style={{ color: 'black' }}>Don't have an account? <a style={{ color: 'blue' }} onClick={() => { this.showSignup() }} data-toggle="modal" >Sign up</a>
@@ -302,7 +315,7 @@ class Header extends Component {
 
                                         <br />
 
-                                        <button type="button" className="btn btn-success" onClick={() => this.signUp()}>Sign Up</button>
+                                        <button disabled={this.state.disable} type="button" className="btn btn-success" onClick={() => this.signUp()}>Sign Up</button>
                                         <br />
                                         <br />
                                         <p style={{ color: 'black' }}>Already have an account? <a style={{ color: 'blue' }} onClick={() => { this.showLogin() }} data-toggle="modal" >Login</a>
