@@ -3,6 +3,18 @@ import '../../resources/bootstrap.min.css';
 import Header from '../header-footer/FixedHeader';
 import Footer from '../header-footer/Footer';
 class Register extends Component {
+  constructor(props){
+    super(props)
+
+    this.state = {
+      data: {
+        hallName: '',
+        address: '',
+        capacity: '',
+        price: ''
+      }
+    }
+  }
   render() {
     return (
       <div style={{textAlign:'center'}}>
