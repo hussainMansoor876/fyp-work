@@ -16,7 +16,8 @@ class Register extends Component {
         hallName: '',
         address: '',
         capacity: '',
-        price: ''
+        price: '',
+        picture: ''
       }
     }
   }
@@ -40,24 +41,67 @@ class Register extends Component {
     })
   }
 
+  updateFile(e) {
+    const { name, files } = e
+    this.setState({
+      data: {
+        ...this.state.data,
+        [name]: files[0]
+      }
+    })
+  }
+
   addData() {
     const { data, user } = this.state
-    if (data.hallName == '' || data.address == '' || data.capacity == '' || data.price == '') {
+    // // Update progress bar
+    // task.on('state_changed', (snapshot) => {
+    //     var percentage = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+    //     // uploader.value = percentage;
+    //     console.log(percentage)
+    //   },
+
+    //   function error(err) {
+    //     console.log('err')
+    //   },
+
+    //   function complete() {
+    //     console.log('complete')
+    //   }
+    // );
+    // storageRef.put(data.picture)
+    // .then(() => {
+    //   console.log('then')
+    // })
+    // .catch((err) => {
+    //   console.log(err)
+    // })
+    if (data.hallName == '' || data.address == '' || data.capacity == '' || data.price == '' || data.picture == '') {
       swal('Fill All textfield(s)')
     }
     else {
       this.setState({ disable: true })
-      firebase.database().ref('user').child(`${user.uid}/hallData`).push(data)
-        .then(() => {
-          this.setState({
-            data: {
-              hallName: '',
-              address: '',
-              capacity: '',
-              price: ''
-            },
-            disable: false
-          })
+      var storageRef = firebase.storage().ref(`${user.uid}/${data.picture.name}`)
+      storageRef.put(data.picture);
+      storageRef.getDownloadURL()
+        .then((url) => {
+          console.log(url)
+          data.picture = url
+          firebase.database().ref('users').child(`${user.uid}/hallData`).push(data)
+            .then(() => {
+              this.setState({
+                data: {
+                  hallName: '',
+                  address: '',
+                  capacity: '',
+                  price: '',
+                  picture: ''
+                },
+                disable: false
+              })
+            })
+        })
+        .catch((err) => {
+          console.log(err)
         })
     }
   }
@@ -97,7 +141,7 @@ class Register extends Component {
 
           <div className="form-group">
             <label for="exampleFormControlFile1" style={{ float: 'left' }}>Upload hall images</label>
-            <input type="file" multiple className="form-control-file" id="exampleFormControlFile1" onChange={(e) => console.log(e.target.files)} />
+            <input type="file" multiple className="form-control-file" id="exampleFormControlFile1" name="picture" onChange={(e) => this.updateFile(e.target)} />
           </div>
 
           <br />

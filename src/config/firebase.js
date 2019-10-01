@@ -5,7 +5,7 @@ var config = {
   authDomain: "venue-club.firebaseapp.com",
   databaseURL: "https://venue-club.firebaseio.com",
   projectId: "venue-club",
-  storageBucket: "",
+  storageBucket: "venue-club.appspot.com",
   messagingSenderId: "836378910974",
   appId: "1:836378910974:web:08d0af2b92b6a7c6"
 };
