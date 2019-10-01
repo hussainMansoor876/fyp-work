@@ -51,7 +51,7 @@ class Register extends Component {
     })
   }
 
-  addData() {
+  async addData() {
     const { data, user } = this.state
     // // Update progress bar
     // task.on('state_changed', (snapshot) => {
@@ -81,7 +81,7 @@ class Register extends Component {
     else {
       this.setState({ disable: true })
       var storageRef = firebase.storage().ref(`${user.uid}/${data.picture.name}`)
-      storageRef.put(data.picture);
+      await storageRef.put(data.picture);
       storageRef.getDownloadURL()
         .then((url) => {
           console.log(url)
