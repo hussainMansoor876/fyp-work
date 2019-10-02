@@ -57,7 +57,9 @@ class Header extends Component {
                     console.log(res)
                     firebase.database().ref('users').child(`${res.user.uid}`).once('value', (value) => {
                         console.log(value.val())
-                        sessionStorage.setItem('user', JSON.stringify(value.val()))
+                        var val1 = value.val()
+                        val1['key'] = value.key
+                        sessionStorage.setItem('user', JSON.stringify(val1))
                         swal('login successfull')
                         window.$('#exampleModalCenter').modal('hide');
                     })

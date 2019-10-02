@@ -14,10 +14,24 @@ import Message from '@material-ui/icons/Message';
 import { Link } from 'react-router-dom';
 
 class Register extends Component {
-  
+  constructor(props){
+    super(props)
+
+    this.state = {
+      user: JSON.parse(sessionStorage.getItem('user'))
+    }
+  }
+
+  logout(){
+    sessionStorage.removeItem('user')
+    window.location.reload()
+  }
+
+
         
   render() {
-  
+    const { user } = this.state
+    console.log(user)
     return (
       <div>
          <AppBar style={{ background: '#3c3c3c' }} position="absolute">
@@ -28,7 +42,7 @@ class Register extends Component {
           <div style={{marginLeft:'auto',marginRight:'-12px'}}>
           <Button style={{color:'white'}}>Browse Venue</Button>
           <Button style={{color:'white'}}>Manage Venues</Button>
-          <Button style={{color:'white'}}>Logout</Button>
+          <Button style={{color:'white'}} onClick={() => this.logout()}>Logout</Button>
          
           <IconButton style={{color:'#ffffff'}} title="Message">
           <Message/>
@@ -56,25 +70,25 @@ class Register extends Component {
           <div className="form-row mt-3">
           <div className="col">
            <label for="inputName">First name</label>
-            <input type="text" className="form-control" id="inputName" />
+            <input type="text" value={user.fName} className="form-control" id="inputName" />
            </div>
           
 
           <div className="col">
             <label for="inputName">Last name</label>
-            <input type="text" className="form-control" id="inputName" />
+            <input type="text" value={user.lName} className="form-control" id="inputName" />
           </div>
           </div>
 
           <div className="form-row mt-2">
             <div className="col">
             <label for="inputCapacity">Email</label>
-            <input type="string" className="form-control" />
+            <input type="email" value={user.email} className="form-control" />
             </div>
 
           <div className="col">
           <label for="inputPrice">Phone</label>
-            <input type="number" className="form-control"  />
+            <input type="text" value={user.phone} className="form-control"  />
           </div>
           </div>
 

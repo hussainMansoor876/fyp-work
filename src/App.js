@@ -60,7 +60,7 @@ class App extends Component {
           <Route exact path="/OwnerDashboard/chat" component={OwnerChat} />
           <Route exact path="/AdminDashboard" component={Admin} />
           <Route exact path="/AdminMessage" component={MessageToAdmin} />
-          <Route exact path="/OwnerDashboard/setting" component={Setting} />
+          <PrivateRoute isLoggedIn={(this.props.isLoggedIn || this.state.isLoggedIn)} exact path="/OwnerDashboard/setting" component={Setting} />
           <Route exact path="/OwnerDashboard/Card" component={Card} />
           <Route exact path="/HallDetails" component={HallDetails} />
 

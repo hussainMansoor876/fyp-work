@@ -14,119 +14,47 @@ import Message from '@material-ui/icons/Message';
 import { Link } from 'react-router-dom';
 
 class OwnerBooking extends Component {
-  
-        
-  render() {
-  
-    return (
-      <div>
-         <AppBar style={{ background: '#3c3c3c' }} position="absolute">
-        <Toolbar>
-          <Typography component="h1" variant="h6" color="inherit" >
-           Owner Dashboard
+
+
+    render() {
+
+        return (
+            <div>
+                <AppBar style={{ background: '#3c3c3c' }} position="absolute">
+                    <Toolbar>
+                        <Typography component="h1" variant="h6" color="inherit" >
+                            Owner Dashboard
           </Typography>
-          <div style={{marginLeft:'auto',marginRight:'-12px'}}>
-          <Button style={{color:'white'}}>Browse Venue</Button>
-          <Button style={{color:'white'}}>Manage Venues</Button>
-          <Button style={{color:'white'}}>Logout</Button>
-         
-          <IconButton style={{color:'#ffffff'}} title="Message">
-          <Message/>
-          </IconButton>
+                        <div style={{ marginLeft: 'auto', marginRight: '-12px' }}>
+                            <Button style={{ color: 'white' }}>Browse Venue</Button>
+                            <Button style={{ color: 'white' }}>Manage Venues</Button>
+                            <Button style={{ color: 'white' }}>Logout</Button>
 
-        <Link to="/RegisterHall"> 
-         <IconButton style={{color:'#ffffff'}} title="Register Hall">
-          <RegisterIcon/>
-          </IconButton>
-          </Link>
+                            <IconButton style={{ color: '#ffffff' }} title="Message">
+                                <Message />
+                            </IconButton>
 
-        
-          <IconButton color="inherit" title="Profile">
-          <UserIcon/>
-          </IconButton>
-          </div>
+                            <Link to="/RegisterHall">
+                                <IconButton style={{ color: '#ffffff' }} title="Register Hall">
+                                    <RegisterIcon />
+                                </IconButton>
+                            </Link>
 
-        </Toolbar>
-      </AppBar>
-        
-      <div> 
-          
-      <div style={{marginTop:'100px',marginBottom:'10px',marginLeft:'25%',marginRight:'25%',borderStyle:'ridge',borderWidth:'1px'}}>
-        <div style={{marginLeft:'40px',marginRight:'40px',marginTop:'40px',marginBottom:'40px'}}> <h2>Edit contact information</h2><hr/>
-          <div className="form-row mt-3">
-          <div className="col">
-           <label for="inputName">First name</label>
-            <input type="text" className="form-control" id="inputName" />
-           </div>
-          
 
-          <div className="col">
-            <label for="inputName">Last name</label>
-            <input type="text" className="form-control" id="inputName" />
-          </div>
-          </div>
+                            <IconButton color="inherit" title="Profile">
+                                <UserIcon />
+                            </IconButton>
+                        </div>
 
-          <div className="form-row mt-2">
-            <div className="col">
-            <label for="inputCapacity">Email</label>
-            <input type="string" className="form-control" />
+                    </Toolbar>
+                </AppBar>
+
+                <Footer />
             </div>
 
-          <div className="col">
-          <label for="inputPrice">Phone</label>
-            <input type="number" className="form-control"  />
-          </div>
-          </div>
 
-          <br />
-          
-          <div>
-            <button type="submit" className="btn btn-success">Update</button>
-          </div>
-
-          </div></div>
-        
-          <div className="form-row mt-2" style={{marginLeft:'25%',marginRight:'25%',marginBottom:'40px'}}>
-            <div className="col" style={{marginRight:'20px',borderStyle:'ridge',borderWidth:'1px'}}>
-              <div style={{marginLeft:'40px',marginRight:'40px',marginTop:'40px',marginBottom:'40px'}}>
-                <h2>Change Password</h2>
-                <hr/>
-                <label for="inputPassword">Current password</label>
-                <input type="password" className="form-control" />
-
-                <label for="inputPassword">New password</label>
-                <input type="password" className="form-control" />
-        
-                <label for="inputPassword">Confirm password</label>
-                <input type="password" className="form-control"/>
-                <br/>
-                
-                <button type="submit" className="btn btn-success">Change Password</button>
-         
-        
-           </div>
-            </div>
-
-            <div className="col" style={{borderStyle:'ridge',borderWidth:'1px'}}>
-              <div style={{marginLeft:'40px',marginRight:'40px',marginTop:'40px',marginBottom:'40px'}}>
-                <h2>Delete Account</h2>
-                <hr/>
-                <br/>
-                
-                <button type="submit" className="btn btn-danger">Change Password</button><br/><br/>
-                <p>This action can not be undone</p>
-        
-           </div>
-            </div>
-          </div>
-          
-          </div>
-        <Footer />
-      </div>
-
-
-    );
-  }
+        );
+    }
 }
 
 export default OwnerBooking;
