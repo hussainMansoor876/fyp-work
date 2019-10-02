@@ -12,129 +12,154 @@ import { Button } from '@material-ui/core';
 import RegisterIcon from '@material-ui/icons/AddCircle'
 import Message from '@material-ui/icons/Message';
 import { Link } from 'react-router-dom';
+import firebase from '../../../config/firebase'
 
 class Register extends Component {
-  constructor(props){
+  constructor(props) {
     super(props)
 
     this.state = {
-      user: JSON.parse(sessionStorage.getItem('user'))
+      user: JSON.parse(sessionStorage.getItem('user')),
+      disable: false
     }
   }
 
-  logout(){
+  // componentWillMount(){
+  //   this.setState({
+  //     user: {
+  //       ...this.state.user,
+  //       phoneNumber: Number(this.state.user.phoneNumber)
+  //     }
+  //   })
+  // }
+
+  logout() {
     sessionStorage.removeItem('user')
     window.location.reload()
   }
 
+  updateData(e) {
+    const { name, value } = e
+    this.setState({
+      user: {
+        ...this.state.user,
+        [name]: value
+      }
+    })
+  }
 
-        
+  updateServer(){
+    const { user } = this.state
+    firebase.database().ref('users').child(`${user['key']}`).update(user)
+  }
+
+
+
   render() {
     const { user } = this.state
-    console.log(user)
     return (
       <div>
-         <AppBar style={{ background: '#3c3c3c' }} position="absolute">
-        <Toolbar>
-          <Typography component="h1" variant="h6" color="inherit" >
-           Owner Dashboard
+        <AppBar style={{ background: '#3c3c3c' }} position="absolute">
+          <Toolbar>
+            <Typography component="h1" variant="h6" color="inherit" >
+              Owner Dashboard
           </Typography>
-          <div style={{marginLeft:'auto',marginRight:'-12px'}}>
-          <Button style={{color:'white'}}>Browse Venue</Button>
-          <Button style={{color:'white'}}>Manage Venues</Button>
-          <Button style={{color:'white'}} onClick={() => this.logout()}>Logout</Button>
-         
-          <IconButton style={{color:'#ffffff'}} title="Message">
-          <Message/>
-          </IconButton>
+            <div style={{ marginLeft: 'auto', marginRight: '-12px' }}>
+              <Button style={{ color: 'white' }}>Browse Venue</Button>
+              <Button style={{ color: 'white' }}>Manage Venues</Button>
+              <Button style={{ color: 'white' }} onClick={() => this.logout()}>Logout</Button>
 
-        <Link to="/RegisterHall"> 
-         <IconButton style={{color:'#ffffff'}} title="Register Hall">
-          <RegisterIcon/>
-          </IconButton>
-          </Link>
+              <IconButton style={{ color: '#ffffff' }} title="Message">
+                <Message />
+              </IconButton>
 
-        
-          <IconButton color="inherit" title="Profile">
-          <UserIcon/>
-          </IconButton>
-          </div>
+              <Link to="/RegisterHall">
+                <IconButton style={{ color: '#ffffff' }} title="Register Hall">
+                  <RegisterIcon />
+                </IconButton>
+              </Link>
 
-        </Toolbar>
-      </AppBar>
-        
-      <div> 
-          
-      <div style={{marginTop:'100px',marginBottom:'10px',marginLeft:'25%',marginRight:'25%',borderStyle:'ridge',borderWidth:'1px'}}>
-        <div style={{marginLeft:'40px',marginRight:'40px',marginTop:'40px',marginBottom:'40px'}}> <h2>Edit contact information</h2><hr/>
-          <div className="form-row mt-3">
-          <div className="col">
-           <label for="inputName">First name</label>
-            <input type="text" value={user.fName} className="form-control" id="inputName" />
-           </div>
-          
 
-          <div className="col">
-            <label for="inputName">Last name</label>
-            <input type="text" value={user.lName} className="form-control" id="inputName" />
-          </div>
-          </div>
-
-          <div className="form-row mt-2">
-            <div className="col">
-            <label for="inputCapacity">Email</label>
-            <input type="email" value={user.email} className="form-control" />
+              <IconButton color="inherit" title="Profile">
+                <UserIcon />
+              </IconButton>
             </div>
 
-          <div className="col">
-          <label for="inputPrice">Phone</label>
-            <input type="text" value={user.phone} className="form-control"  />
-          </div>
-          </div>
+          </Toolbar>
+        </AppBar>
 
-          <br />
-          
-          <div>
-            <button type="submit" className="btn btn-success">Update</button>
-          </div>
+        <div>
 
-          </div></div>
-        
-          <div className="form-row mt-2" style={{marginLeft:'25%',marginRight:'25%',marginBottom:'40px'}}>
-            <div className="col" style={{marginRight:'20px',borderStyle:'ridge',borderWidth:'1px'}}>
-              <div style={{marginLeft:'40px',marginRight:'40px',marginTop:'40px',marginBottom:'40px'}}>
+          <div style={{ marginTop: '100px', marginBottom: '10px', marginLeft: '25%', marginRight: '25%', borderStyle: 'ridge', borderWidth: '1px' }}>
+            <div style={{ marginLeft: '40px', marginRight: '40px', marginTop: '40px', marginBottom: '40px' }}> <h2>Edit contact information</h2><hr />
+              <div className="form-row mt-3">
+                <div className="col">
+                  <label for="inputName">First name</label>
+                  <input type="text" name="fName" onChange={(e) => this.updateData(e.target)} value={user.fName} className="form-control" id="inputName" />
+                </div>
+
+
+                <div className="col">
+                  <label for="inputName">Last name</label>
+                  <input type="text" name="lName" onChange={(e) => this.updateData(e.target)} value={user.lName} className="form-control" id="inputName" />
+                </div>
+              </div>
+
+              <div className="form-row mt-2">
+                <div className="col">
+                  <label for="inputCapacity">Email</label>
+                  <input type="email" name="email" value={user.email} onChange={(e) => this.updateData(e.target)} className="form-control" />
+                </div>
+
+                <div className="col">
+                  <label for="inputPrice">Phone</label>
+                  <input type="number" name="phoneNumber" onChange={(e) => this.updateData(e.target)} value={user.phoneNumber} className="form-control" />
+                </div>
+              </div>
+
+              <br />
+
+              <div>
+                <button type="submit" className="btn btn-success" disabled={this.state.disable}  onClick={() => this.updateServer()} >Update</button>
+              </div>
+
+            </div></div>
+
+          <div className="form-row mt-2" style={{ marginLeft: '25%', marginRight: '25%', marginBottom: '40px' }}>
+            <div className="col" style={{ marginRight: '20px', borderStyle: 'ridge', borderWidth: '1px' }}>
+              <div style={{ marginLeft: '40px', marginRight: '40px', marginTop: '40px', marginBottom: '40px' }}>
                 <h2>Change Password</h2>
-                <hr/>
+                <hr />
                 <label for="inputPassword">Current password</label>
                 <input type="password" className="form-control" />
 
                 <label for="inputPassword">New password</label>
                 <input type="password" className="form-control" />
-        
+
                 <label for="inputPassword">Confirm password</label>
-                <input type="password" className="form-control"/>
-                <br/>
-                
+                <input type="password" className="form-control" />
+                <br />
+
                 <button type="submit" className="btn btn-success">Change Password</button>
-         
-        
-           </div>
+
+
+              </div>
             </div>
 
-            <div className="col" style={{borderStyle:'ridge',borderWidth:'1px'}}>
-              <div style={{marginLeft:'40px',marginRight:'40px',marginTop:'40px',marginBottom:'40px'}}>
+            <div className="col" style={{ borderStyle: 'ridge', borderWidth: '1px' }}>
+              <div style={{ marginLeft: '40px', marginRight: '40px', marginTop: '40px', marginBottom: '40px' }}>
                 <h2>Delete Account</h2>
-                <hr/>
-                <br/>
-                
-                <button type="submit" className="btn btn-danger">Change Password</button><br/><br/>
+                <hr />
+                <br />
+
+                <button type="submit" className="btn btn-danger">Change Password</button><br /><br />
                 <p>This action can not be undone</p>
-        
-           </div>
+
+              </div>
             </div>
           </div>
-          
-          </div>
+
+        </div>
         <Footer />
       </div>
 
