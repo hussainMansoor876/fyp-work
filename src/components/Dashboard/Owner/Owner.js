@@ -109,62 +109,52 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const classes = useStyles();
-const user = JSON.parse(sessionStorage.user)
-const { hallData } = user
-const hallDataArr = []
-  
-if (hallDataArr.length > 3) {
-  var data = hallDataArr.slice(0, 3)
-}
-else {
-  var data = hallData
-}
 
-const [open, setOpen] = React.useState(true);
-const handleDrawerOpen = () => {
-  document.getElementById("dot_icon").style.display = "inline-block";
-  setOpen(true);
-};
-const handleDrawerClose = () => {
-  document.getElementById("dot_icon").style.display = "none";
-  setOpen(false);
-};
-const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+export default function Dashboard(props) {
 
-export default class Dashboard extends React.Component {
-  constructor(props){
-    super(props)
-    this.state = {
-      user: JSON.parse(sessionStorage.user),
-      hallData: user.hallData,
-      hallDataArr: []
-    }
+  var user = JSON.parse(sessionStorage.user)
+  const { hallData } = user
+  var hallDataArr = []
+
+  console.log(props)
+
+  for (var i in hallData) {
+    hallDataArr.push(hallData[i])
   }
 
-  componentWillMount(){
-    for(var i in hallData) {
-      hallDataArr.push(hallData[i])
-    }
+  const classes = useStyles();
+
+  if (hallDataArr.length > 3) {
+    var data = hallDataArr.slice(0, 3)
+  }
+  else {
+    var data = hallData
   }
 
-  componentDidMount(){
+  const [open, setOpen] = React.useState(true);
+  const handleDrawerOpen = () => {
+    document.getElementById("dot_icon").style.display = "inline-block";
+    setOpen(true);
+  };
+  const handleDrawerClose = () => {
+    document.getElementById("dot_icon").style.display = "none";
+    setOpen(false);
+  };
+  const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
 
+
+
+
+  const pageUpdate = (e) => {
+    console.log(e)
+    var index = e * 3
+    data = hallDataArr.slice(index - 3, index)
+    console.log(index)
   }
-  
 
 
-
- pageUpdate(e){
-  console.log(e)
-  var index = e * 3
-  data = hallDataArr.slice(index - 3, index)
-  console.log(index)
-}
-
-render{
   return (
-    <div className={classes.root}>
+    <div className={classes.root} >
       <CssBaseline />
       <AppBar style={{ background: '#3c3c3c' }} position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
         <Toolbar className={classes.toolbar}>
@@ -175,13 +165,13 @@ render{
             onClick={handleDrawerOpen}
             className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
           >
-  
+
             <MenuIcon />
           </IconButton>
-  
-  
+
+
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-  
+
             <Link> <DotsIcon id="dot_icon" onClick={handleDrawerClose} style={{ color: 'white' }} /></Link>
             &nbsp;
              Owner Dashboard
@@ -189,26 +179,26 @@ render{
           <Button style={{ color: 'white' }}>Browse Venue</Button>
           <Button style={{ color: 'white' }}>Manage Venues</Button>
           <Button style={{ color: 'white' }}>Logout</Button>
-  
+
           <IconButton style={{ color: '#ffffff' }} title="Message">
             <Message />
           </IconButton>
-  
+
           <Link to="/RegisterHall">
             <IconButton style={{ color: '#ffffff' }} title="Register Hall">
               <RegisterIcon />
             </IconButton>
           </Link>
-  
-  
+
+
           <IconButton color="inherit" title="Profile">
             <UserIcon />
           </IconButton>
-  
-  
+
+
         </Toolbar>
       </AppBar>
-  
+
       <Drawer
         variant="permanent"
         classes={{
@@ -224,14 +214,14 @@ render{
         <div className="my-3">
           <List >{mainListItems}</List>
         </div>
-  
+
         <Divider />
-  
-  
+
+
         <div className="my-4">
           <List >{secondaryListItems}</List>
         </div>
-  
+
       </Drawer>
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
@@ -241,7 +231,7 @@ render{
               <Paper className={fixedHeightPaper}>
                 <div style={{ background: '#ECECEC', padding: '30px' }}>
                   <Row gutter={16}>
-                    {data.map((v, i) => {
+                    {props.hallDataArr.slice(props.start, props.end).map((v, i) => {
                       return <Col span={8}>
                         <Card
                           hoverable
@@ -258,8 +248,8 @@ render{
                     defaultCurrent={1}
                     defaultPageSize={3} //default size of page
                     // onChange={this.handleChange}
-                    onChange={(e) => this.pageUpdate(e)}
-                    total={hallDataArr.length} //total number of card data available
+                    onChange={(e) => props.updatePage(e)}
+                    total={props.hallDataArr.length} //total number of card data available
                   />
                 </div>
                 {/* <div style={{textAlign:'center',marginTop:'80px'}}>
@@ -281,9 +271,8 @@ render{
             </Grid>
           </Grid>
         </Container>
-  
+
       </main>
     </div>
   )
-}
 }
