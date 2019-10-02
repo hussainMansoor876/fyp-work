@@ -14,32 +14,41 @@ import { Link } from 'react-router-dom';
 import MessageIcon from '@material-ui/icons/Message';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 
+
+function logout(){
+  sessionStorage.removeItem('user')
+  window.location.reload()
+}
+
 export const mainListItems = (
-    <div>
-      <Link to="/OwnerDashboard">
+  <div>
+    <Link to="/OwnerDashboard">
       <ListItem button>
         <ListItemIcon>
           <DashboardIcon />
         </ListItemIcon>
         <ListItemText primary="Dashboard" />
       </ListItem>
-      </Link>
+    </Link>
 
-      <Link to="/OwnerDashboard">
+    <Link to="/OwnerDashboard/booking">
       <ListItem button>
         <ListItemIcon>
           <BookingIcon />
         </ListItemIcon>
         <ListItemText primary="Bookings" />
       </ListItem>
-      </Link>
+    </Link>
 
+    <Link to="/OwnerDashboard/chat">
       <ListItem button>
         <ListItemIcon>
           <MessageIcon />
         </ListItemIcon>
         <ListItemText primary="Messages" />
       </ListItem>
+    </Link>
+
     <Link to="/Setting">
       <ListItem button>
         <ListItemIcon>
@@ -47,22 +56,24 @@ export const mainListItems = (
         </ListItemIcon>
         <ListItemText primary="Setting" />
       </ListItem>
-      </Link>
+    </Link>
 
+    <Link>
       <ListItem button>
         <ListItemIcon>
           <Logout />
         </ListItemIcon>
-        <ListItemText primary="Logout" />
+        <ListItemText primary="Logout" onClick={() => logout()} />
       </ListItem>
+    </Link>
 
-    </div>
-  );
-  
-export const secondaryListItems=(
-  
+  </div>
+);
+
+export const secondaryListItems = (
+
   <div>
-  <Link to="/AdminMessage">
+    <Link to="/AdminMessage">
       <ListItem button >
         <ListItemIcon>
           <DashboardIcon />
@@ -70,27 +81,27 @@ export const secondaryListItems=(
         <ListItemText secondary="Message to admin" />
       </ListItem></Link>
 
-      <ListItem button>
-        <ListItemIcon>
-          <FeedbackIcon />
-        </ListItemIcon>
-        <ListItemText primary="Feedback" />
-      </ListItem>
-  <Link to="/OwnerDashboard/Card">
+    <ListItem button>
+      <ListItemIcon>
+        <FeedbackIcon />
+      </ListItemIcon>
+      <ListItemText primary="Feedback" />
+    </ListItem>
+    {/* <Link to="/OwnerDashboard/Card">
       <ListItem button>
         <ListItemIcon>
           <FeedbackIcon />
         </ListItemIcon>
         <ListItemText primary="Card" />
       </ListItem>
-      </Link>
-  <Link to="/HallDetails">
+    </Link>
+    <Link to="/HallDetails">
       <ListItem button>
         <ListItemIcon>
           <FeedbackIcon />
         </ListItemIcon>
         <ListItemText primary="Hall Details" />
       </ListItem>
-      </Link>
+    </Link> */}
   </div>
 );

@@ -105,31 +105,16 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
   },
   fixedHeight: {
-    height: 440,
+    height: 500,
   },
 }));
 
 
 export default function Dashboard(props) {
 
-  var user = JSON.parse(sessionStorage.user)
-  const { hallData } = user
-  var hallDataArr = []
-
-  console.log(props)
-
-  for (var i in hallData) {
-    hallDataArr.push(hallData[i])
-  }
 
   const classes = useStyles();
 
-  if (hallDataArr.length > 3) {
-    var data = hallDataArr.slice(0, 3)
-  }
-  else {
-    var data = hallData
-  }
 
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
@@ -141,16 +126,6 @@ export default function Dashboard(props) {
     setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
-
-
-
-  const pageUpdate = (e) => {
-    console.log(e)
-    var index = e * 3
-    data = hallDataArr.slice(index - 3, index)
-    console.log(index)
-  }
 
 
   return (
@@ -235,7 +210,7 @@ export default function Dashboard(props) {
                       return <Col span={8}>
                         <Card
                           hoverable
-                          cover={<img alt="example" style={{ height: 200 }} src={v.picture} />}
+                          cover={<img alt="example" style={{ height: 260 }} src={v.picture} />}
                         >
                           <Meta title={v.hallName} description={`Rs ${v.price}`} />
                         </Card>
