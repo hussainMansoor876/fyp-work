@@ -1,0 +1,23 @@
+{
+  "files": {
+    "main.css": "/fyp-work/static/css/main.d845e4c8.chunk.css",
+    "main.js": "/fyp-work/static/js/main.e4ddcf8e.chunk.js",
+    "main.js.map": "/fyp-work/static/js/main.e4ddcf8e.chunk.js.map",
+    "runtime~main.js": "/fyp-work/static/js/runtime~main.9f4e90f3.js",
+    "runtime~main.js.map": "/fyp-work/static/js/runtime~main.9f4e90f3.js.map",
+    "static/css/2.074869bb.chunk.css": "/fyp-work/static/css/2.074869bb.chunk.css",
+    "static/js/2.deb705fb.chunk.js": "/fyp-work/static/js/2.deb705fb.chunk.js",
+    "static/js/2.deb705fb.chunk.js.map": "/fyp-work/static/js/2.deb705fb.chunk.js.map",
+    "index.html": "/fyp-work/index.html",
+    "precache-manifest.fabbaa70db070d33b6b953b1d525f6fe.js": "/fyp-work/precache-manifest.fabbaa70db070d33b6b953b1d525f6fe.js",
+    "service-worker.js": "/fyp-work/service-worker.js",
+    "static/css/2.074869bb.chunk.css.map": "/fyp-work/static/css/2.074869bb.chunk.css.map",
+    "static/css/main.d845e4c8.chunk.css.map": "/fyp-work/static/css/main.d845e4c8.chunk.css.map",
+    "static/media/final.png": "/fyp-work/static/media/final.34acc0bf.png",
+    "static/media/huzaifa.jpg": "/fyp-work/static/media/huzaifa.bfd4017f.jpg",
+    "static/media/majid.jpg": "/fyp-work/static/media/majid.06c6d27b.jpg",
+    "static/media/slide_one.jpg": "/fyp-work/static/media/slide_one.49802bd8.jpg",
+    "static/media/slide_three.jpg": "/fyp-work/static/media/slide_three.5d182c66.jpg",
+    "static/media/slide_two.jpg": "/fyp-work/static/media/slide_two.790baf85.jpg"
+  }
+}
