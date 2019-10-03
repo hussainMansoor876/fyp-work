@@ -2,7 +2,7 @@
   "name": "the_venue",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://hussainmansoor876.github.io/fyp-work/",
+  "homepage": "https://hussainmansoor876.github.io/fyp-work",
   "dependencies": {
     "@material-ui/core": "^4.2.0",
     "@material-ui/icons": "^4.2.1",
