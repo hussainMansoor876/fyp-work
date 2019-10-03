@@ -12,8 +12,44 @@ import { Button } from '@material-ui/core';
 import RegisterIcon from '@material-ui/icons/AddCircle'
 import Message from '@material-ui/icons/Message';
 import { Link } from 'react-router-dom';
+import 'antd/dist/antd.css';
+import { Table, Skeleton } from 'antd';
+
+
+const columns = [
+    {
+        title: 'Buyer Name',
+        dataIndex: 'name'
+    },
+    {
+        title: 'age',
+        dataIndex: 'age',
+    },
+    {
+        title: 'address',
+        dataIndex: 'address',
+    },
+];
+
+const data = [];
+for (let i = 0; i < 460; i++) {
+    data.push({
+        key: i,
+        name: `Edward King ABc hello rfjygyjgfyh ${i}`,
+        age: 32,
+        address: `London, Park Lane no. ${i}`,
+    });
+}
 
 class OwnerBooking extends Component {
+    constructor(props) {
+        super(props)
+
+        this.state = {
+            user: JSON.parse(sessionStorage.getItem('user'))
+        }
+    }
+
 
 
     render() {
@@ -49,6 +85,13 @@ class OwnerBooking extends Component {
                     </Toolbar>
                 </AppBar>
 
+                <div style={{ width: '100%', justifyContent: 'center', display: 'flex', textAlign: 'center', marginTop: 140 }}>
+                    {data.length ? <Table
+                        style={{ width: '94%' }}
+                        columns={columns}
+                        dataSource={data}
+                    /> : <Skeleton active />}
+                </div>
                 <Footer />
             </div>
 
