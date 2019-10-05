@@ -13,6 +13,7 @@ import RegisterIcon from '@material-ui/icons/AddCircle'
 import Message from '@material-ui/icons/Message';
 import { Link } from 'react-router-dom';
 import firebase from '../../../config/firebase'
+import swal from 'sweetalert';
 
 class Register extends Component {
   constructor(props) {
@@ -21,6 +22,7 @@ class Register extends Component {
     this.state = {
       user: JSON.parse(sessionStorage.getItem('user')),
       disable: false,
+      disable1: true,
       newPassword: '',
       confirm: ''
     }
@@ -55,6 +57,44 @@ class Register extends Component {
   updateServer() {
     const { user } = this.state
     firebase.database().ref('users').child(`${user['key']}`).update(user)
+  }
+
+  changePassword() {
+    const { newPassword, confirm } = this.state
+    if (newPassword !== confirm) {
+      swal({
+        title: "Password did not match",
+        icon: "warning",
+        dangerMode: true,
+      })
+      return
+    }
+    this.setState({ disable1: true })
+    firebase.auth().onAuthStateChanged((user) => {
+      if (user) {
+        user.updatePassword(newPassword)
+          .then(() => {
+            this.setState({
+              newPassword: '',
+              confirm: ''
+            })
+            swal({
+              title: "Password Updated Successfully",
+              icon: "success"
+            })
+          }).catch((error) => {
+            this.setState({
+              newPassword: '',
+              confirm: ''
+            })
+            swal({
+              title: error,
+              icon: "warning",
+              dangerMode: true,
+            })
+          });
+      }
+    });
   }
 
 
@@ -138,13 +178,27 @@ class Register extends Component {
                 <input type="password" className="form-control" /> */}
 
                 <label for="inputPassword">New password</label>
-                <input type="password" className="form-control" name="newPassword" value={newPassword} onChange={(e) => this.setState({ newPassword: e.target.value })} />
+                <input type="password" className="form-control" name="newPassword" value={newPassword} onChange={(e) => this.setState({ newPassword: e.target.value }, () => {
+                  if (this.state.newPassword.length && this.state.confirm.length) {
+                    this.setState({ disable1: false })
+                  }
+                  else {
+                    this.setState({ disable1: true })
+                  }
+                })} />
 
                 <label for="inputPassword">Confirm password</label>
-                <input type="password" className="form-control" name="confirm" value={confirm} onChange={(e) => this.setState({ confirm: e.target.value })} />
+                <input type="password" className="form-control" name="confirm" value={confirm} onChange={(e) => this.setState({ confirm: e.target.value }, () => {
+                  if (this.state.newPassword.length && this.state.confirm.length) {
+                    this.setState({ disable1: false })
+                  }
+                  else {
+                    this.setState({ disable1: true })
+                  }
+                })} />
                 <br />
 
-                <button type="submit" className="btn btn-success" onClick={() => this.changePassword()}>Change Password</button>
+                <button type="submit" className="btn btn-success" disabled={this.state.disable1} onClick={() => this.changePassword()}>Change Password</button>
 
 
               </div>
