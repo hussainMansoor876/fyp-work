@@ -20,18 +20,22 @@ class Register extends Component {
 
     this.state = {
       user: JSON.parse(sessionStorage.getItem('user')),
-      disable: false
+      disable: false,
+      newPassword: '',
+      confirm: ''
     }
   }
 
-  // componentWillMount(){
-  //   this.setState({
-  //     user: {
-  //       ...this.state.user,
-  //       phoneNumber: Number(this.state.user.phoneNumber)
-  //     }
-  //   })
-  // }
+  componentWillMount() {
+    firebase.auth().onAuthStateChanged(function (user) {
+      if (user) {
+        console.log(user.phoneNumber)
+        // User is signed in.
+      } else {
+        // No user is signed in.
+      }
+    });
+  }
 
   logout() {
     sessionStorage.removeItem('user')
@@ -48,7 +52,7 @@ class Register extends Component {
     })
   }
 
-  updateServer(){
+  updateServer() {
     const { user } = this.state
     firebase.database().ref('users').child(`${user['key']}`).update(user)
   }
@@ -56,7 +60,7 @@ class Register extends Component {
 
 
   render() {
-    const { user } = this.state
+    const { user, newPassword, confirm } = this.state
     return (
       <div>
         <AppBar style={{ background: '#3c3c3c' }} position="absolute">
@@ -120,7 +124,7 @@ class Register extends Component {
               <br />
 
               <div>
-                <button type="submit" className="btn btn-success" disabled={this.state.disable}  onClick={() => this.updateServer()} >Update</button>
+                <button type="submit" className="btn btn-success" disabled={this.state.disable} onClick={() => this.updateServer()} >Update</button>
               </div>
 
             </div></div>
@@ -130,17 +134,17 @@ class Register extends Component {
               <div style={{ marginLeft: '40px', marginRight: '40px', marginTop: '40px', marginBottom: '40px' }}>
                 <h2>Change Password</h2>
                 <hr />
-                <label for="inputPassword">Current password</label>
-                <input type="password" className="form-control" />
+                {/* <label for="inputPassword">Current password</label>
+                <input type="password" className="form-control" /> */}
 
                 <label for="inputPassword">New password</label>
-                <input type="password" className="form-control" />
+                <input type="password" className="form-control" name="newPassword" value={newPassword} onChange={(e) => this.setState({ newPassword: e.target.value })} />
 
                 <label for="inputPassword">Confirm password</label>
-                <input type="password" className="form-control" />
+                <input type="password" className="form-control" name="confirm" value={confirm} onChange={(e) => this.setState({ confirm: e.target.value })} />
                 <br />
 
-                <button type="submit" className="btn btn-success">Change Password</button>
+                <button type="submit" className="btn btn-success" onClick={() => this.changePassword()}>Change Password</button>
 
 
               </div>
