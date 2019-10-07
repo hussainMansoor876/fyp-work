@@ -13,7 +13,8 @@ import RegisterIcon from '@material-ui/icons/AddCircle'
 import Message from '@material-ui/icons/Message';
 import { Link } from 'react-router-dom';
 import 'antd/dist/antd.css';
-import { Table, Skeleton, Modal } from 'antd';
+import { Table, Skeleton, Modal, Button as Btn } from 'antd';
+import { stat } from 'fs';
 
 
 
@@ -33,26 +34,42 @@ class OwnerBooking extends Component {
                     render: text => <a href="#" onClick={() => this.setState({ visible: true })}>{text}</a>
                 },
                 {
-                    title: 'age',
-                    dataIndex: 'age',
+                    title: 'Hall Name',
+                    dataIndex: 'hallName',
                 },
                 {
-                    title: 'address',
-                    dataIndex: 'address',
+                    title: 'Program Date',
+                    dataIndex: 'pDate',
                 },
+                {
+                    title: 'Statue',
+                    dataIndex: 'status'
+                }
             ],
-            data: []
+            data: [],
+            date: new Date()
         }
     }
 
     componentWillMount() {
-        const { data } = this.state;
+        const { data, date } = this.state;
         for (let i = 0; i < 460; i++) {
+            var status = 'pending'
+            if (i % 2 === 0) {
+                status = 'pending'
+            }
+            else if (i % 3 === 0) {
+                status = 'accepted'
+            }
+            else {
+                status = 'rejected'
+            }
             data.push({
                 key: i,
                 name: `Edward King ABc hello rfjygyjgfyh ${i}`,
-                age: 32,
-                address: `London, Park Lane no. ${i}`,
+                hallName: 32,
+                pDate: date.toDateString(),
+                status: status
             });
         }
         this.setState({ data })
@@ -66,9 +83,9 @@ class OwnerBooking extends Component {
         setTimeout(() => {
             this.setState({
                 visible: false,
-                confirmLoading: false,
+                confirmLoading: true,
             });
-        }, 2000);
+        }, 3000);
     };
 
     handleCancel = () => {
@@ -81,7 +98,7 @@ class OwnerBooking extends Component {
 
 
     render() {
-        const { visible, confirmLoading, columns, data  } = this.state
+        const { visible, confirmLoading, columns, data } = this.state
 
         return (
             <div>
@@ -122,12 +139,24 @@ class OwnerBooking extends Component {
                     /> : <Skeleton active />}
                 </div>
                 <Modal
-                    title="Title"
                     visible={visible}
+                    title="Title"
                     onOk={this.handleOk}
-                    confirmLoading={confirmLoading}
                     onCancel={this.handleCancel}
+                    footer={[
+                        <Btn key="back" type="danger" onClick={this.handleCancel}>
+                            Reject
+                        </Btn>,
+                        <Btn key="submit" type="primary" loading={confirmLoading} onClick={this.handleOk}>
+                            Accept
+                        </Btn>,
+                    ]}
                 >
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
+                    <p>Some contents...</p>
                 </Modal>
                 <Footer />
             </div>
