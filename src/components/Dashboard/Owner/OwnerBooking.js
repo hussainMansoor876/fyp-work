@@ -13,50 +13,79 @@ import RegisterIcon from '@material-ui/icons/AddCircle'
 import Message from '@material-ui/icons/Message';
 import { Link } from 'react-router-dom';
 import 'antd/dist/antd.css';
-import { Table, Skeleton } from 'antd';
+import { Table, Skeleton, Modal } from 'antd';
 
 
-const columns = [
-    {
-        title: 'Buyer Name',
-        dataIndex: 'name'
-    },
-    {
-        title: 'age',
-        dataIndex: 'age',
-    },
-    {
-        title: 'address',
-        dataIndex: 'address',
-    },
-];
 
-const data = [];
-for (let i = 0; i < 460; i++) {
-    data.push({
-        key: i,
-        name: `Edward King ABc hello rfjygyjgfyh ${i}`,
-        age: 32,
-        address: `London, Park Lane no. ${i}`,
-    });
-}
 
 class OwnerBooking extends Component {
     constructor(props) {
         super(props)
 
         this.state = {
-            user: JSON.parse(sessionStorage.getItem('user'))
+            user: JSON.parse(sessionStorage.getItem('user')),
+            visible: false,
+            confirmLoading: false,
+            columns: [
+                {
+                    title: 'Buyer Name',
+                    dataIndex: 'name',
+                    render: text => <a href="#" onClick={() => this.setState({ visible: true })}>{text}</a>
+                },
+                {
+                    title: 'age',
+                    dataIndex: 'age',
+                },
+                {
+                    title: 'address',
+                    dataIndex: 'address',
+                },
+            ],
+            data: []
         }
     }
+
+    componentWillMount() {
+        const { data } = this.state;
+        for (let i = 0; i < 460; i++) {
+            data.push({
+                key: i,
+                name: `Edward King ABc hello rfjygyjgfyh ${i}`,
+                age: 32,
+                address: `London, Park Lane no. ${i}`,
+            });
+        }
+        this.setState({ data })
+    }
+
+    handleOk = () => {
+        this.setState({
+            ModalText: 'The modal will be closed after two seconds',
+            confirmLoading: true,
+        });
+        setTimeout(() => {
+            this.setState({
+                visible: false,
+                confirmLoading: false,
+            });
+        }, 2000);
+    };
+
+    handleCancel = () => {
+        console.log('Clicked cancel button');
+        this.setState({
+            visible: false,
+        });
+    };
 
 
 
     render() {
+        const { visible, confirmLoading, columns, data  } = this.state
 
         return (
             <div>
-                <AppBar style={{ background: '#3c3c3c' }} position="absolute">
+                <AppBar style={{ background: '#3c3c3c' }} position="fixed">
                     <Toolbar>
                         <Typography component="h1" variant="h6" color="inherit" >
                             Owner Dashboard
@@ -92,6 +121,14 @@ class OwnerBooking extends Component {
                         dataSource={data}
                     /> : <Skeleton active />}
                 </div>
+                <Modal
+                    title="Title"
+                    visible={visible}
+                    onOk={this.handleOk}
+                    confirmLoading={confirmLoading}
+                    onCancel={this.handleCancel}
+                >
+                </Modal>
                 <Footer />
             </div>
 
