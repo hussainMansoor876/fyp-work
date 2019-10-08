@@ -17,7 +17,9 @@ class Register extends Component {
         address: '',
         capacity: '',
         price: '',
-        picture: ''
+        picture: '',
+        venueLocation: '',
+        venueType: ''
       }
     }
   }
@@ -75,7 +77,7 @@ class Register extends Component {
     // .catch((err) => {
     //   console.log(err)
     // })
-    if (data.hallName == '' || data.address == '' || data.capacity == '' || data.price == '' || data.picture == '') {
+    if (data.hallName === '' || data.address === '' || data.capacity === '' || data.price === '' || data.picture === '' || data.venueLocation === '') {
       swal('Fill All textfield(s)')
     }
     else {
@@ -86,6 +88,7 @@ class Register extends Component {
         .then((url) => {
           console.log(url)
           data.picture = url
+          firebase.database().ref('allHallData').child(`${user.uid}`).push(data)
           firebase.database().ref('users').child(`${user.uid}/hallData`).push(data)
             .then(() => {
               this.setState({
@@ -105,6 +108,7 @@ class Register extends Component {
         })
     }
   }
+
 
   render() {
     const { data, disable } = this.state
@@ -134,6 +138,43 @@ class Register extends Component {
             <div className="col">
               <label for="inputPrice" style={{ float: 'left' }}>Price</label>
               <input type="number" className="form-control" placeholder="Rs." name="price" value={data.price} onChange={(e) => this.updateData(e.target)} />
+            </div>
+          </div>
+
+          <div className="form-row">
+          <div className="col">
+              <select name="venueType" onChange={(e) => this.updateData(e.target)} className="form-control" id="exampleFormControlSelect1" style={{
+                // width: '250px',
+                marginTop: 27,
+                borderTopColor: '#ffffff',
+                borderLeftColor: '#ffffff',
+                borderRightColor: '#ffffff'
+              }} >
+                <option value="">Select Venue Location</option>
+                <option value="gulshan-e-iqbal">Gulshan-e-Iqbal</option>
+                <option value="nazimabad">Nazimabad</option>
+                <option value="north nazimabad">North Nazimabad</option>
+                <option value="">Defense</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+
+            <div className="col">
+              <select name="venueLocation" onChange={(e) => this.updateData(e.target)} className="form-control" id="exampleFormControlSelect1" style={{
+                // width: '250px',
+                marginTop: 27,
+                borderTopColor: '#ffffff',
+                borderLeftColor: '#ffffff',
+                borderRightColor: '#ffffff'
+              }} >
+                <option value="">Select Venue Location</option>
+                <option value="gulshan-e-iqbal">Gulshan-e-Iqbal</option>
+                <option value="nazimabad">Nazimabad</option>
+                <option value="north nazimabad">North Nazimabad</option>
+                <option value="">Defense</option>
+                <option>Other</option>
+              </select>
             </div>
           </div>
 

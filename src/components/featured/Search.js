@@ -10,8 +10,8 @@ class Search extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            showLogin: true,
-            showSignup: false,
+            showLogin1: true,
+            showSignup1: false,
             drawerOpen: false,
             headerShow: false,
             email: '',
@@ -29,14 +29,14 @@ class Search extends Component {
         }
     }
 
-    showSignup() {
-        window.$('#exampleModalCenter').modal('hide');
-        window.$('#signupModalCenter').modal('show');
+    showSignup1() {
+        window.$('#exampleModalCenter1').modal('hide');
+        window.$('#signupModalCenter1').modal('show');
     }
 
-    showLogin() {
-        window.$('#signupModalCenter').modal('hide');
-        window.$('#exampleModalCenter').modal('show');
+    showLogin11() {
+        window.$('#signupModalCenter1').modal('hide');
+        window.$('#exampleModalCenter1').modal('show');
     }
 
     async login() {
@@ -111,6 +111,18 @@ class Search extends Component {
         }
     }
 
+
+    searchVenue(){
+        const user = sessionStorage.getItem('user')
+        if(user){
+            console.log('Mil gya')
+        }
+        else{
+            console.log("Nahi Mila")
+            this.showLogin11()
+        }
+    }
+
     render() {
         const { obj, email, password } = this.state;
 
@@ -166,7 +178,7 @@ class Search extends Component {
                             </div>
 
                         </div>
-                        <button type="button" className="btn btn-success" >Search</button>
+                        <button type="button" className="btn btn-success" onClick={() => this.searchVenue()} >Search</button>
 
                     </div>
 
@@ -175,7 +187,7 @@ class Search extends Component {
 
                 <div>
 
-                    <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div className="modal fade" id="exampleModalCenter1" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div className="modal-dialog modal-dialog-centered" role="document">
                             <div className="modal-content">
                                 <div className="modal-header">
@@ -183,7 +195,9 @@ class Search extends Component {
 
 
                                     <div className="d-flex justify-content-center" style={{ width: '100%' }}>
-                                        <h5 style={{ color: 'black' }} className="modal-title" id="exampleModalLongTitle">Welcome to login page</h5>
+                                        <h5 style={{ color: 'black' }} className="modal-title" id="exampleModalLongTitle">
+                                            You must Login to register Venuu
+                                        </h5>
 
                                     </div>
 
@@ -224,7 +238,7 @@ class Search extends Component {
                                         <button type="button" disabled={this.state.disable} className="btn btn-success" onClick={() => this.login()}>Login</button>
                                         <br />
                                         <br />
-                                        <p style={{ color: 'black' }}>Don't have an account? <a style={{ color: 'blue' }} onClick={() => { this.showSignup() }} data-toggle="modal" >Sign up</a>
+                                        <p style={{ color: 'black' }}>Don't have an account? <a style={{ color: 'blue' }} onClick={() => { this.showSignup1() }} data-toggle="modal" >Sign up</a>
                                         </p>
 
                                     </div>
@@ -236,7 +250,7 @@ class Search extends Component {
 
 
 
-                    <div className="modal fade" style={{ overflow: 'scroll' }} id="signupModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div className="modal fade" style={{ overflow: 'scroll' }} id="signupModalCenter1" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                         <div className="modal-dialog modal-dialog-centered" role="document">
                             <div className="modal-content">
                                 <div className="modal-header">
@@ -309,7 +323,7 @@ class Search extends Component {
                                         <button disabled={this.state.disable} type="button" className="btn btn-success" onClick={() => this.signUp()}>Sign Up</button>
                                         <br />
                                         <br />
-                                        <p style={{ color: 'black' }}>Already have an account? <a style={{ color: 'blue' }} onClick={() => { this.showLogin() }} data-toggle="modal" >Login</a>
+                                        <p style={{ color: 'black' }}>Already have an account? <a style={{ color: 'blue' }} onClick={() => { this.showLogin1() }} data-toggle="modal" >Login</a>
                                         </p>
                                     </div>
                                 </div>
