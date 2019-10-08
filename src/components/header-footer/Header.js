@@ -3,7 +3,7 @@ import '../../resources/bootstrap.min.css';
 import { Link } from 'react-router-dom';
 import { scroller } from 'react-scroll';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
-import $ from 'jquery';
+// import $ from 'jquery';
 import firebase from '../../config/firebase';
 import swal from 'sweetalert'
 
