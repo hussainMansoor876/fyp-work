@@ -17,6 +17,9 @@ class Search extends Component {
             email: '',
             password: '',
             disable: false,
+            vName: '',
+            vType: '',
+            vLocation: '',
             obj: {
                 fName: '',
                 lName: '',
@@ -124,7 +127,7 @@ class Search extends Component {
     }
 
     render() {
-        const { obj, email, password } = this.state;
+        const { obj, email, password, disable, vName, vType, vLocation } = this.state;
 
         return (
             <Slide left delay={1000}>
@@ -135,7 +138,7 @@ class Search extends Component {
                             <div className="container">
                                 <div className="row">
                                     <div className="col-md-4">
-                                        <input type="email" className="form-control" id="exampleFormControlInput1" placeholder="Search by: Venue Name" style={{
+                                        <input name="vName" value={vName} className="form-control" id="exampleFormControlInput1" placeholder="Search by: Venue Name" style={{
                                             width: '250px',
                                             borderTopColor: '#ffffff',
                                             borderLeftColor: '#ffffff',
@@ -146,31 +149,33 @@ class Search extends Component {
                                     </div>
 
                                     <div className="col-md-4">
-                                        <select className="form-control" id="exampleFormControlSelect1" style={{
+                                        <select name="vType" value={vType} className="form-control" id="exampleFormControlSelect1" style={{
                                             width: '250px',
                                             borderTopColor: '#ffffff',
                                             borderLeftColor: '#ffffff',
                                             borderRightColor: '#ffffff'
 
                                         }} >
-                                            <option selected>Select Venue Type</option>
-                                            <option>Hall</option>
-                                            <option>banquet</option>
+                                            <option>Select Venue Type</option>
+                                            <option value="hall">Hall</option>
+                                            <option value="banquet">banquet</option>
+                                            <option value="other">Other</option>
                                         </select>
                                     </div>
 
                                     <div className="col-md-4">
-                                        <select className="form-control" id="exampleFormControlSelect1" style={{
+                                        <select name="vLocation" value={vLocation} className="form-control" id="exampleFormControlSelect1" style={{
                                             width: '250px',
                                             borderTopColor: '#ffffff',
                                             borderLeftColor: '#ffffff',
                                             borderRightColor: '#ffffff'
                                         }} >
-                                            <option selected>Select Venue Location</option>
-                                            <option>Gulshan-e-Iqbal</option>
-                                            <option>Nazimabad</option>
-                                            <option>North Nazimabad</option>
-                                            <option>Defense</option>
+                                            <option>Select Venue Location</option>
+                                            <option value="gulshan-e-iqbal">Gulshan-e-Iqbal</option>
+                                            <option value="nazimabad">Nazimabad</option>
+                                            <option value="north nazimabad">North Nazimabad</option>
+                                            <option  value="defense">Defense</option>
+                                            <option valu="other">Other</option>
                                         </select>
                                     </div>
 
@@ -178,7 +183,7 @@ class Search extends Component {
                             </div>
 
                         </div>
-                        <button type="button" className="btn btn-success" onClick={() => this.searchVenue()} >Search</button>
+                        <button type="button" className="btn btn-success" disabled={disable} onClick={() => this.searchVenue()} >Search</button>
 
                     </div>
 

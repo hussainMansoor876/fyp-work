@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import Owner from './Owner';
+import firebase from '../../../config/firebase'
 
 class OwnerClass extends Component {
     constructor() {
@@ -15,13 +16,23 @@ class OwnerClass extends Component {
         this.updatePage = this.updatePage.bind(this)
     }
 
-    componentWillMount() {
+    async componentWillMount() {
         const { user, hallDataArr } = this.state
+
+        await firebase.database().ref('users').child(`${user.uid}/hallData`).on('child_added', (val) => {
+            var value = val.val()
+            hallDataArr.push(value)
+            console.log(hallDataArr)
+            this.setState({
+                hallData: hallData,
+                hallDataArr
+            })
+        })
         const { hallData } = user
 
-        for (var i in hallData) {
-            hallDataArr.push(hallData[i])
-        }
+        // for (var i in hallData) {
+        //     hallDataArr.push(hallData[i])
+        // }
         this.setState({
             hallData: hallData,
             hallDataArr
@@ -39,14 +50,14 @@ class OwnerClass extends Component {
     render() {
         const { user, hallData, hallDataArr, start, end } = this.state
         return (
-                <Owner
-                    user={user}
-                    hallData={hallData}
-                    hallDataArr={hallDataArr}
-                    start={start}
-                    end={end}
-                    updatePage={this.updatePage}
-                />
+            <Owner
+                user={user}
+                hallData={hallData}
+                hallDataArr={hallDataArr}
+                start={start}
+                end={end}
+                updatePage={this.updatePage}
+            />
         );
     }
 }

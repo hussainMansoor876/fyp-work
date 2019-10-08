@@ -182,7 +182,7 @@ class Register extends Component {
 
           <div className="form-group">
             <label for="exampleFormControlFile1" style={{ float: 'left' }}>Upload hall images</label>
-            <input type="file" multiple className="form-control-file" id="exampleFormControlFile1" name="picture" onChange={(e) => this.updateFile(e.target)} />
+            <input type="file" accept="image/*" className="form-control-file" id="exampleFormControlFile1" name="picture" onChange={(e) => this.updateFile(e.target)} />
           </div>
 
           <br />
