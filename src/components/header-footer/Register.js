@@ -77,7 +77,7 @@ class Register extends Component {
     // .catch((err) => {
     //   console.log(err)
     // })
-    if (data.hallName === '' || data.address === '' || data.capacity === '' || data.price === '' || data.picture === '' || data.venueLocation === '') {
+    if (data.hallName === '' || data.address === '' || data.capacity === '' || data.price === '' || data.picture === '' || data.venueLocation === '' || data.venueType === '') {
       swal('Fill All textfield(s)')
     }
     else {
@@ -97,7 +97,9 @@ class Register extends Component {
                   address: '',
                   capacity: '',
                   price: '',
-                  picture: ''
+                  picture: '',
+                  venueLocation: '',
+                  venueType: ''
                 },
                 disable: false
               })
@@ -142,7 +144,7 @@ class Register extends Component {
           </div>
 
           <div className="form-row">
-          <div className="col">
+            <div className="col">
               <select name="venueType" onChange={(e) => this.updateData(e.target)} className="form-control" id="exampleFormControlSelect1" style={{
                 // width: '250px',
                 marginTop: 27,
@@ -150,12 +152,10 @@ class Register extends Component {
                 borderLeftColor: '#ffffff',
                 borderRightColor: '#ffffff'
               }} >
-                <option value="">Select Venue Location</option>
-                <option value="gulshan-e-iqbal">Gulshan-e-Iqbal</option>
-                <option value="nazimabad">Nazimabad</option>
-                <option value="north nazimabad">North Nazimabad</option>
-                <option value="">Defense</option>
-                <option>Other</option>
+                <option value="">Select Venue Type</option>
+                <option value="hall">Hall</option>
+                <option value="banquet">Banquet</option>
+                <option value="other">Other</option>
               </select>
             </div>
 
@@ -172,8 +172,8 @@ class Register extends Component {
                 <option value="gulshan-e-iqbal">Gulshan-e-Iqbal</option>
                 <option value="nazimabad">Nazimabad</option>
                 <option value="north nazimabad">North Nazimabad</option>
-                <option value="">Defense</option>
-                <option>Other</option>
+                <option value="defense">Defense</option>
+                <option value="other">Other</option>
               </select>
             </div>
           </div>
