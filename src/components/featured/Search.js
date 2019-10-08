@@ -16,7 +16,7 @@ class Search extends Component {
             headerShow: false,
             email: '',
             password: '',
-            disable: false,
+            disable: true,
             vName: '',
             vType: '',
             vLocation: '',
@@ -115,15 +115,35 @@ class Search extends Component {
     }
 
 
-    searchVenue(){
+    searchVenue() {
         const user = sessionStorage.getItem('user')
-        if(user){
+        if (user) {
             console.log('Mil gya')
         }
-        else{
+        else {
             console.log("Nahi Mila")
             this.showLogin11()
         }
+    }
+
+    searchChange(e) {
+        const { name, value } = e
+
+        this.setState({
+            [name]: value
+        }, () => {
+            const { vName, vType, vLocation } = this.state
+            if (vName || vType || vLocation) {
+                this.setState({
+                    disable: false
+                })
+            }
+            else{
+                this.setState({
+                    disable: true
+                })
+            }
+        })
     }
 
     render() {
@@ -138,7 +158,7 @@ class Search extends Component {
                             <div className="container">
                                 <div className="row">
                                     <div className="col-md-4">
-                                        <input name="vName" value={vName} className="form-control" id="exampleFormControlInput1" placeholder="Search by: Venue Name" style={{
+                                        <input name="vName" value={vName} onChange={(e) => this.searchChange(e.target)} className="form-control" id="exampleFormControlInput1" placeholder="Search by: Venue Name" style={{
                                             width: '250px',
                                             borderTopColor: '#ffffff',
                                             borderLeftColor: '#ffffff',
@@ -149,7 +169,7 @@ class Search extends Component {
                                     </div>
 
                                     <div className="col-md-4">
-                                        <select name="vType" value={vType} className="form-control" id="exampleFormControlSelect1" style={{
+                                        <select name="vType" value={vType} onChange={(e) => this.searchChange(e.target)} className="form-control" id="exampleFormControlSelect1" style={{
                                             width: '250px',
                                             borderTopColor: '#ffffff',
                                             borderLeftColor: '#ffffff',
@@ -164,7 +184,7 @@ class Search extends Component {
                                     </div>
 
                                     <div className="col-md-4">
-                                        <select name="vLocation" value={vLocation} className="form-control" id="exampleFormControlSelect1" style={{
+                                        <select name="vLocation" value={vLocation} onChange={(e) => this.searchChange(e.target)} className="form-control" id="exampleFormControlSelect1" style={{
                                             width: '250px',
                                             borderTopColor: '#ffffff',
                                             borderLeftColor: '#ffffff',
@@ -174,7 +194,7 @@ class Search extends Component {
                                             <option value="gulshan-e-iqbal">Gulshan-e-Iqbal</option>
                                             <option value="nazimabad">Nazimabad</option>
                                             <option value="north nazimabad">North Nazimabad</option>
-                                            <option  value="defense">Defense</option>
+                                            <option value="defense">Defense</option>
                                             <option valu="other">Other</option>
                                         </select>
                                     </div>
