@@ -15,7 +15,10 @@ import { Link } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import { Element } from 'react-scroll';
 import Featured from '../featured'
-import { Table, Skeleton, Modal, Button as Btn } from 'antd';
+import 'antd/dist/antd.css';
+import { Card, Col, Row } from 'antd';
+
+const { Meta } = Card
 
 
 
@@ -68,6 +71,46 @@ class SearchResult extends Component {
                     </AppBar>
                     <Featured />
                 </Element>
+                <div>
+                    <h1 style={{ textAlign: 'center', marginTop: 20 }}>Search Result</h1>
+                    <div style={{ background: '#ECECEC', padding: '30px' }}>
+                        <Row gutter={16}>
+                            <Col span={8}>
+                                <Card
+                                    hoverable
+                                    cover={<img alt="example" style={{ height: 260 }} src={'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQefCoQ8XaDsgV3HdlAjqap7esgqwmqB-Xd5AIL9STJIbsjFfII'} />}
+                                >
+                                    <Meta title={'hallName'} description={`Rs ${'price'}`} />
+                                </Card>
+                            </Col>
+                            <Col span={8}>
+                                <Card title="Card title" bordered={false}>
+                                    Card content
+                                </Card>
+                            </Col>
+                            <Col span={8}>
+                                <Card title="Card title" bordered={false}>
+                                    Card content
+                                </Card>
+                            </Col>
+                            <Col span={8}>
+                                <Card title="Card title" bordered={false}>
+                                    Card content
+                                </Card>
+                            </Col>
+                            <Col span={8}>
+                                <Card title="Card title" bordered={false}>
+                                    Card content
+                                </Card>
+                            </Col>
+                            <Col span={8}>
+                                <Card title="Card title" bordered={false}>
+                                    Card content
+                                </Card>
+                            </Col>
+                        </Row>
+                    </div>
+                </div>
                 <Footer />
             </div>
 
