@@ -16,6 +16,7 @@ import 'antd/dist/antd.css';
 import { Element } from 'react-scroll';
 import Featured from '../featured'
 import 'antd/dist/antd.css';
+import firebase from '../../config/firebase'
 import { Card, Col, Row } from 'antd';
 
 const { Meta } = Card
@@ -31,7 +32,23 @@ class SearchResult extends Component {
             user: JSON.parse(sessionStorage.getItem('user')),
             visible: false,
             confirmLoading: false,
+            allHallData: []
         }
+    }
+
+
+    componentWillMount() {
+        const search = JSON.parse(sessionStorage.getItem('search'))
+        console.log('user', search)
+        firebase.database().ref('allHallData').on('child_added', (val) => {
+            firebase.database().ref('allHallData').child(`${val.key}`).on('child_added', (val1) => {
+                var value = val1.val()
+                if (value.hallName.toLowerCase().indexOf(search.vName.toLowerCase()) !== -1 && value.venueLocation.toLowerCase().indexOf(search.vLocation.toLowerCase()) !== -1 && value.venueType.toLowerCase().indexOf(search.vType.toLowerCase())) {
+                    console.log("Hello")
+                }
+                console.log(val1.val())
+            })
+        })
     }
 
 
@@ -84,28 +101,28 @@ class SearchResult extends Component {
                                 </Card>
                             </Col>
                             <Col span={8}>
-                                <Card title="Card title" bordered={false}>
-                                    Card content
+                                <Card
+                                    title="Hello"
+                                    hoverable
+                                    cover={<img alt="example" style={{ height: 260 }} src={'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQefCoQ8XaDsgV3HdlAjqap7esgqwmqB-Xd5AIL9STJIbsjFfII'} />}
+                                >
+                                    <Meta title={'hallName'} description={`Rs ${'price'}`} />
                                 </Card>
                             </Col>
                             <Col span={8}>
-                                <Card title="Card title" bordered={false}>
-                                    Card content
+                                <Card
+                                    hoverable
+                                    cover={<img alt="example" style={{ height: 260 }} src={'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQefCoQ8XaDsgV3HdlAjqap7esgqwmqB-Xd5AIL9STJIbsjFfII'} />}
+                                >
+                                    <Meta title={'hallName'} description={`Rs ${'price'}`} />
                                 </Card>
                             </Col>
                             <Col span={8}>
-                                <Card title="Card title" bordered={false}>
-                                    Card content
-                                </Card>
-                            </Col>
-                            <Col span={8}>
-                                <Card title="Card title" bordered={false}>
-                                    Card content
-                                </Card>
-                            </Col>
-                            <Col span={8}>
-                                <Card title="Card title" bordered={false}>
-                                    Card content
+                                <Card
+                                    hoverable
+                                    cover={<img alt="example" style={{ height: 260 }} src={'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQefCoQ8XaDsgV3HdlAjqap7esgqwmqB-Xd5AIL9STJIbsjFfII'} />}
+                                >
+                                    <Meta title={'hallName'} description={`Rs ${'price'}`} />
                                 </Card>
                             </Col>
                         </Row>
