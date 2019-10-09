@@ -116,9 +116,17 @@ class Search extends Component {
 
 
     searchVenue() {
+        const { vName, vType, vLocation } = this.state
+        var obj = {
+            vName,
+            vType,
+            vLocation
+        }
         const user = sessionStorage.getItem('user')
         if (user) {
             console.log('Mil gya')
+            sessionStorage.setItem('search', JSON.stringify(obj))
+            window.location.href = '/searchResult'
         }
         else {
             console.log("Nahi Mila")
@@ -138,7 +146,7 @@ class Search extends Component {
                     disable: false
                 })
             }
-            else{
+            else {
                 this.setState({
                     disable: true
                 })

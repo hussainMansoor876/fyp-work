@@ -5,7 +5,7 @@ import '../../resources/bootstrap.min.css';
 
 const Footer = () => {
     return (
-        <footer className="bck_black" style={{ margin: '2px auto', marginTop: 300 }}>
+        <footer className="bck_black" style={{ margin: '2px auto' }}>
             <Zoom duration={500} delay={500}>
                 <img style={{ width: '120px', height: '120px' }} src={require('../../resources/images/final.png')} />
 

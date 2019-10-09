@@ -5,13 +5,13 @@ import '../../resources/bootstrap.min.css';
 
 const Featured = () => {
     return (
-        <div style={{position:'relative'}}>
-            <Carrousel/>
+        <div style={{ position: 'relative' }}>
+            <Carrousel />
 
-        <div className="artist_name">
-        <div className="wrapper">Let Us Help You Create</div>
-        </div>
-            <Search/>
+            <div className="artist_name">
+                <div className="wrapper">Let Us Help You Create</div>
+            </div>
+            <Search />
         </div>
     );
 };
