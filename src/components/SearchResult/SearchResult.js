@@ -14,10 +14,11 @@ import Message from '@material-ui/icons/Message';
 import { Link } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import { Element } from 'react-scroll';
-import Featured from '../featured'
+import Carrousel from '../featured/Carrousel'
+import Search from '../featured/Search';
 import 'antd/dist/antd.css';
 import firebase from '../../config/firebase'
-import { Card, Col, Row } from 'antd';
+import { Card, Col, Row, Skeleton } from 'antd';
 
 const { Meta } = Card
 
@@ -30,21 +31,24 @@ class SearchResult extends Component {
 
         this.state = {
             user: JSON.parse(sessionStorage.getItem('user')),
+            search: JSON.parse(sessionStorage.getItem('search')),
             visible: false,
             confirmLoading: false,
-            allHallData: []
+            allHallData: [],
         }
     }
 
 
     componentWillMount() {
-        const search = JSON.parse(sessionStorage.getItem('search'))
+        const { search, allHallData } = this.state
         console.log('user', search)
         firebase.database().ref('allHallData').on('child_added', (val) => {
             firebase.database().ref('allHallData').child(`${val.key}`).on('child_added', (val1) => {
                 var value = val1.val()
-                if (value.hallName.toLowerCase().indexOf(search.vName.toLowerCase()) !== -1 && value.venueLocation.toLowerCase().indexOf(search.vLocation.toLowerCase()) !== -1 && value.venueType.toLowerCase().indexOf(search.vType.toLowerCase())) {
-                    console.log("Hello")
+                if (value.hallName.toLowerCase().indexOf(search.vName.toLowerCase()) !== -1 && value.venueLocation.toLowerCase().indexOf(search.vLocation.toLowerCase()) !== -1 && value.venueType.toLowerCase().indexOf(search.vType.toLowerCase()) !== -1) {
+                    allHallData.push(value)
+                    this.setState({ allHallData })
+                    console.log(allHallData)
                 }
                 console.log(val1.val())
             })
@@ -54,6 +58,7 @@ class SearchResult extends Component {
 
 
     render() {
+        const { allHallData, search } = this.state
         return (
             <div>
                 <Element name="Home">
@@ -86,48 +91,34 @@ class SearchResult extends Component {
 
                         </Toolbar>
                     </AppBar>
-                    <Featured />
+                    <div style={{ position: 'relative' }}>
+                        <Carrousel />
+
+                        <div className="artist_name">
+                            <div className="wrapper">Let Us Help You Create</div>
+                        </div>
+                        <Search search={search} />
+                    </div>
                 </Element>
-                <div>
+                {allHallData.length ? <div>
                     <h1 style={{ textAlign: 'center', marginTop: 20 }}>Search Result</h1>
                     <div style={{ background: '#ECECEC', padding: '30px' }}>
                         <Row gutter={16}>
-                            <Col span={8}>
-                                <Card
-                                    hoverable
-                                    cover={<img alt="example" style={{ height: 260 }} src={'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQefCoQ8XaDsgV3HdlAjqap7esgqwmqB-Xd5AIL9STJIbsjFfII'} />}
-                                >
-                                    <Meta title={'hallName'} description={`Rs ${'price'}`} />
-                                </Card>
-                            </Col>
-                            <Col span={8}>
-                                <Card
-                                    title="Hello"
-                                    hoverable
-                                    cover={<img alt="example" style={{ height: 260 }} src={'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQefCoQ8XaDsgV3HdlAjqap7esgqwmqB-Xd5AIL9STJIbsjFfII'} />}
-                                >
-                                    <Meta title={'hallName'} description={`Rs ${'price'}`} />
-                                </Card>
-                            </Col>
-                            <Col span={8}>
-                                <Card
-                                    hoverable
-                                    cover={<img alt="example" style={{ height: 260 }} src={'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQefCoQ8XaDsgV3HdlAjqap7esgqwmqB-Xd5AIL9STJIbsjFfII'} />}
-                                >
-                                    <Meta title={'hallName'} description={`Rs ${'price'}`} />
-                                </Card>
-                            </Col>
-                            <Col span={8}>
-                                <Card
-                                    hoverable
-                                    cover={<img alt="example" style={{ height: 260 }} src={'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQefCoQ8XaDsgV3HdlAjqap7esgqwmqB-Xd5AIL9STJIbsjFfII'} />}
-                                >
-                                    <Meta title={'hallName'} description={`Rs ${'price'}`} />
-                                </Card>
-                            </Col>
+                            {allHallData.map((v, i) => {
+                                return <Col span={8} key={i}>
+                                    <Card
+                                        title={v.hallName}
+                                        hoverable
+                                        cover={<img alt="example" style={{ height: 260 }} src={'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQefCoQ8XaDsgV3HdlAjqap7esgqwmqB-Xd5AIL9STJIbsjFfII'} />}
+                                    >
+                                        <Meta title={`${v.venueType}`} description={`Rs ${v.price}`} />
+                                        <h1>{`Rs ${v.price}`}</h1>
+                                    </Card>
+                                </Col>
+                            })}
                         </Row>
                     </div>
-                </div>
+                </div> : <Skeleton />}
                 <Footer />
             </div>
 

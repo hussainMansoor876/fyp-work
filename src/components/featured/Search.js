@@ -32,6 +32,10 @@ class Search extends Component {
         }
     }
 
+    componentWillMount(){
+        console.log('this',this.props)
+    }
+
     showSignup1() {
         window.$('#exampleModalCenter1').modal('hide');
         window.$('#signupModalCenter1').modal('show');
@@ -166,18 +170,19 @@ class Search extends Component {
                             <div className="container">
                                 <div className="row">
                                     <div className="col-md-4">
-                                        <input name="vName" value={vName} onChange={(e) => this.searchChange(e.target)} className="form-control" id="exampleFormControlInput1" placeholder="Search by: Venue Name" style={{
+                                        <input name="vName" value={this.props.search ? this.props.search.vName : vName} onChange={(e) => this.searchChange(e.target)} className="form-control" id="exampleFormControlInput1" placeholder="Search by: Venue Name" style={{
                                             width: '250px',
                                             borderTopColor: '#ffffff',
                                             borderLeftColor: '#ffffff',
                                             borderRightColor: '#ffffff'
 
-                                        }} />
+                                        }}
+                                         />
 
                                     </div>
 
                                     <div className="col-md-4">
-                                        <select name="vType" value={vType} onChange={(e) => this.searchChange(e.target)} className="form-control" id="exampleFormControlSelect1" style={{
+                                        <select name="vType" value={this.props.search ? this.props.search.vType : vType} onChange={(e) => this.searchChange(e.target)} className="form-control" id="exampleFormControlSelect1" style={{
                                             width: '250px',
                                             borderTopColor: '#ffffff',
                                             borderLeftColor: '#ffffff',
@@ -192,7 +197,7 @@ class Search extends Component {
                                     </div>
 
                                     <div className="col-md-4">
-                                        <select name="vLocation" value={vLocation} onChange={(e) => this.searchChange(e.target)} className="form-control" id="exampleFormControlSelect1" style={{
+                                        <select name="vLocation" value={this.props.search ? this.props.search.vLocation : vLocation} onChange={(e) => this.searchChange(e.target)} className="form-control" id="exampleFormControlSelect1" style={{
                                             width: '250px',
                                             borderTopColor: '#ffffff',
                                             borderLeftColor: '#ffffff',
