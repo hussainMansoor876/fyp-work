@@ -18,7 +18,7 @@ import Carrousel from '../featured/Carrousel'
 import Search from '../featured/Search';
 import 'antd/dist/antd.css';
 import firebase from '../../config/firebase'
-import { Card, Col, Row, Skeleton, Button as Btn, Form, Modal, Input, Radio } from 'antd';
+import { Card, Col, Row, Skeleton, Button as Btn, Form, Modal, Input, DatePicker } from 'antd';
 
 const { Meta } = Card
 
@@ -35,7 +35,7 @@ class SearchResult extends Component {
             visible: false,
             confirmLoading: false,
             allHallData: [],
-            visible: false,
+            selectedHall: ''
         }
     }
 
@@ -47,6 +47,7 @@ class SearchResult extends Component {
             firebase.database().ref('allHallData').child(`${val.key}`).on('child_added', (val1) => {
                 var value = val1.val()
                 if (value.hallName.toLowerCase().indexOf(search.vName.toLowerCase()) !== -1 && value.venueLocation.toLowerCase().indexOf(search.vLocation.toLowerCase()) !== -1 && value.venueType.toLowerCase().indexOf(search.vType.toLowerCase()) !== -1) {
+                    value['key'] = val.key
                     allHallData.push(value)
                     this.setState({ allHallData })
                     console.log(allHallData)
@@ -54,6 +55,30 @@ class SearchResult extends Component {
                 console.log(val1.val())
             })
         })
+    }
+
+    handleSubmit = (e) => {
+        const { selectedHall } = this.state
+        e.preventDefault();
+        this.props.form.validateFields((err, fieldsValue) => {
+            if (err) {
+                return;
+            }
+            fieldsValue['date-time-picker'] = fieldsValue['date-time-picker'].format('YYYY-MM-DD HH:mm:ss')
+            fieldsValue['send'] = selectedHall
+
+            firebase.database().ref('users').child(`myBooking/${selectedHall.key}`).push(fieldsValue)
+                .then(() => {
+                    this.setState({ visible: false })
+                    this.props.form.resetFields()
+                })
+        })
+    }
+
+    logout() {
+        sessionStorage.clear('user')
+        sessionStorage.clear('search')
+        window.location.reload()
     }
 
 
@@ -73,7 +98,7 @@ class SearchResult extends Component {
                             <div style={{ marginLeft: 'auto', marginRight: '-12px' }}>
                                 <Button style={{ color: 'white' }}>Browse Venue</Button>
                                 <Button style={{ color: 'white' }}>Manage Venues</Button>
-                                <Button style={{ color: 'white' }}>Logout</Button>
+                                <Button style={{ color: 'white' }} onClick={() => this.logout()}>Logout</Button>
 
                                 <IconButton style={{ color: '#ffffff' }} title="Message">
                                     <Message />
@@ -102,64 +127,76 @@ class SearchResult extends Component {
                         <Search />
                     </div>
                 </Element>
-                {allHallData.length ? <div>
-                    <h1 style={{ textAlign: 'center', marginTop: 20 }}>Search Result</h1>
-                    <div style={{ background: '#ECECEC', padding: '30px' }}>
-                        <Row gutter={16}>
-                            {allHallData.map((v, i) => {
-                                return <Col span={8} key={i}>
-                                    <Card
-                                        title={v.hallName}
-                                        hoverable
-                                        cover={<img alt="example" style={{ height: 260 }} src={'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQefCoQ8XaDsgV3HdlAjqap7esgqwmqB-Xd5AIL9STJIbsjFfII'} />}
-                                    >
-                                        <Meta title={`${v.venueType}`} />
-                                        <h1>{`Rs: ${v.price}`}</h1>
-                                        <Btn type="primary" onClick={() => this.setState({ visible: true })} block>
-                                            Register
+                {
+                    allHallData.length ? <div>
+                        <h1 style={{ textAlign: 'center', marginTop: 20 }}>Search Result</h1>
+                        <div style={{ background: '#ECECEC', padding: '30px' }}>
+                            <Row gutter={16}>
+                                {allHallData.map((v, i) => {
+                                    return <Col span={8} key={i}>
+                                        <Card
+                                            title={v.hallName}
+                                            hoverable
+                                            cover={<img alt="example" style={{ height: 260 }} src={'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQefCoQ8XaDsgV3HdlAjqap7esgqwmqB-Xd5AIL9STJIbsjFfII'} />}
+                                        >
+                                            <Meta title={`VenueType: ${v.venueType}`} />
+                                            <br />
+                                            <h3>Advance: {v.price / 10}</h3>
+                                            <h1>{`Rs: ${v.price}`}</h1>
+                                            <Btn type="primary" onClick={() => this.setState({ visible: true, selectedHall: v }, () => {
+                                                this.props.form.setFieldsValue({
+                                                    hallName: v.hallName
+                                                })
+                                            })} block>
+                                                Register
                                         </Btn>
-                                    </Card>
-                                </Col>
-                            })}
-                        </Row>
-                    </div>
-                </div> : <Skeleton />}
-                <Footer />
+                                        </Card>
+                                    </Col>
+                                })}
+                            </Row>
+                        </div>
+                    </div> : <Skeleton />
+                }
+                < Footer />
                 <Modal
                     visible={visible}
                     title="Create a new collection"
-                    okText="Create"
-                // onCancel={onCancel}
-                // onOk={onCreate}
+                    okText="Submit"
+                    onCancel={() => this.setState({ visible: false })}
+                    onOk={this.handleSubmit}
                 >
                     <Form layout="vertical">
-                        <Form.Item label="Title">
+                        <Form.Item label="Name">
+                            {getFieldDecorator('name', {
+                                rules: [{ required: true, message: 'Please input the title of collection!' }],
+                            })(<Input placeholder="Enter your Name Here..." />)}
+                        </Form.Item>
+                        <Form.Item label="Phone Number">
                             {getFieldDecorator('title', {
                                 rules: [{ required: true, message: 'Please input the title of collection!' }],
-                            })(<Input />)}
+                            })(<Input type="number" placeholder="Enter your Number Here..." />)}
                         </Form.Item>
-                        <Form.Item label="Description">
-                            {getFieldDecorator('description')(<Input type="textarea" />)}
+                        <Form.Item label="Hall Name">
+                            {getFieldDecorator('hallName', {
+                                rules: [{ required: true, message: 'Please input the title of collection!' }],
+                            })(<Input placeholder="Enter your Number Here..." readOnly />)}
                         </Form.Item>
-                        <Form.Item className="collection-create-form_last-form-item">
-                            {getFieldDecorator('modifier', {
-                                initialValue: 'public',
+                        <Form.Item label="Date and Time">
+                            {getFieldDecorator('date-time-picker', {
+                                rules: [{ type: 'object', required: true, message: 'Please select time!' }]
                             })(
-                                <Radio.Group>
-                                    <Radio value="public">Public</Radio>
-                                    <Radio value="private">Private</Radio>
-                                </Radio.Group>,
+                                <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" block />
                             )}
                         </Form.Item>
                     </Form>
                 </Modal>
-            </div>
+            </div >
 
 
         );
     }
 }
 
-const SearchResultForm = Form.create({ name: 'time_related_controls' })(SearchResult);
+const SearchResultForm = Form.create({ name: 'form_in_modal' })(SearchResult);
 
 export default SearchResultForm;

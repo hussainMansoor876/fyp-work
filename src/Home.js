@@ -8,43 +8,55 @@ import Categories from './components/categories';
 import Footer from './components/header-footer/Footer';
 import AboutUs from './components/AboutUs';
 import SearchByEmail from './components/SearchByEmail';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Element } from 'react-scroll';
 import './resources/bootstrap.min.css';
 
 class Home extends Component {
-  render(){
-  return (
-      
-      
-    <div>
+  constructor() {
+    super()
 
-    <Element name="Home">
-    <Header/>
-    </Element>
-    
-     <Featured/>
-     
-     <Element name="Categories">
-     <Categories/>
-     </Element>
+    this.state={
 
-     <Element name="AboutUs">
-     <AboutUs/>
-     </Element>
+    }
+  }
 
-     
-     
-     
-     
-     <TopDeals/>
-     {/* <VenueInfo/> */}
-     
-     <SearchByEmail/>
-     <Footer/>
-    </div>
-   
-  );
-}
+  componentWillMount(){
+    sessionStorage.clear('search')
+  }
+
+  render() {
+    return (
+
+
+      <div>
+
+        <Element name="Home">
+          <Header />
+        </Element>
+
+        <Featured />
+
+        <Element name="Categories">
+          <Categories />
+        </Element>
+
+        <Element name="AboutUs">
+          <AboutUs />
+        </Element>
+
+
+
+
+
+        <TopDeals />
+        {/* <VenueInfo/> */}
+
+        <SearchByEmail />
+        <Footer />
+      </div>
+
+    );
+  }
 }
 export default Home;
