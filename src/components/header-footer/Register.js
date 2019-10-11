@@ -89,7 +89,7 @@ class Register extends Component {
           console.log(url)
           data.picture = url
           firebase.database().ref('allHallData').child(`${user.uid}`).push(data)
-          firebase.database().ref('users').child(`${user.uid}/hallData`).push(data)
+          // firebase.database().ref('users').child(`${user.uid}/hallData`).push(data)
             .then(() => {
               this.setState({
                 data: {

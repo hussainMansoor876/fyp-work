@@ -47,7 +47,8 @@ class SearchResult extends Component {
             firebase.database().ref('allHallData').child(`${val.key}`).on('child_added', (val1) => {
                 var value = val1.val()
                 if (value.hallName.toLowerCase().indexOf(search.vName.toLowerCase()) !== -1 && value.venueLocation.toLowerCase().indexOf(search.vLocation.toLowerCase()) !== -1 && value.venueType.toLowerCase().indexOf(search.vType.toLowerCase()) !== -1) {
-                    value['key'] = val.key
+                    value['userUid'] = val.key
+                    value['key'] = val1.key
                     allHallData.push(value)
                     this.setState({ allHallData })
                     console.log(allHallData)
@@ -58,7 +59,7 @@ class SearchResult extends Component {
     }
 
     handleSubmit = (e) => {
-        const { selectedHall } = this.state
+        const { selectedHall, user } = this.state
         e.preventDefault();
         this.props.form.validateFields((err, fieldsValue) => {
             if (err) {
@@ -66,11 +67,14 @@ class SearchResult extends Component {
             }
             fieldsValue['date-time-picker'] = fieldsValue['date-time-picker'].format('YYYY-MM-DD HH:mm:ss')
             fieldsValue['send'] = selectedHall
+            fieldsValue['customerUid'] = user.uid
+            fieldsValue['status'] = 'pending'
 
-            firebase.database().ref('users').child(`myBooking/${selectedHall.key}`).push(fieldsValue)
+            firebase.database().ref('users').child(`${user.uid}/sentBooking/${selectedHall.userUid}/${selectedHall.key}`).set(fieldsValue)
                 .then(() => {
                     this.setState({ visible: false })
                     this.props.form.resetFields()
+                    firebase.database().ref('users').child(`${selectedHall.userUid}/recBooking/${selectedHall.key}`).push(fieldsValue)
                 })
         })
     }

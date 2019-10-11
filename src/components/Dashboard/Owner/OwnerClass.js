@@ -19,8 +19,9 @@ class OwnerClass extends Component {
     async componentWillMount() {
         const { user, hallDataArr } = this.state
 
-        await firebase.database().ref('users').child(`${user.uid}/hallData`).on('child_added', (val) => {
+        await firebase.database().ref('allHallData').child(`${user.uid}`).on('child_added', (val) => {
             var value = val.val()
+            value['key'] = val.key
             hallDataArr.push(value)
             console.log(hallDataArr)
             this.setState({

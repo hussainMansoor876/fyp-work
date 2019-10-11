@@ -23,7 +23,7 @@ import Deposits from './Deposits';
 import Orders from './Orders';
 import { Button } from '@material-ui/core';
 import 'antd/dist/antd.css';
-import { Card, Pagination, Col, Row } from 'antd';
+import { Card, Pagination, Col, Row, Skeleton } from 'antd';
 
 const { Meta } = Card;
 
@@ -204,7 +204,7 @@ export default function Dashboard(props) {
           <Grid container spacing={3}>
             <Grid item xs={12} md={8} lg={9}>
               <Paper className={fixedHeightPaper}>
-                <div style={{ background: '#ECECEC', padding: '30px' }}>
+                {props.hallDataArr.length ? <div style={{ background: '#ECECEC', padding: '30px' }}>
                   <Row gutter={16}>
                     {props.hallDataArr.slice(props.start, props.end).map((v, i) => {
                       return <Col span={8}>
@@ -226,10 +226,7 @@ export default function Dashboard(props) {
                     onChange={(e) => props.updatePage(e)}
                     total={props.hallDataArr.length} //total number of card data available
                   />
-                </div>
-                {/* <div style={{textAlign:'center',marginTop:'80px'}}>
-                 <p style={{fontSize:'22px'}} title="Register Hall">Click <Link to="/RegisterHall"><RegisterIcon/></Link>   to register your hall</p>
-                  </div> */}
+                </div> : <Skeleton /> }
               </Paper>
             </Grid>
             {/* Recent Deposits */}

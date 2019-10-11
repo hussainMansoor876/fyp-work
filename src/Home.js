@@ -22,7 +22,7 @@ class Home extends Component {
   }
 
   componentWillMount(){
-    sessionStorage.clear('search')
+    sessionStorage.removeItem('search')
   }
 
   render() {
