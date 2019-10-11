@@ -33,7 +33,6 @@ class Search extends Component {
     }
 
     componentWillMount(){
-        console.log('this',this.props)
     }
 
     showSignup1() {
@@ -170,7 +169,7 @@ class Search extends Component {
                             <div className="container">
                                 <div className="row">
                                     <div className="col-md-4">
-                                        <input name="vName" value={this.props.search ? this.props.search.vName : vName} onChange={(e) => this.searchChange(e.target)} className="form-control" id="exampleFormControlInput1" placeholder="Search by: Venue Name" style={{
+                                        <input name="vName" value={vName} onChange={(e) => this.searchChange(e.target)} className="form-control" id="exampleFormControlInput1" placeholder="Search by: Venue Name" style={{
                                             width: '250px',
                                             borderTopColor: '#ffffff',
                                             borderLeftColor: '#ffffff',
@@ -182,7 +181,7 @@ class Search extends Component {
                                     </div>
 
                                     <div className="col-md-4">
-                                        <select name="vType" value={this.props.search ? this.props.search.vType : vType} onChange={(e) => this.searchChange(e.target)} className="form-control" id="exampleFormControlSelect1" style={{
+                                        <select name="vType" value={vType} onChange={(e) => this.searchChange(e.target)} className="form-control" id="exampleFormControlSelect1" style={{
                                             width: '250px',
                                             borderTopColor: '#ffffff',
                                             borderLeftColor: '#ffffff',
@@ -197,7 +196,7 @@ class Search extends Component {
                                     </div>
 
                                     <div className="col-md-4">
-                                        <select name="vLocation" value={this.props.search ? this.props.search.vLocation : vLocation} onChange={(e) => this.searchChange(e.target)} className="form-control" id="exampleFormControlSelect1" style={{
+                                        <select name="vLocation" value={vLocation} onChange={(e) => this.searchChange(e.target)} className="form-control" id="exampleFormControlSelect1" style={{
                                             width: '250px',
                                             borderTopColor: '#ffffff',
                                             borderLeftColor: '#ffffff',
@@ -256,11 +255,11 @@ class Search extends Component {
                                     <p style={{ color: 'black' }}>OR</p>
 
                                     <div className="form-group">
-                                        <input type="email" className="form-control" id="email" value={email} onChange={(e) => this.setState({ email: e.target.value })} aria-describedby="emailHelp" placeholder="Enter email" />
+                                        <input type="email" className="form-control" value={email} onChange={(e) => this.setState({ email: e.target.value })} aria-describedby="emailHelp" placeholder="Enter email" />
                                     </div>
 
                                     <div className="form-group">
-                                        <input type="password" className="form-control" id="password" placeholder="Password" value={password} onChange={(e) => this.setState({ password: e.target.value })} />
+                                        <input type="password" className="form-control" placeholder="Password" value={password} onChange={(e) => this.setState({ password: e.target.value })} />
                                     </div>
 
 
@@ -317,27 +316,27 @@ class Search extends Component {
 
 
                                     <div className="form-group">
-                                        <input className="form-control" id="f_name" name="fName" value={obj.fName} onChange={(e) => this.updateData(e.target)} aria-describedby="emailHelp" placeholder="First name" />
+                                        <input className="form-control" name="fName" value={obj.fName} onChange={(e) => this.updateData(e.target)} aria-describedby="emailHelp" placeholder="First name" />
                                     </div>
 
                                     <div className="form-group">
-                                        <input name="lName" value={obj.lName} onChange={(e) => this.updateData(e.target)} className="form-control" id="l_name" aria-describedby="emailHelp" placeholder="Last name" />
+                                        <input name="lName" value={obj.lName} onChange={(e) => this.updateData(e.target)} className="form-control" aria-describedby="emailHelp" placeholder="Last name" />
                                     </div>
 
                                     <div className="form-group">
-                                        <input type="email" className="form-control" name="email" value={obj.email} onChange={(e) => this.updateData(e.target)} id="email1" aria-describedby="emailHelp" placeholder="Enter email" />
+                                        <input type="email" className="form-control" name="email" value={obj.email} onChange={(e) => this.updateData(e.target)} aria-describedby="emailHelp" placeholder="Enter email" />
                                     </div>
 
                                     <div className="form-group">
-                                        <input type="number" name="phoneNumber" value={obj.phoneNumber} onChange={(e) => this.updateData(e.target)} className="form-control" id="phone" placeholder="Phone #" />
+                                        <input type="number" name="phoneNumber" value={obj.phoneNumber} onChange={(e) => this.updateData(e.target)} className="form-control" placeholder="Phone #" />
                                     </div>
 
                                     <div className="form-group">
-                                        <input type="password" name="password" value={obj.password} onChange={(e) => this.updateData(e.target)} className="form-control" id="password1" placeholder="Password" />
+                                        <input type="password" name="password" value={obj.password} onChange={(e) => this.updateData(e.target)} className="form-control" placeholder="Password" />
                                     </div>
 
                                     <div className="form-group">
-                                        <input type="password" name="confirmPassword" value={obj.confirmPassword} onChange={(e) => this.updateData(e.target)} className="form-control" id="confirm_pwd" placeholder="Confirm Password" />
+                                        <input type="password" name="confirmPassword" value={obj.confirmPassword} onChange={(e) => this.updateData(e.target)} className="form-control" placeholder="Confirm Password" />
                                     </div>
 
                                     <select className="custom-select mr-sm-2" id="inlineFormCustomSelect" name="accountType" value={obj.accountType} onChange={(e) => this.updateData(e.target)}>

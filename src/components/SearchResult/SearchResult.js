@@ -18,7 +18,7 @@ import Carrousel from '../featured/Carrousel'
 import Search from '../featured/Search';
 import 'antd/dist/antd.css';
 import firebase from '../../config/firebase'
-import { Card, Col, Row, Skeleton } from 'antd';
+import { Card, Col, Row, Skeleton, Button as Btn, Form, Modal, Input, Radio } from 'antd';
 
 const { Meta } = Card
 
@@ -31,10 +31,11 @@ class SearchResult extends Component {
 
         this.state = {
             user: JSON.parse(sessionStorage.getItem('user')),
-            search: JSON.parse(sessionStorage.getItem('search')),
+            search: sessionStorage.getItem('search') ? JSON.parse(sessionStorage.getItem('search')) : false,
             visible: false,
             confirmLoading: false,
             allHallData: [],
+            visible: false,
         }
     }
 
@@ -58,7 +59,8 @@ class SearchResult extends Component {
 
 
     render() {
-        const { allHallData, search } = this.state
+        const { allHallData, visible } = this.state
+        const { getFieldDecorator } = this.props.form;
         return (
             <div>
                 <Element name="Home">
@@ -97,7 +99,7 @@ class SearchResult extends Component {
                         <div className="artist_name">
                             <div className="wrapper">Let Us Help You Create</div>
                         </div>
-                        <Search search={search} />
+                        <Search />
                     </div>
                 </Element>
                 {allHallData.length ? <div>
@@ -111,8 +113,11 @@ class SearchResult extends Component {
                                         hoverable
                                         cover={<img alt="example" style={{ height: 260 }} src={'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQefCoQ8XaDsgV3HdlAjqap7esgqwmqB-Xd5AIL9STJIbsjFfII'} />}
                                     >
-                                        <Meta title={`${v.venueType}`} description={`Rs ${v.price}`} />
-                                        <h1>{`Rs ${v.price}`}</h1>
+                                        <Meta title={`${v.venueType}`} />
+                                        <h1>{`Rs: ${v.price}`}</h1>
+                                        <Btn type="primary" onClick={() => this.setState({ visible: true })} block>
+                                            Register
+                                        </Btn>
                                     </Card>
                                 </Col>
                             })}
@@ -120,6 +125,34 @@ class SearchResult extends Component {
                     </div>
                 </div> : <Skeleton />}
                 <Footer />
+                <Modal
+                    visible={visible}
+                    title="Create a new collection"
+                    okText="Create"
+                // onCancel={onCancel}
+                // onOk={onCreate}
+                >
+                    <Form layout="vertical">
+                        <Form.Item label="Title">
+                            {getFieldDecorator('title', {
+                                rules: [{ required: true, message: 'Please input the title of collection!' }],
+                            })(<Input />)}
+                        </Form.Item>
+                        <Form.Item label="Description">
+                            {getFieldDecorator('description')(<Input type="textarea" />)}
+                        </Form.Item>
+                        <Form.Item className="collection-create-form_last-form-item">
+                            {getFieldDecorator('modifier', {
+                                initialValue: 'public',
+                            })(
+                                <Radio.Group>
+                                    <Radio value="public">Public</Radio>
+                                    <Radio value="private">Private</Radio>
+                                </Radio.Group>,
+                            )}
+                        </Form.Item>
+                    </Form>
+                </Modal>
             </div>
 
 
@@ -127,4 +160,6 @@ class SearchResult extends Component {
     }
 }
 
-export default SearchResult;
+const SearchResultForm = Form.create({ name: 'time_related_controls' })(SearchResult);
+
+export default SearchResultForm;
