@@ -109,6 +109,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+function logout(){
+  sessionStorage.removeItem('user')
+  window.location.reload()
+}
+
 
 export default function Dashboard(props) {
 
@@ -153,7 +158,7 @@ export default function Dashboard(props) {
             </Typography>
           <Button style={{ color: 'white' }}>Browse Venue</Button>
           <Button style={{ color: 'white' }}>Manage Venues</Button>
-          <Button style={{ color: 'white' }}>Logout</Button>
+          <Button style={{ color: 'white' }} onClick={() => logout()}>Logout</Button>
 
           <IconButton style={{ color: '#ffffff' }} title="Message">
             <Message />
@@ -226,7 +231,7 @@ export default function Dashboard(props) {
                     onChange={(e) => props.updatePage(e)}
                     total={props.hallDataArr.length} //total number of card data available
                   />
-                </div> : <Skeleton /> }
+                </div> : <Skeleton />}
               </Paper>
             </Grid>
             {/* Recent Deposits */}

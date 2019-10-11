@@ -23,11 +23,50 @@ import Deposits from './Deposits';
 import Orders from './Orders';
 import { Button } from '@material-ui/core';
 import 'antd/dist/antd.css';
-import { Card, Pagination, Col, Row } from 'antd';
+import { Card, Skeleton, Table } from 'antd';
 
 const { Meta } = Card;
 
 const drawerWidth = 240;
+
+const columns = [
+  {
+    title: 'Hall Name',
+    dataIndex: 'name',
+    render: text => <a href="#">{text}</a>
+  },
+  {
+    title: 'Program Date',
+    dataIndex: 'pDate',
+  },
+  {
+    title: 'Statue',
+    dataIndex: 'status'
+  }
+]
+
+const date = new Date()
+const data = []
+
+
+for (let i = 0; i < 460; i++) {
+  var status = 'pending'
+  if (i % 2 === 0) {
+    status = 'pending'
+  }
+  else if (i % 3 === 0) {
+    status = 'accepted'
+  }
+  else {
+    status = 'rejected'
+  }
+  data.push({
+    key: i,
+    name: `Edward King ABc hello rfjygyjgfyh ${i}`,
+    pDate: date.toDateString(),
+    status: status
+  });
+}
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -198,56 +237,16 @@ export default function Dashboard(props) {
         </div>
 
       </Drawer>
-      <main className={classes.content}>
-        <div className={classes.appBarSpacer} />
-        <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={8} lg={9}>
-              <Paper className={fixedHeightPaper}>
-                <div style={{ background: '#ECECEC', padding: '30px' }}>
-                  <Row gutter={16}>
-                    {props.hallDataArr.slice(props.start, props.end).map((v, i) => {
-                      return <Col span={8}>
-                        <Card
-                          hoverable
-                          cover={<img alt="example" style={{ height: 260 }} src={v.picture} />}
-                        >
-                          <Meta title={v.hallName} description={`Rs ${v.price}`} />
-                        </Card>
-                      </Col>
-                    })}
-                  </Row>
-                  <br />
-                  <Pagination
-                    style={{ textAlign: 'right' }}
-                    defaultCurrent={1}
-                    defaultPageSize={3} //default size of page
-                    // onChange={this.handleChange}
-                    onChange={(e) => props.updatePage(e)}
-                    total={props.hallDataArr.length} //total number of card data available
-                  />
-                </div>
-                {/* <div style={{textAlign:'center',marginTop:'80px'}}>
-                 <p style={{fontSize:'22px'}} title="Register Hall">Click <Link to="/RegisterHall"><RegisterIcon/></Link>   to register your hall</p>
-                  </div> */}
-              </Paper>
-            </Grid>
-            {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
-              <Paper className={fixedHeightPaper}>
-                <Deposits />
-              </Paper>
-            </Grid>
-            {/* Recent Orders */}
-            <Grid item xs={12}>
-              <Paper className={classes.paper}>
-                <Orders />
-              </Paper>
-            </Grid>
-          </Grid>
-        </Container>
 
-      </main>
+      {data.length ? <div style={{ width: '100%', justifyContent: 'center', textAlign: 'center', marginTop: 140 }}>
+          <h3>My Recent Bookings</h3>
+        <Table
+          pagination={false}
+          style={{ width: '94%' }}
+          columns={columns}
+          dataSource={data.slice(0,10)}
+        />
+      </div> : <Skeleton active />}
     </div>
   )
 }

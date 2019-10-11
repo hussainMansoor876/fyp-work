@@ -23,6 +23,16 @@ class Home extends Component {
 
   componentWillMount(){
     sessionStorage.removeItem('search')
+    const user = JSON.parse(sessionStorage.getItem('user'))
+    if(user){
+      console.log(user)
+      if(user.accountType === "2"){
+        this.props.history.push('/OwnerDashboard')
+      }
+      else{
+        this.props.history.push('/userDashboard')
+      }
+    }
   }
 
   render() {
