@@ -149,7 +149,7 @@ export default function Dashboard(props) {
 
             <Link> <DotsIcon id="dot_icon" onClick={handleDrawerClose} style={{ color: 'white' }} /></Link>
             &nbsp;
-             Owner Dashboard
+             User Dashboard
             </Typography>
           <Button style={{ color: 'white' }}>Browse Venue</Button>
           <Button style={{ color: 'white' }}>Manage Venues</Button>

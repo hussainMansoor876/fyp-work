@@ -64,7 +64,8 @@ class Search extends Component {
                         val1['key'] = value.key
                         sessionStorage.setItem('user', JSON.stringify(val1))
                         swal('login successfull')
-                        window.$('#exampleModalCenter').modal('hide');
+                        window.$('#exampleModalCenter1').modal('hide');
+                        window.location.reload()
                     })
                     this.setState({
                         email: '',
@@ -73,7 +74,7 @@ class Search extends Component {
                     })
                 })
                 .catch((error) => {
-                    alert('something went wrong' + error);
+                    swal('something went wrong' + error);
                 });
         }
     }
@@ -108,11 +109,12 @@ class Search extends Component {
                 firebase.database().ref('users').child(`${res.user.uid}/`).set(obj)
                 sessionStorage.setItem('user', JSON.stringify(obj))
                 this.setState({ obj: obj1, disable: false })
-                swal('Signup successfull' + res);
-                window.$('#signupModalCenter').modal('hide');
+                swal('Signup successfull');
+                window.$('#signupModalCenter1').modal('hide');
+                window.location.reload()
             })
                 .catch((error) => {
-                    alert('something went wrong' + error);
+                    swal('something went wrong' + error);
                 });
         }
     }

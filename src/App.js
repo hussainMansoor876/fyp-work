@@ -13,6 +13,7 @@ import HallDetails from './components/Dashboard/Owner/HallDetails';
 import OwnerBooking from './components/Dashboard/Owner/OwnerBooking'
 import OwnerChat from './components/Dashboard/Owner/OwnerChat'
 import SearchResult from './components/SearchResult/SearchResult'
+import UserDashboard from './components/Dashboard/User/UserClass'
 
 
 
@@ -57,6 +58,7 @@ class App extends Component {
           <Route exact path="/RegisterHall" component={Register} />
           <Route exact path="/PrivacyPolicy" component={Privacy} />
           <PrivateRoute isLoggedIn={(this.props.isLoggedIn || this.state.isLoggedIn)} exact path="/OwnerDashboard" component={Owner} />
+          <PrivateRoute isLoggedIn={(this.props.isLoggedIn || this.state.isLoggedIn)} exact path="/userDashboard" component={UserDashboard} />
           <Route exact path="/OwnerDashboard/booking" component={OwnerBooking} />
           <Route exact path="/OwnerDashboard/chat" component={OwnerChat} />
           <Route exact path="/AdminDashboard" component={Admin} />

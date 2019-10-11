@@ -20,6 +20,7 @@ class Header extends Component {
             email: '',
             password: '',
             disable: false,
+            user: sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : false,
             obj: {
                 fName: '',
                 lName: '',
@@ -62,6 +63,7 @@ class Header extends Component {
                         sessionStorage.setItem('user', JSON.stringify(val1))
                         swal('login successfull')
                         window.$('#exampleModalCenter').modal('hide');
+                        window.location.reload()
                     })
                     this.setState({
                         email: '',
@@ -70,7 +72,7 @@ class Header extends Component {
                     })
                 })
                 .catch((error) => {
-                    alert('something went wrong' + error);
+                    swal('something went wrong' + error);
                 });
         }
     }
@@ -105,11 +107,12 @@ class Header extends Component {
                 firebase.database().ref('users').child(`${res.user.uid}/`).set(obj)
                 sessionStorage.setItem('user', JSON.stringify(obj))
                 this.setState({ obj: obj1, disable: false })
-                swal('Signup successfull' + res);
+                swal('Signup successfull');
                 window.$('#signupModalCenter').modal('hide');
+                window.location.reload()
             })
                 .catch((error) => {
-                    alert('something went wrong' + error);
+                    swal('something went wrong' + error);
                 });
         }
     }
@@ -151,6 +154,11 @@ class Header extends Component {
         })
     }
 
+    logout(){
+        sessionStorage.removeItem('user')
+        window.location.reload()
+    }
+
     render() {
         const { obj, email, password } = this.state;
         return (
@@ -176,9 +184,10 @@ class Header extends Component {
                             <li>  <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} onClick={() => this.scrollToElement('Categories')}>CATEGORIES</button></li>
                             <li>   <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} onClick={() => this.scrollToElement('AboutUs')}>ABOUT US</button></li>
                             <li>  <Link to="/PrivacyPolicy">   <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }}>PRIVACY POLICY</button></Link></li>
-                            <li>  <button type="button" style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} data-toggle="modal" data-target="#exampleModalCenter" >LOGIN / SIGNUP</button></li>
-                            <li>  <Link to="/OwnerDashboard"> <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }}>Owner</button></Link></li>
-                            <li>  <Link to="/AdminDashboard"><button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} >Admin</button></Link></li>
+                            {!this.state.user ? <li>  <button type="button" style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} data-toggle="modal" data-target="#exampleModalCenter" >LOGIN / SIGNUP</button></li> :
+                                <li>  <button type="button" style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} onClick={() => this.logout()} >Logout</button></li>}
+                            {/* <li>  <Link to="/OwnerDashboard"> <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }}>Owner</button></Link></li>
+                            <li>  <Link to="/AdminDashboard"><button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} >Admin</button></Link></li> */}
 
                         </ul>
                     </div>

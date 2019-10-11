@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Owner from './Owner';
+import User from './User';
 import firebase from '../../../config/firebase'
 
 class OwnerClass extends Component {
@@ -50,7 +50,7 @@ class OwnerClass extends Component {
     render() {
         const { user, hallData, hallDataArr, start, end } = this.state
         return (
-            <Owner
+            <User
                 user={user}
                 hallData={hallData}
                 hallDataArr={hallDataArr}

@@ -43,19 +43,23 @@ class SearchResult extends Component {
     componentWillMount() {
         const { search, allHallData } = this.state
         console.log('user', search)
-        firebase.database().ref('allHallData').on('child_added', (val) => {
-            firebase.database().ref('allHallData').child(`${val.key}`).on('child_added', (val1) => {
-                var value = val1.val()
-                if (value.hallName.toLowerCase().indexOf(search.vName.toLowerCase()) !== -1 && value.venueLocation.toLowerCase().indexOf(search.vLocation.toLowerCase()) !== -1 && value.venueType.toLowerCase().indexOf(search.vType.toLowerCase()) !== -1) {
-                    value['userUid'] = val.key
-                    value['key'] = val1.key
-                    allHallData.push(value)
-                    this.setState({ allHallData })
-                    console.log(allHallData)
-                }
-                console.log(val1.val())
+        if (search) {
+            firebase.database().ref('allHallData').on('child_added', (val) => {
+                firebase.database().ref('allHallData').child(`${val.key}`).on('child_added', (val1) => {
+                    var value = val1.val()
+                    if (value.hallName.toLowerCase().indexOf(search.vName.toLowerCase()) !== -1 && value.venueLocation.toLowerCase().indexOf(search.vLocation.toLowerCase()) !== -1 && value.venueType.toLowerCase().indexOf(search.vType.toLowerCase()) !== -1) {
+                        value['userUid'] = val.key
+                        value['key'] = val1.key
+                        allHallData.push(value)
+                        this.setState({ allHallData })
+                    }
+                })
             })
-        })
+        }
+    }
+
+    componentDidMount(){
+        sessionStorage.removeItem('search')
     }
 
     handleSubmit = (e) => {
@@ -88,7 +92,7 @@ class SearchResult extends Component {
 
 
     render() {
-        const { allHallData, visible } = this.state
+        const { allHallData, visible, search } = this.state
         const { getFieldDecorator } = this.props.form;
         return (
             <div>
@@ -132,7 +136,7 @@ class SearchResult extends Component {
                     </div>
                 </Element>
                 {
-                    allHallData.length ? <div>
+                    search ? allHallData.length ? <div>
                         <h1 style={{ textAlign: 'center', marginTop: 20 }}>Search Result</h1>
                         <div style={{ background: '#ECECEC', padding: '30px' }}>
                             <Row gutter={16}>
@@ -147,6 +151,7 @@ class SearchResult extends Component {
                                             <br />
                                             <h3>Advance: {v.price / 10}</h3>
                                             <h1>{`Rs: ${v.price}`}</h1>
+                                            <p>Address: {v.address}</p>
                                             <Btn type="primary" onClick={() => this.setState({ visible: true, selectedHall: v }, () => {
                                                 this.props.form.setFieldsValue({
                                                     hallName: v.hallName
@@ -159,7 +164,7 @@ class SearchResult extends Component {
                                 })}
                             </Row>
                         </div>
-                    </div> : <Skeleton />
+                    </div> : <Skeleton /> : <div style={{ marginTop: 300 }}></div>
                 }
                 < Footer />
                 <Modal
