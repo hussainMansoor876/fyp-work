@@ -45,28 +45,7 @@ const columns = [
   }
 ]
 
-const date = new Date()
-const data = []
 
-
-for (let i = 0; i < 460; i++) {
-  var status = 'pending'
-  if (i % 2 === 0) {
-    status = 'pending'
-  }
-  else if (i % 3 === 0) {
-    status = 'accepted'
-  }
-  else {
-    status = 'rejected'
-  }
-  data.push({
-    key: i,
-    name: `Edward King ABc hello rfjygyjgfyh ${i}`,
-    pDate: date.toDateString(),
-    status: status
-  });
-}
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -153,12 +132,13 @@ export default function Dashboard(props) {
 
 
   const classes = useStyles();
+  console.log(props)
 
 
   const [open, setOpen] = React.useState(true);
   const handleDrawerOpen = () => {
     document.getElementById("dot_icon").style.display = "inline-block";
-    setOpen(true);
+    // setOpen(true);
   };
   const handleDrawerClose = () => {
     document.getElementById("dot_icon").style.display = "none";
@@ -238,13 +218,13 @@ export default function Dashboard(props) {
 
       </Drawer>
 
-      {data.length ? <div style={{ width: '100%', justifyContent: 'center', textAlign: 'center', marginTop: 140 }}>
+      {props.data.length ? <div style={{ width: '100%', justifyContent: 'center', textAlign: 'center', marginTop: 140 }}>
           <h3>My Recent Bookings</h3>
         <Table
-          pagination={false}
+          // pagination={false}
           style={{ width: '94%' }}
           columns={columns}
-          dataSource={data.slice(0,10)}
+          dataSource={props.data.reverse()}
         />
       </div> : <Skeleton active />}
     </div>

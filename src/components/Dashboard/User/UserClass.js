@@ -10,32 +10,52 @@ class OwnerClass extends Component {
             hallData: '',
             hallDataArr: [],
             start: 0,
-            end: 3
+            end: 3,
+            data: [],
+            columns: [
+                {
+                    title: 'Hall Name',
+                    dataIndex: 'name',
+                    render: text => <a href="#">{text}</a>
+                },
+                {
+                    title: 'Program Date',
+                    dataIndex: 'pDate',
+                },
+                {
+                    title: 'Statue',
+                    dataIndex: 'status'
+                }
+            ]
         }
 
         this.updatePage = this.updatePage.bind(this)
     }
 
     async componentWillMount() {
-        const { user, hallDataArr } = this.state
+        const { user, hallDataArr, data } = this.state
 
-        await firebase.database().ref('users').child(`${user.uid}/hallData`).on('child_added', (val) => {
+        await firebase.database().ref('users').child(`${user.uid}/sentBooking`).on('child_added', (val) => {
             var value = val.val()
             hallDataArr.push(value)
-            console.log(hallDataArr)
+            data.push({
+                key: val.key,
+                name: value.hallName,
+                pDate: value['date-time-picker'],
+                status: value.status
+            });
             this.setState({
-                hallData: hallData,
-                hallDataArr
+                hallDataArr,
+                data
             })
         })
-        const { hallData } = user
 
         // for (var i in hallData) {
         //     hallDataArr.push(hallData[i])
         // }
         this.setState({
-            hallData: hallData,
-            hallDataArr
+            hallDataArr,
+            data
         })
     }
 
@@ -47,14 +67,19 @@ class OwnerClass extends Component {
         })
     }
 
+    componentDidMount() {
+        console.log(this.state.hallDataArr)
+    }
+
     render() {
-        const { user, hallData, hallDataArr, start, end } = this.state
+        const { user, hallDataArr, start, end, data, columns } = this.state
         return (
             <User
                 user={user}
-                hallData={hallData}
                 hallDataArr={hallDataArr}
                 start={start}
+                columns={columns}
+                data={data}
                 end={end}
                 updatePage={this.updatePage}
             />

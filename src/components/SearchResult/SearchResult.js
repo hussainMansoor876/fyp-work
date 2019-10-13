@@ -19,6 +19,7 @@ import Search from '../featured/Search';
 import 'antd/dist/antd.css';
 import firebase from '../../config/firebase'
 import { Card, Col, Row, Skeleton, Button as Btn, Form, Modal, Input, DatePicker } from 'antd';
+import swal from 'sweetalert';
 
 const { Meta } = Card
 
@@ -58,8 +59,8 @@ class SearchResult extends Component {
         }
     }
 
-    componentDidMount(){
-        sessionStorage.removeItem('search')
+    componentDidMount() {
+        // sessionStorage.removeItem('search')
     }
 
     handleSubmit = (e) => {
@@ -70,15 +71,22 @@ class SearchResult extends Component {
                 return;
             }
             fieldsValue['date-time-picker'] = fieldsValue['date-time-picker'].format('YYYY-MM-DD HH:mm:ss')
-            fieldsValue['send'] = selectedHall
+            fieldsValue['hallData'] = selectedHall
             fieldsValue['customerUid'] = user.uid
+            fieldsValue['advance'] = selectedHall.price / 10
             fieldsValue['status'] = 'pending'
 
-            firebase.database().ref('users').child(`${user.uid}/sentBooking/${selectedHall.userUid}/${selectedHall.key}`).set(fieldsValue)
-                .then(() => {
+            firebase.database().ref('users').child(`${user.uid}/sentBooking/`).push(fieldsValue)
+                .then((snap) => {
                     this.setState({ visible: false })
+                    swal({
+                        title: "successfully!",
+                        text: "Send the Booking Request",
+                        icon: "success",
+                        // button: "OK",
+                    });
                     this.props.form.resetFields()
-                    firebase.database().ref('users').child(`${selectedHall.userUid}/recBooking/${selectedHall.key}`).push(fieldsValue)
+                    firebase.database().ref('users').child(`${selectedHall.userUid}/recBooking/${snap.key}`).set(fieldsValue)
                 })
         })
     }
@@ -92,7 +100,7 @@ class SearchResult extends Component {
 
 
     render() {
-        const { allHallData, visible, search } = this.state
+        const { allHallData, visible, search, user } = this.state
         const { getFieldDecorator } = this.props.form;
         return (
             <div>
@@ -101,27 +109,23 @@ class SearchResult extends Component {
                     <AppBar style={{ background: '#3c3c3c' }} position="fixed">
                         <Toolbar>
                             <Typography component="h1" variant="h6" color="inherit" >
-                                Owner Dashboard
+                                User Dashboard
           </Typography>
                             <div style={{ marginLeft: 'auto', marginRight: '-12px' }}>
-                                <Button style={{ color: 'white' }}>Browse Venue</Button>
-                                <Button style={{ color: 'white' }}>Manage Venues</Button>
+                                <Button style={{ color: 'white' }} onClick={() => window.location.href = '/userDashboard'} >Home</Button>
+                                {/* <Button style={{ color: 'white' }}>Manage Venues</Button> */}
                                 <Button style={{ color: 'white' }} onClick={() => this.logout()}>Logout</Button>
 
-                                <IconButton style={{ color: '#ffffff' }} title="Message">
+                                {/* <IconButton style={{ color: '#ffffff' }} title="Message">
                                     <Message />
-                                </IconButton>
+                                </IconButton> */}
 
-                                <Link to="/RegisterHall">
-                                    <IconButton style={{ color: '#ffffff' }} title="Register Hall">
-                                        <RegisterIcon />
+                                <Button style={{ color: 'white' }}>
+                                    {user.fName}
+                                    <IconButton color="inherit" title="Profile">
+                                        <UserIcon />
                                     </IconButton>
-                                </Link>
-
-
-                                <IconButton color="inherit" title="Profile">
-                                    <UserIcon />
-                                </IconButton>
+                                </Button>
                             </div>
 
                         </Toolbar>

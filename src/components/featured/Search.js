@@ -33,6 +33,7 @@ class Search extends Component {
     }
 
     componentWillMount(){
+        console.log('this',this.props.props)
     }
 
     showSignup1() {
@@ -65,7 +66,7 @@ class Search extends Component {
                         sessionStorage.setItem('user', JSON.stringify(val1))
                         swal('login successfull')
                         window.$('#exampleModalCenter1').modal('hide');
-                        window.location.reload()
+                        this.props.props.history.push('/searchResult')
                     })
                     this.setState({
                         email: '',

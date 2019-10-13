@@ -13,8 +13,8 @@ import { Element } from 'react-scroll';
 import './resources/bootstrap.min.css';
 
 class Home extends Component {
-  constructor() {
-    super()
+  constructor(props) {
+    super(props)
 
     this.state={
 
@@ -22,17 +22,17 @@ class Home extends Component {
   }
 
   componentWillMount(){
-    sessionStorage.removeItem('search')
-    const user = JSON.parse(sessionStorage.getItem('user'))
-    if(user){
-      console.log(user)
-      if(user.accountType === "2"){
-        this.props.history.push('/OwnerDashboard')
-      }
-      else{
-        this.props.history.push('/userDashboard')
-      }
-    }
+    // sessionStorage.removeItem('search')
+    // const user = JSON.parse(sessionStorage.getItem('user'))
+    // if(user){
+    //   console.log(user)
+    //   if(user.accountType === "2"){
+    //     this.props.history.push('/OwnerDashboard')
+    //   }
+    //   else{
+    //     this.props.history.push('/userDashboard')
+    //   }
+    // }
   }
 
   render() {
@@ -45,7 +45,7 @@ class Home extends Component {
           <Header />
         </Element>
 
-        <Featured />
+        <Featured props={this.props} />
 
         <Element name="Categories">
           <Categories />
