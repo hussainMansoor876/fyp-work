@@ -59,7 +59,7 @@ class App extends Component {
           <Route exact path="/PrivacyPolicy" component={Privacy} />
           <PrivateRoute isLoggedIn={(this.props.isLoggedIn || this.state.isLoggedIn)} exact path="/OwnerDashboard" component={Owner} />
           <PrivateRoute isLoggedIn={(this.props.isLoggedIn || this.state.isLoggedIn)} exact path="/userDashboard" component={UserDashboard} />
-          <Route exact path="/OwnerDashboard/booking" component={OwnerBooking} />
+          <PrivateRoute isLoggedIn={(this.props.isLoggedIn || this.state.isLoggedIn)} exact path="/OwnerDashboard/booking" component={OwnerBooking} />
           <Route exact path="/OwnerDashboard/chat" component={OwnerChat} />
           <Route exact path="/AdminDashboard" component={Admin} />
           <Route exact path="/AdminMessage" component={MessageToAdmin} />

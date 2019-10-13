@@ -15,6 +15,7 @@ import { Link } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import { Table, Skeleton, Modal, Button as Btn } from 'antd';
 import { stat } from 'fs';
+import firebase from '../../../config/firebase'
 
 
 
@@ -29,7 +30,7 @@ class OwnerBooking extends Component {
             confirmLoading: false,
             columns: [
                 {
-                    title: 'Buyer Name',
+                    title: 'Customer Name',
                     dataIndex: 'name',
                     render: text => <a href="#" onClick={() => this.setState({ visible: true })}>{text}</a>
                 },
@@ -52,27 +53,18 @@ class OwnerBooking extends Component {
     }
 
     componentWillMount() {
-        const { data, date } = this.state;
-        for (let i = 0; i < 460; i++) {
-            var status = 'pending'
-            if (i % 2 === 0) {
-                status = 'pending'
-            }
-            else if (i % 3 === 0) {
-                status = 'accepted'
-            }
-            else {
-                status = 'rejected'
-            }
+        const { user, data } = this.state
+        firebase.database().ref('users').child(`${user.uid}/recBooking`).on('child_added', (val) => {
+            var value = val.val()
             data.push({
-                key: i,
-                name: `Edward King ABc hello rfjygyjgfyh ${i}`,
-                hallName: 32,
-                pDate: date.toDateString(),
-                status: status
+                key: val.key,
+                name: value.name,
+                hallName: value.hallName,
+                pDate: value['date-time-picker'],
+                status: value.status
             });
-        }
-        this.setState({ data })
+            this.setState({ data })
+        })
     }
 
     handleOk = () => {
@@ -96,6 +88,12 @@ class OwnerBooking extends Component {
     };
 
 
+    logout() {
+        sessionStorage.removeItem('user')
+        window.location.reload()
+    }
+
+
 
     render() {
         const { visible, confirmLoading, columns, data } = this.state
@@ -110,7 +108,7 @@ class OwnerBooking extends Component {
                         <div style={{ marginLeft: 'auto', marginRight: '-12px' }}>
                             <Button style={{ color: 'white' }}>Browse Venue</Button>
                             <Button style={{ color: 'white' }}>Manage Venues</Button>
-                            <Button style={{ color: 'white' }}>Logout</Button>
+                            <Button style={{ color: 'white' }} onClick={() => this.logout()} >Logout</Button>
 
                             <IconButton style={{ color: '#ffffff' }} title="Message">
                                 <Message />
@@ -135,7 +133,7 @@ class OwnerBooking extends Component {
                     {data.length ? <Table
                         style={{ width: '94%' }}
                         columns={columns}
-                        dataSource={data}
+                        dataSource={data.slice().reverse()}
                     /> : <Skeleton active />}
                 </div>
                 <Modal
