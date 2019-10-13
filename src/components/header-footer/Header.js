@@ -63,7 +63,13 @@ class Header extends Component {
                         sessionStorage.setItem('user', JSON.stringify(val1))
                         swal('login successfull')
                         window.$('#exampleModalCenter').modal('hide');
-                        window.location.reload()
+                        console.log("Hello")
+                        if(val1.accountType === "1"){
+                            window.location.href = '/userDashboard'
+                        }
+                        else{
+                            window.location.href = '/OwnerDashboard'
+                        }
                     })
                     this.setState({
                         email: '',

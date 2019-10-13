@@ -66,7 +66,7 @@ class Search extends Component {
                         sessionStorage.setItem('user', JSON.stringify(val1))
                         swal('login successfull')
                         window.$('#exampleModalCenter1').modal('hide');
-                        this.props.props.history.push('/searchResult')
+                        window.location.href = '/searchResult'
                     })
                     this.setState({
                         email: '',
@@ -112,7 +112,7 @@ class Search extends Component {
                 this.setState({ obj: obj1, disable: false })
                 swal('Signup successfull');
                 window.$('#signupModalCenter1').modal('hide');
-                window.location.reload()
+                window.location.href = '/searchResult'
             })
                 .catch((error) => {
                     swal('something went wrong' + error);

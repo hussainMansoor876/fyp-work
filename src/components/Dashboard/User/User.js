@@ -128,6 +128,12 @@ const useStyles = makeStyles(theme => ({
 }));
 
 
+function logout(){
+  sessionStorage.removeItem('user')
+  window.location.reload()
+}
+
+
 export default function Dashboard(props) {
 
 
@@ -170,9 +176,7 @@ export default function Dashboard(props) {
             &nbsp;
              User Dashboard
             </Typography>
-          <Button style={{ color: 'white' }}>Browse Venue</Button>
-          <Button style={{ color: 'white' }}>Manage Venues</Button>
-          <Button style={{ color: 'white' }}>Logout</Button>
+          <Button style={{ color: 'white' }} onClick={() => logout()}>Logout</Button>
 
           <IconButton style={{ color: '#ffffff' }} title="Message">
             <Message />
@@ -219,7 +223,7 @@ export default function Dashboard(props) {
       </Drawer>
 
       {props.data.length ? <div style={{ width: '100%', justifyContent: 'center', textAlign: 'center', marginTop: 140 }}>
-          <h3>My Recent Bookings</h3>
+        <h3>My Recent Bookings</h3>
         <Table
           // pagination={false}
           style={{ width: '94%' }}
