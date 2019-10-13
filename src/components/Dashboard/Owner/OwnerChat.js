@@ -14,19 +14,32 @@ class OwnerChat extends Component {
         super(props)
 
         this.state = {
-            user: JSON.parse(sessionStorage.getItem('user'))
+            user: JSON.parse(sessionStorage.getItem('user')),
+            data: []
         }
     }
 
     componentWillMount() {
-        firebase.auth().onAuthStateChanged(function (user) {
-            if (user) {
-                console.log(user)
-                // User is signed in.
-            } else {
-                // No user is signed in.
+        // firebase.auth().onAuthStateChanged(function (user) {
+        //     if (user) {
+        //         console.log(user)
+        //         // User is signed in.
+        //     } else {
+        //         // No user is signed in.
+        //     }
+        // });
+
+        const { user, data } = this.state
+        firebase.database().ref('users').child(`${user.uid}/chatList`).on('child_added', (val) => {
+            var obj = {
+                name: val.val(),
+                uid: val.key
             }
-        });
+            data.push(obj)
+            this.setState({
+                data
+            })
+        })
     }
 
     logout() {
@@ -37,6 +50,7 @@ class OwnerChat extends Component {
 
 
     render() {
+        const { data } = this.state
         return (
             <Layout style={{ minHeight: '100vh' }}>
                 <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
@@ -46,6 +60,7 @@ class OwnerChat extends Component {
                             <Icon type="user" />
                             <span>All Users</span>
                         </Menu.Item>
+                        {data.length ? data.map((v,i))}
                         <Menu.Item key="9">
                             <Icon type="user" />
                             <span>User 1</span>
@@ -56,7 +71,7 @@ class OwnerChat extends Component {
                     <Header style={{ background: '#fff', padding: 0 }}>
                         <h1 style={{ textAlign: 'center' }}>All Chat</h1>
                     </Header>
-                    <Content style={{ margin: '0 16px',  overflow: 'scroll' }}>
+                    <Content style={{ margin: '0 16px', overflow: 'scroll' }}>
                         <Breadcrumb style={{ margin: '16px 0' }}>
                             <Breadcrumb.Item>User 1</Breadcrumb.Item>
                         </Breadcrumb>
@@ -98,6 +113,7 @@ class OwnerChat extends Component {
                                 type="success"
                             />
                         </div>
+                    
                     </Content>
                     <Footer style={{ width: '100%', padding: 24 }}>
                         <div style={{ display: 'flex' }}>

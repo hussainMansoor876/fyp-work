@@ -73,30 +73,43 @@ class OwnerBooking extends Component {
 
     handleOk = () => {
         const { modalData, user } = this.state
-        var message = `Your request has approved Kindly pay the Advance fees Rs: ${modalData.advance} of ${modalData.hallName}`
-        var myMsg = {
-            msg: message,
-            recName: modalData.name
-        }
-        var recMsg = {
-            msg: message,
-            senderName: user.fName
-        }
-
-        firebase.database().ref('users').child(`${user.uid}/chat/${modalData.customerUid}/`).push(myMsg)
-        .then((snap)=>{
-            firebase.database().ref('users').child(`${modalData.customerUid}/chat/${user.uid}/${snap.key}`).set(recMsg)
-        })
-        this.setState({
-            ModalText: 'The modal will be closed after two seconds',
-            confirmLoading: true,
-        });
-        setTimeout(() => {
+        if (modalData.status === "pending") {
             this.setState({
-                visible: false,
+                ModalText: 'The modal will be closed after two seconds',
                 confirmLoading: true,
             });
-        }, 3000);
+            var message = `Your request has approved Kindly pay the Advance fees Rs: ${modalData.advance} of ${modalData.hallName}`
+            var myMsg = {
+                msg: message,
+                recName: modalData.name
+            }
+            var recMsg = {
+                msg: message,
+                senderName: user.fName
+            }
+
+            firebase.database().ref('users').child(`${user.uid}/chatList/${modalData.customerUid}`).set(modalData.name)
+            firebase.database().ref('users').child(`${modalData.customerUid}/chatList/${user.uid}`).set(user.fName)
+
+            firebase.database().ref('users').child(`${user.uid}/recBooking/${modalData.key}`).update({ status: "Approved" })
+            firebase.database().ref('users').child(`${modalData.customerUid}/sentBooking/${modalData.key}`).update({ status: "Approved" })
+
+            firebase.database().ref('users').child(`${user.uid}/chat/${modalData.customerUid}/`).push(myMsg)
+                .then((snap) => {
+                    firebase.database().ref('users').child(`${modalData.customerUid}/chat/${user.uid}/${snap.key}`).set(recMsg)
+                        .then(() => {
+                            this.setState({
+                                visible: false,
+                                confirmLoading: true,
+                            }, () => {
+                                this.props.history.push(`/OwnerDashboard/chat`)
+                            })
+                        })
+                })
+        }
+        this.setState({
+            visible: false
+        })
     };
 
     handleCancel = () => {
@@ -104,6 +117,26 @@ class OwnerBooking extends Component {
         this.setState({
             visible: false,
         });
+    };
+
+    handleCancel1 = () => {
+        const { modalData, user } = this.state
+        if (modalData.status === "pending") {
+            firebase.database().ref('users').child(`${user.uid}/recBooking/${modalData.key}`).update({ status: "Rejected" })
+            firebase.database().ref('users').child(`${modalData.customerUid}/sentBooking/${modalData.key}`).update({ status: "Rejected" })
+                .then(() => {
+                    this.setState({
+                        visible: false,
+                    }, () => {
+                        window.location.reload()
+                    })
+                })
+        }
+        else {
+            this.setState({
+                visible: false
+            })
+        }
     };
 
 
@@ -158,14 +191,14 @@ class OwnerBooking extends Component {
                 <Modal
                     visible={visible}
                     title={modalData.hallName}
-                    onOk={this.handleOk}
+                    // onOk={this.handleOk}
                     onCancel={this.handleCancel}
                     footer={[
-                        <Btn key="back" type="danger" onClick={this.handleCancel}>
-                            Reject
+                        <Btn key="back" type={modalData.status === "pending" ? "danger" : "secondary"} onClick={this.handleCancel1}>
+                            {modalData.status === "pending" ? "Reject" : "Cancel"}
                         </Btn>,
                         <Btn key="submit" type="primary" loading={confirmLoading} onClick={this.handleOk}>
-                            Accept
+                            {modalData.status === "pending" ? "Accept" : "Ok"}
                         </Btn>,
                     ]}
                 >
