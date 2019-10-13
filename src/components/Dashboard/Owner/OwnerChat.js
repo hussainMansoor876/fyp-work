@@ -15,7 +15,8 @@ class OwnerChat extends Component {
 
         this.state = {
             user: JSON.parse(sessionStorage.getItem('user')),
-            data: []
+            data: [],
+            selectedChat: ''
         }
     }
 
@@ -30,6 +31,9 @@ class OwnerChat extends Component {
         // });
 
         const { user, data } = this.state
+        // if(user.chatList){
+
+        // }
         firebase.database().ref('users').child(`${user.uid}/chatList`).on('child_added', (val) => {
             var obj = {
                 name: val.val(),
@@ -48,9 +52,20 @@ class OwnerChat extends Component {
     }
 
 
+    openChat(v) {
+        const { user } = this.state
+        this.setState({
+            selectedChat: v
+        })
+        firebase.database().ref('users').child(`${user.uid}/chat/${v.key}`).on('child_added', (val) => {
+            console.log(val.val())
+        })
+    }
+
+
 
     render() {
-        const { data } = this.state
+        const { data, selectedChat } = this.state
         return (
             <Layout style={{ minHeight: '100vh' }}>
                 <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
@@ -60,11 +75,12 @@ class OwnerChat extends Component {
                             <Icon type="user" />
                             <span>All Users</span>
                         </Menu.Item>
-                        {data.length ? data.map((v,i))}
-                        <Menu.Item key="9">
-                            <Icon type="user" />
-                            <span>User 1</span>
-                        </Menu.Item>
+                        {data.length && data.map((v, i) => {
+                            return <Menu.Item key={i + 2} onClick={() => this.openChat(v)}>
+                                <Icon type="user" />
+                                <span>{v.name}</span>
+                            </Menu.Item>
+                        })}
                     </Menu>
                 </Sider>
                 <Layout>
@@ -113,7 +129,7 @@ class OwnerChat extends Component {
                                 type="success"
                             />
                         </div>
-                    
+
                     </Content>
                     <Footer style={{ width: '100%', padding: 24 }}>
                         <div style={{ display: 'flex' }}>

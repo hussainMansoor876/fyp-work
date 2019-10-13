@@ -9,10 +9,13 @@
     "@material-ui/styles": "^4.3.0",
     "antd": "^3.23.4",
     "bootstrap-social": "^5.1.1",
+    "express": "^4.17.1",
     "firebase": "^6.3.0",
     "gh-pages": "^2.1.1",
+    "heroku-ssl-redirect": "^0.0.4",
     "jquery": "^3.4.1",
     "mdbreact": "^4.19.1",
+    "path": "^0.12.7",
     "popper.js": "^1.15.0",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
@@ -26,12 +29,12 @@
     "sweetalert": "^2.1.2"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "node clientserver.js",
+    "start-client": "react-scripts start",
     "build": "react-scripts build",
-    "predeploy": "yarn run build",
-    "deploy": "gh-pages -d build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "heroku-postbuild": "npm run build"
   },
   "eslintConfig": {
     "extends": "react-app"
