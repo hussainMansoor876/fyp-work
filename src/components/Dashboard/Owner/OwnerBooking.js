@@ -32,7 +32,9 @@ class OwnerBooking extends Component {
                 {
                     title: 'Customer Name',
                     dataIndex: 'name',
-                    render: text => <a href="#" onClick={() => this.setState({ visible: true })}>{text}</a>
+                    render: text => <a href="#" onClick={() => this.setState({ visible: true, modalData: text }, () => {
+                        console.log(this.state.modalData)
+                    })}>{text.name}</a>
                 },
                 {
                     title: 'Hall Name',
@@ -48,7 +50,8 @@ class OwnerBooking extends Component {
                 }
             ],
             data: [],
-            date: new Date()
+            date: new Date(),
+            modalData: ''
         }
     }
 
@@ -56,9 +59,10 @@ class OwnerBooking extends Component {
         const { user, data } = this.state
         firebase.database().ref('users').child(`${user.uid}/recBooking`).on('child_added', (val) => {
             var value = val.val()
+            value['key'] = val.key
             data.push({
                 key: val.key,
-                name: value.name,
+                name: value,
                 hallName: value.hallName,
                 pDate: value['date-time-picker'],
                 status: value.status
@@ -68,6 +72,21 @@ class OwnerBooking extends Component {
     }
 
     handleOk = () => {
+        const { modalData, user } = this.state
+        var message = `Your request has approved Kindly pay the Advance fees Rs: ${modalData.advance} of ${modalData.hallName}`
+        var myMsg = {
+            msg: message,
+            recName: modalData.name
+        }
+        var recMsg = {
+            msg: message,
+            senderName: user.fName
+        }
+
+        firebase.database().ref('users').child(`${user.uid}/chat/${modalData.customerUid}/`).push(myMsg)
+        .then((snap)=>{
+            firebase.database().ref('users').child(`${modalData.customerUid}/chat/${user.uid}/${snap.key}`).set(recMsg)
+        })
         this.setState({
             ModalText: 'The modal will be closed after two seconds',
             confirmLoading: true,
@@ -96,7 +115,7 @@ class OwnerBooking extends Component {
 
 
     render() {
-        const { visible, confirmLoading, columns, data } = this.state
+        const { visible, confirmLoading, columns, data, modalData } = this.state
 
         return (
             <div>
@@ -138,7 +157,7 @@ class OwnerBooking extends Component {
                 </div>
                 <Modal
                     visible={visible}
-                    title="Title"
+                    title={modalData.hallName}
                     onOk={this.handleOk}
                     onCancel={this.handleCancel}
                     footer={[
@@ -150,11 +169,8 @@ class OwnerBooking extends Component {
                         </Btn>,
                     ]}
                 >
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
-                    <p>Some contents...</p>
+                    <h3>Customer Name: {modalData.name}</h3>
+                    <h4>Customer Number: {modalData.number}</h4>
                 </Modal>
                 <Footer />
             </div>

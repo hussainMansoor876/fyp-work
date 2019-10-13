@@ -185,7 +185,7 @@ class SearchResult extends Component {
                             })(<Input placeholder="Enter your Name Here..." />)}
                         </Form.Item>
                         <Form.Item label="Phone Number">
-                            {getFieldDecorator('title', {
+                            {getFieldDecorator('number', {
                                 rules: [{ required: true, message: 'Please input the title of collection!' }],
                             })(<Input type="number" placeholder="Enter your Number Here..." />)}
                         </Form.Item>

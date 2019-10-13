@@ -31,12 +31,12 @@ export const mainListItems = (
       </ListItem>
     </Link>
 
-    <Link to="/OwnerDashboard/booking">
+    <Link to="/searchResult">
       <ListItem button>
         <ListItemIcon>
           <BookingIcon />
         </ListItemIcon>
-        <ListItemText primary="Bookings" />
+        <ListItemText primary="Search Venue" />
       </ListItem>
     </Link>
 
