@@ -228,7 +228,7 @@ export default function Dashboard(props) {
           // pagination={false}
           style={{ width: '94%' }}
           columns={columns}
-          dataSource={props.data.reverse()}
+          dataSource={props.data.slice().reverse()}
         />
       </div> : <Skeleton active />}
     </div>
