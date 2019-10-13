@@ -32,8 +32,8 @@ class Search extends Component {
         }
     }
 
-    componentWillMount(){
-        console.log('this',this.props.props)
+    componentWillMount() {
+        console.log('this', this.props.props)
     }
 
     showSignup1() {
@@ -66,7 +66,12 @@ class Search extends Component {
                         sessionStorage.setItem('user', JSON.stringify(val1))
                         swal('login successfull')
                         window.$('#exampleModalCenter1').modal('hide');
-                        window.location.href = '/searchResult'
+                        if (val1.accountType === "1") {
+                            window.location.href = '/searchResult'
+                        }
+                        else {
+                            window.location.href = '/OwnerDashboard'
+                        }
                     })
                     this.setState({
                         email: '',
@@ -109,10 +114,15 @@ class Search extends Component {
                 console.log(res)
                 firebase.database().ref('users').child(`${res.user.uid}/`).set(obj)
                 sessionStorage.setItem('user', JSON.stringify(obj))
-                this.setState({ obj: obj1, disable: false })
                 swal('Signup successfull');
                 window.$('#signupModalCenter1').modal('hide');
-                window.location.href = '/searchResult'
+                if (obj.accountType === "1") {
+                    window.location.href = '/searchResult'
+                }
+                else {
+                    window.location.href = '/OwnerDashboard'
+                    this.setState({ obj: obj1, disable: false })
+                }
             })
                 .catch((error) => {
                     swal('something went wrong' + error);
@@ -132,7 +142,12 @@ class Search extends Component {
         if (user) {
             console.log('Mil gya')
             sessionStorage.setItem('search', JSON.stringify(obj))
-            window.location.href = '/searchResult'
+            if (user.accountType === "1") {
+                window.location.href = '/searchResult'
+            }
+            else {
+                window.location.href = '/OwnerDashboard'
+            }
         }
         else {
             console.log("Nahi Mila")
@@ -179,7 +194,7 @@ class Search extends Component {
                                             borderRightColor: '#ffffff'
 
                                         }}
-                                         />
+                                        />
 
                                     </div>
 
