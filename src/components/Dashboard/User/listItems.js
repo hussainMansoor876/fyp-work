@@ -49,7 +49,7 @@ export const mainListItems = (
       </ListItem>
     </Link>
 
-    <Link to="/OwnerDashboard/setting">
+    <Link to="/userDashboard/setting">
       <ListItem button>
         <ListItemIcon>
           <SettingIcon />

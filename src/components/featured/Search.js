@@ -139,15 +139,15 @@ class Search extends Component {
             vLocation
         }
         const user = sessionStorage.getItem('user')
-        if (user) {
-            console.log('Mil gya')
-            sessionStorage.setItem('search', JSON.stringify(obj))
-            window.location.href = '/searchResult'
-        }
-        else {
-            console.log("Nahi Mila")
-            this.showLogin11()
-        }
+        sessionStorage.setItem('search', JSON.stringify(obj))
+        window.location.href = '/searchResult'
+        // if (user) {
+        //     console.log('Mil gya')
+        // }
+        // else {
+        //     console.log("Nahi Mila")
+        //     this.showLogin11()
+        // }
     }
 
     searchChange(e) {
@@ -204,7 +204,6 @@ class Search extends Component {
                                             <option>Select Venue Type</option>
                                             <option value="hall">Hall</option>
                                             <option value="banquet">banquet</option>
-                                            <option value="other">Other</option>
                                         </select>
                                     </div>
 
@@ -220,7 +219,6 @@ class Search extends Component {
                                             <option value="nazimabad">Nazimabad</option>
                                             <option value="north nazimabad">North Nazimabad</option>
                                             <option value="defense">Defense</option>
-                                            <option valu="other">Other</option>
                                         </select>
                                     </div>
 

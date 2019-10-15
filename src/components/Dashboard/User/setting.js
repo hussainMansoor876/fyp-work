@@ -106,7 +106,7 @@ class Register extends Component {
         <AppBar style={{ background: '#3c3c3c' }} position="absolute">
           <Toolbar>
             <Typography component="h1" variant="h6" color="inherit" >
-              Owner Dashboard
+              User Dashboard
           </Typography>
             <div style={{ marginLeft: 'auto', marginRight: '-12px' }}>
               <Button style={{ color: 'white' }}>Browse Venue</Button>
