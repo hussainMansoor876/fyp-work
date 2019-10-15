@@ -70,10 +70,21 @@ class SearchResult extends Component {
                 })
             })
         }
+        else {
+            firebase.database().ref('allHallData').on('child_added', (val) => {
+                firebase.database().ref('allHallData').child(`${val.key}`).on('child_added', (val1) => {
+                    var value = val1.val()
+                    value['userUid'] = val.key
+                    value['key'] = val1.key
+                    allHallData.push(value)
+                    this.setState({ allHallData })
+                })
+            })
+        }
     }
 
     componentDidMount() {
-        // sessionStorage.removeItem('search')
+        sessionStorage.removeItem('search')
     }
 
     handleSubmit = (e) => {
@@ -414,7 +425,7 @@ class SearchResult extends Component {
                     </div>
                 </Element>
                 {
-                    search ? allHallData.length ? <div>
+                    search & allHallData.length ? <div>
                         <h1 style={{ textAlign: 'center', marginTop: 20 }}>Search Result</h1>
                         <div style={{ background: '#ECECEC', padding: '30px' }}>
                             <Row gutter={16}>
@@ -438,7 +449,33 @@ class SearchResult extends Component {
                                 })}
                             </Row>
                         </div>
-                    </div> : <Skeleton /> : <div style={{ marginTop: 300 }}></div>
+                    </div> : allHallData.length ? <div>
+                        <h1 style={{ textAlign: 'center', marginTop: 20 }}>Search Result</h1>
+                        <div style={{ background: '#ECECEC', padding: '30px' }}>
+                            <Row gutter={16}>
+                                {allHallData.map((v, i) => {
+                                    return <Col span={8} key={i}>
+                                        <Card
+                                            style={{ marginTop: 20 }}
+                                            title={v.hallName}
+                                            hoverable
+                                            cover={<img alt="example" style={{ height: 260 }} src={'https://encrypted-tbn0.gstatic.com/images?q=tbn%3AANd9GcQefCoQ8XaDsgV3HdlAjqap7esgqwmqB-Xd5AIL9STJIbsjFfII'} />}
+                                        >
+                                            <Meta title={`VenueType: ${v.venueType}`} />
+                                            <br />
+                                            <h3>Advance: {v.price / 10}</h3>
+                                            <h1>{`Rs: ${v.price}`}</h1>
+                                            <p>Address: {v.address}</p>
+                                            <Btn type="primary" onClick={() => this.venueBooking(v)} block>
+                                                Register
+                                        </Btn>
+                                        </Card>
+                                    </Col>
+                                })}
+                            </Row>
+                        </div>
+                    </div> :
+                            <Skeleton />
                 }
                 < Footer />
                 <Modal
