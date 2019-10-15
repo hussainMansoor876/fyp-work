@@ -142,12 +142,7 @@ class Search extends Component {
         if (user) {
             console.log('Mil gya')
             sessionStorage.setItem('search', JSON.stringify(obj))
-            if (user.accountType === "1") {
-                window.location.href = '/searchResult'
-            }
-            else {
-                window.location.href = '/OwnerDashboard'
-            }
+            window.location.href = '/searchResult'
         }
         else {
             console.log("Nahi Mila")
