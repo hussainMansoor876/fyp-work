@@ -178,7 +178,7 @@ export default function Dashboard(props) {
             </Typography>
           <Button style={{ color: 'white' }} onClick={() => logout()}>Logout</Button>
 
-          <IconButton style={{ color: '#ffffff' }} title="Message">
+          <IconButton onClick={() => window.location.href = '/userDashboard/chat'} style={{ color: '#ffffff' }} title="Message">
             <Message />
           </IconButton>
 
