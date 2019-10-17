@@ -131,7 +131,12 @@ class SearchResult extends Component {
             })
         }
         else {
-
+            this.setState({ selectedHall: v }, () => {
+                this.props.form.setFieldsValue({
+                    hallName: v.hallName
+                })
+                this.showLogin()
+            })
         }
     }
 
@@ -148,7 +153,7 @@ class SearchResult extends Component {
     async login() {
         const { email, password } = this.state
 
-        if (email == '' || password == '') {
+        if (email === '' || password === '') {
             swal('Enter both textfield(s)')
         }
         else {
@@ -166,11 +171,14 @@ class SearchResult extends Component {
                         swal('login successfull')
                         window.$('#exampleModalCenter').modal('hide');
                         console.log("Hello")
-                        if (val1.accountType === "1") {
-                            window.location.href = '/userDashboard'
+                        if (val1.accountType === "2") {
+                            window.location.href = '/OwnerDashboard'
                         }
                         else {
-                            window.location.href = '/OwnerDashboard'
+                            this.setState({
+                                user: val1,
+                                visible: true
+                            })
                         }
                     })
                     this.setState({
@@ -188,7 +196,7 @@ class SearchResult extends Component {
     signUp() {
         const { obj } = this.state
 
-        if (obj.email === '' || obj.password === '' || obj.fName === '' || obj.lName === '' || obj.email === '' || obj.password === '' || obj.phoneNumber === '' || obj.confirmPassword === '' || obj.accountType === '') {
+        if (obj.email == '' || obj.password == '' || obj.fName == '' || obj.lName == '' || obj.email == '' || obj.password == '' || obj.phoneNumber == '' || obj.confirmPassword == '' || obj.accountType == '') {
             swal('Fill All textfield(s)')
         }
         else if (obj.password !== obj.confirmPassword) {
@@ -214,10 +222,14 @@ class SearchResult extends Component {
                 console.log(res)
                 firebase.database().ref('users').child(`${res.user.uid}/`).set(obj)
                 sessionStorage.setItem('user', JSON.stringify(obj))
-                this.setState({ obj: obj1, disable: false })
                 swal('Signup successfull');
                 window.$('#signupModalCenter').modal('hide');
-                window.location.reload()
+                if (obj.accountType === "2") {
+                    window.location.href = '/OwnerDashboard'
+                }
+                else {
+                    this.setState({ user: obj1, visible: true })
+                }
             })
                 .catch((error) => {
                     swal('something went wrong' + error);
@@ -510,6 +522,8 @@ class SearchResult extends Component {
                         </Form.Item>
                     </Form>
                 </Modal>
+
+
 
             </div >
 
