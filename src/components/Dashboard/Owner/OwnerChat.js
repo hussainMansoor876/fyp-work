@@ -16,8 +16,11 @@ class OwnerChat extends Component {
         this.state = {
             user: JSON.parse(sessionStorage.getItem('user')),
             data: [],
+            dataObj: {},
             selectedChat: '',
-            chatUserName: ''
+            chatUserName: '',
+            allMessages: [],
+            myMsg: ''
         }
     }
 
@@ -35,15 +38,21 @@ class OwnerChat extends Component {
         // if(user.chatList){
 
         // }
+        var obj1 = {}
         firebase.database().ref('users').child(`${user.uid}/chatList`).on('child_added', (val) => {
             var obj = {
                 name: val.val(),
                 uid: val.key,
                 [val.key]: val.val()
             }
+            obj1[val.key] = {
+                name: val.val(),
+                uid: val.key
+            }
             data.push(obj)
             this.setState({
-                data
+                data,
+                dataObj: obj1
             })
         })
     }
@@ -55,20 +64,56 @@ class OwnerChat extends Component {
 
 
     openChat(v) {
-        const { user } = this.state
-        console.log(v)
-        // this.setState({
-        //     selectedChat: v
-        // })
-        // firebase.database().ref('users').child(`${user.uid}/chat/${v.key}`).on('child_added', (val) => {
-        //     console.log(val.val())
-        // })
+        const { user, dataObj } = this.state
+        console.log(dataObj[v.key])
+        this.setState({
+            selectedChat: dataObj[v.key],
+            chatUserName: dataObj[v.key]['name']
+        })
+        this.setState({
+            allMessages: []
+        }, () => {
+            const { allMessages } = this.state
+
+            firebase.database().ref('users').child(`${user.uid}/chat/${v.key}`).on('child_added', (val) => {
+                var obj = {
+                    data: val.val(),
+                    key: val.key
+                }
+                allMessages.push(obj)
+                this.setState({
+                    allMessages
+                })
+            })
+        })
+    }
+
+    sendMsg(){
+        const { myMsg, selectedChat, user } = this.state
+        var myMsg1 = {
+            msg: myMsg,
+            recName: selectedChat.name
+        }
+        var recMsg = {
+            msg: myMsg,
+            senderName: user.fName
+        }
+
+        firebase.database().ref('users').child(`${user.uid}/chat/${selectedChat.uid}/`).push(myMsg1)
+                .then((snap) => {
+                    firebase.database().ref('users').child(`${selectedChat.uid}/chat/${user.uid}/${snap.key}`).set(recMsg)
+                        .then(() => {
+                            this.setState({
+                                myMsg: ''
+                            })
+                        })
+                })
     }
 
 
 
     render() {
-        const { data, selectedChat, chatUserName } = this.state
+        const { data, allMessages, chatUserName, myMsg } = this.state
         return (
             <Layout style={{ minHeight: '100vh' }}>
                 <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
@@ -95,52 +140,35 @@ class OwnerChat extends Component {
                             <Breadcrumb.Item>{chatUserName}</Breadcrumb.Item>
                         </Breadcrumb>
                         <div style={{ padding: 24, background: '#fff', minHeight: 360, }}>
-                            <Alert
-                                message="Hussain"
-                                description="Additional description and information about copywriting."
+                            {allMessages.length ? allMessages.map((v, i) => {
+                                if(v.data.recName){
+                                    return < Alert
+                                    key={i}
+                                    style={{ marginBottom: 10, width: '70%', marginLeft: '30%' }}
+                                    message="Me"
+                                    description={v.data.msg}
+                                    type="success"
+                                />
+                                }
+                                return <Alert
+                                message={v.data.senderName}
+                                description={v.data.msg}
                                 type="info"
                                 style={{ marginBottom: 10, width: '70%' }}
                             />
-                            <Alert
-                                style={{ marginBottom: 10, width: '70%', marginLeft: '30%' }}
-                                message="Me"
-                                description="Detailed description and advice about successful copywriting."
-                                type="success"
-                            />
-                            <Alert
-                                message="Hussain"
-                                description="Additional description and information about copywriting."
-                                type="info"
-                                style={{ marginBottom: 10, width: '70%' }}
-                            />
-                            <Alert
-                                style={{ marginBottom: 10, width: '70%', marginLeft: '30%' }}
-                                message="Me"
-                                description="Detailed description and advice about successful copywriting."
-                                type="success"
-                            />
-                            <Alert
-                                message="Hussain"
-                                description="Additional description and information about copywriting."
-                                type="info"
-                                style={{ marginBottom: 10, width: '70%' }}
-                            />
-                            <Alert
-                                style={{ marginBottom: 10, width: '70%', marginLeft: '30%' }}
-                                message="Me"
-                                description="Detailed description and advice about successful copywriting."
-                                type="success"
-                            />
+                            }) : }
                         </div>
 
                     </Content>
                     <Footer style={{ width: '100%', padding: 24 }}>
                         <div style={{ display: 'flex' }}>
-                            <TextArea
+                        <TextArea
                                 placeholder="Autosize height with minimum and maximum number of lines"
                                 autosize={{ minRows: 2, maxRows: 6 }}
+                                value={myMsg}
+                                onChange={(e) => this.setState({ myMsg: e.target.value })}
                             />
-                            <Button type="primary" shape="circle" style={{ textAlign: 'center', height: 55, width: 65, paddingBottom: 10, marginLeft: 1 }} icon="right" />
+                            <Button type="primary" shape="circle" style={{ textAlign: 'center', height: 55, width: 65, paddingBottom: 10, marginLeft: 1 }} icon="right" disabled={myMsg ? false : true} onClick={() => this.sendMsg()} />
                         </div>
                     </Footer>
                 </Layout>

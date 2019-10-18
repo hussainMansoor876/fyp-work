@@ -40,7 +40,7 @@ export const mainListItems = (
       </ListItem>
     </Link>
 
-    <Link to="/OwnerDashboard/chat">
+    <Link to="/user/chat">
       <ListItem button>
         <ListItemIcon>
           <MessageIcon />

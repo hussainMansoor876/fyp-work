@@ -15,6 +15,7 @@ import OwnerChat from './components/Dashboard/Owner/OwnerChat'
 import SearchResult from './components/SearchResult/SearchResult'
 import UserDashboard from './components/Dashboard/User/UserClass'
 import UserSetting from './components/Dashboard/User/setting'
+import UserChat from './components/Dashboard/User/UserChat'
 
 
 
@@ -61,7 +62,8 @@ class App extends Component {
           <PrivateRoute isLoggedIn={(this.props.isLoggedIn || this.state.isLoggedIn)} exact path="/OwnerDashboard" component={Owner} />
           <PrivateRoute isLoggedIn={(this.props.isLoggedIn || this.state.isLoggedIn)} exact path="/userDashboard" component={UserDashboard} />
           <PrivateRoute isLoggedIn={(this.props.isLoggedIn || this.state.isLoggedIn)} exact path="/OwnerDashboard/booking" component={OwnerBooking} />
-          <Route exact path="/OwnerDashboard/chat" component={OwnerChat} />
+          <PrivateRoute isLoggedIn={(this.props.isLoggedIn || this.state.isLoggedIn)} exact path="/OwnerDashboard/chat" component={OwnerChat} />
+          <PrivateRoute isLoggedIn={(this.props.isLoggedIn || this.state.isLoggedIn)} exact path="/user/chat" component={UserChat} />
           <Route exact path="/AdminDashboard" component={Admin} />
           <Route exact path="/AdminMessage" component={MessageToAdmin} />
           <PrivateRoute isLoggedIn={(this.props.isLoggedIn || this.state.isLoggedIn)} exact path="/OwnerDashboard/setting" component={Setting} />

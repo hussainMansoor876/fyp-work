@@ -78,7 +78,7 @@ class OwnerBooking extends Component {
                 ModalText: 'The modal will be closed after two seconds',
                 confirmLoading: true,
             });
-            var message = `Your request has approved Kindly pay the Advance fees Rs: ${modalData.advance} of ${modalData.hallName}`
+            var message = `Your request has approved Kindly pay the Advance fees Rs: ${modalData.price/10} of ${modalData.hallName}`
             var myMsg = {
                 msg: message,
                 recName: modalData.name
