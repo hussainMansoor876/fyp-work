@@ -148,15 +148,12 @@ class Header extends Component {
     }
 
     updateData(e) {
-        console.log(e)
         const { name, value } = e
         this.setState({
             obj: {
                 ...this.state.obj,
                 [name]: value
             }
-        }, () => {
-            console.log(this.state.obj)
         })
     }
 

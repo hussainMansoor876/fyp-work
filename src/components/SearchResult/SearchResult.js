@@ -87,6 +87,16 @@ class SearchResult extends Component {
         sessionStorage.removeItem('search')
     }
 
+    updateData(e) {
+        const { name, value } = e
+        this.setState({
+            obj: {
+                ...this.state.obj,
+                [name]: value
+            }
+        })
+    }
+
     handleSubmit = (e) => {
         const { selectedHall, user } = this.state
         e.preventDefault();
@@ -126,7 +136,8 @@ class SearchResult extends Component {
         if (user) {
             this.setState({ visible: true, selectedHall: v }, () => {
                 this.props.form.setFieldsValue({
-                    hallName: v.hallName
+                    hallName: v.hallName,
+                    name: user.fName
                 })
             })
         }
@@ -175,6 +186,10 @@ class SearchResult extends Component {
                             window.location.href = '/OwnerDashboard'
                         }
                         else {
+                            this.props.form.setFieldsValue({
+                                name: val1.fName
+                            })
+
                             this.setState({
                                 user: val1,
                                 visible: true
@@ -228,6 +243,9 @@ class SearchResult extends Component {
                     window.location.href = '/OwnerDashboard'
                 }
                 else {
+                    this.props.form.setFieldsValue({
+                        name: obj1.fName
+                    })
                     this.setState({ user: obj1, visible: true })
                 }
             })
@@ -501,7 +519,7 @@ class SearchResult extends Component {
                         <Form.Item label="Name">
                             {getFieldDecorator('name', {
                                 rules: [{ required: true, message: 'Please input the title of collection!' }],
-                            })(<Input placeholder="Enter your Name Here..." />)}
+                            })(<Input placeholder="Enter your Name Here..." readOnly />)}
                         </Form.Item>
                         <Form.Item label="Phone Number">
                             {getFieldDecorator('number', {

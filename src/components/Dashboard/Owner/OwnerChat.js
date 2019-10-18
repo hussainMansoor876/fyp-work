@@ -16,7 +16,8 @@ class OwnerChat extends Component {
         this.state = {
             user: JSON.parse(sessionStorage.getItem('user')),
             data: [],
-            selectedChat: ''
+            selectedChat: '',
+            chatUserName: ''
         }
     }
 
@@ -37,7 +38,8 @@ class OwnerChat extends Component {
         firebase.database().ref('users').child(`${user.uid}/chatList`).on('child_added', (val) => {
             var obj = {
                 name: val.val(),
-                uid: val.key
+                uid: val.key,
+                [val.key]: val.val()
             }
             data.push(obj)
             this.setState({
@@ -54,29 +56,30 @@ class OwnerChat extends Component {
 
     openChat(v) {
         const { user } = this.state
-        this.setState({
-            selectedChat: v
-        })
-        firebase.database().ref('users').child(`${user.uid}/chat/${v.key}`).on('child_added', (val) => {
-            console.log(val.val())
-        })
+        console.log(v)
+        // this.setState({
+        //     selectedChat: v
+        // })
+        // firebase.database().ref('users').child(`${user.uid}/chat/${v.key}`).on('child_added', (val) => {
+        //     console.log(val.val())
+        // })
     }
 
 
 
     render() {
-        const { data, selectedChat } = this.state
+        const { data, selectedChat, chatUserName } = this.state
         return (
             <Layout style={{ minHeight: '100vh' }}>
                 <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
                     <div className="logo" />
-                    <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
+                    <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" onClick={(v) => this.openChat(v)}>
                         <Menu.Item key="1">
                             <Icon type="user" />
                             <span>All Users</span>
                         </Menu.Item>
                         {data.length && data.map((v, i) => {
-                            return <Menu.Item key={i + 2} onClick={() => this.openChat(v)}>
+                            return <Menu.Item key={v.uid}>
                                 <Icon type="user" />
                                 <span>{v.name}</span>
                             </Menu.Item>
@@ -89,7 +92,7 @@ class OwnerChat extends Component {
                     </Header>
                     <Content style={{ margin: '0 16px', overflow: 'scroll' }}>
                         <Breadcrumb style={{ margin: '16px 0' }}>
-                            <Breadcrumb.Item>User 1</Breadcrumb.Item>
+                            <Breadcrumb.Item>{chatUserName}</Breadcrumb.Item>
                         </Breadcrumb>
                         <div style={{ padding: 24, background: '#fff', minHeight: 360, }}>
                             <Alert
