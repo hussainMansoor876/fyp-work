@@ -4,12 +4,14 @@ import '../../../resources/bootstrap.min.css';
 import firebase from '../../../config/firebase'
 import swal from 'sweetalert';
 
-import { Layout, Menu, Breadcrumb, Icon, Input, Button, Alert } from 'antd';
+import { Layout, Menu, Breadcrumb, Icon, Input, Button, Alert, Typography, Skeleton } from 'antd';
 
 const { Header, Content, Footer, Sider } = Layout;
 const { TextArea } = Input;
 
-class OwnerChat extends Component {
+const { Title } = Typography;
+
+class UserChat extends Component {
     constructor(props) {
         super(props)
 
@@ -21,6 +23,7 @@ class OwnerChat extends Component {
             chatUserName: '',
             allMessages: [],
             myMsg: '',
+            loader: false
         }
     }
 
@@ -65,16 +68,15 @@ class OwnerChat extends Component {
 
     openChat(v) {
         const { user, dataObj } = this.state
-        console.log(dataObj[v.key])
         this.setState({
             selectedChat: dataObj[v.key],
-            chatUserName: dataObj[v.key]['name']
+            chatUserName: dataObj[v.key]['name'],
+            loader: true
         })
         this.setState({
             allMessages: []
         }, () => {
             const { allMessages } = this.state
-            console.log(allMessages)
 
             firebase.database().ref('users').child(`${user.uid}/chat/${v.key}`).on('child_added', (val) => {
                 var obj = {
@@ -83,11 +85,17 @@ class OwnerChat extends Component {
                 }
                 allMessages.push(obj)
                 this.setState({
-                    allMessages
+                    allMessages,
+                    loader: false
                 })
             })
         })
 
+        // setTimeout(() => {
+        //     this.setState({
+        //         loader: false
+        //     })
+        // }, 2000)
     }
 
     sendMsg() {
@@ -115,7 +123,7 @@ class OwnerChat extends Component {
 
 
     render() {
-        const { data, allMessages, chatUserName, myMsg } = this.state
+        const { data, allMessages, chatUserName, myMsg, loader } = this.state
         return (
             <Layout style={{ minHeight: '100vh' }}>
                 <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
@@ -137,12 +145,12 @@ class OwnerChat extends Component {
                     <Header style={{ background: '#fff', padding: 0 }}>
                         <h1 style={{ textAlign: 'center' }}>All Chat</h1>
                     </Header>
-                    <Content style={{ margin: '0 16px', overflow: 'scroll' }}>
+                    <Content style={{ margin: '0 16px', overflow: 'hidden' }}>
                         <Breadcrumb style={{ margin: '16px 0' }}>
                             <Breadcrumb.Item>{chatUserName}</Breadcrumb.Item>
                         </Breadcrumb>
                         <div style={{ padding: 24, background: '#fff', minHeight: 360, }}>
-                            {allMessages.length ? allMessages.map((v, i) => {
+                            {allMessages.length && !loader ? allMessages.map((v, i) => {
                                 if (v.data.recName) {
                                     return < Alert
                                         key={i}
@@ -153,18 +161,16 @@ class OwnerChat extends Component {
                                     />
                                 }
                                 return <Alert
-                                    key={i}
                                     message={v.data.senderName}
                                     description={v.data.msg}
                                     type="info"
                                     style={{ marginBottom: 10, width: '70%' }}
                                 />
-                            }) : null}
-
+                            }) : loader ? <Skeleton /> : <Title style={{ textAlign: 'center', marginTop: 100 }}>Select a Conversation</Title>}
                         </div>
 
                     </Content>
-                    <Footer style={{ width: '100%', padding: 24 }}>
+                    {allMessages.length && !loader && <Footer style={{ width: '100%', padding: 24 }}>
                         <div style={{ display: 'flex' }}>
                             <TextArea
                                 placeholder="Autosize height with minimum and maximum number of lines"
@@ -174,7 +180,7 @@ class OwnerChat extends Component {
                             />
                             <Button type="primary" shape="circle" style={{ textAlign: 'center', height: 55, width: 65, paddingBottom: 10, marginLeft: 1 }} icon="right" disabled={myMsg ? false : true} onClick={() => this.sendMsg()} />
                         </div>
-                    </Footer>
+                    </Footer>}
                 </Layout>
             </Layout>
 
@@ -183,4 +189,4 @@ class OwnerChat extends Component {
     }
 }
 
-export default OwnerChat;
+export default UserChat;
