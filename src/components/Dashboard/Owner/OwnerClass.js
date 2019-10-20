@@ -10,7 +10,8 @@ class OwnerClass extends Component {
             hallData: '',
             hallDataArr: [],
             start: 0,
-            end: 3
+            end: 3,
+            isData: true
         }
 
         this.updatePage = this.updatePage.bind(this)
@@ -23,7 +24,6 @@ class OwnerClass extends Component {
             var value = val.val()
             value['key'] = val.key
             hallDataArr.push(value)
-            console.log(hallDataArr)
             this.setState({
                 hallData: hallData,
                 hallDataArr
@@ -38,6 +38,12 @@ class OwnerClass extends Component {
             hallData: hallData,
             hallDataArr
         })
+
+        !this.state.hallDataArr.length && setTimeout(() => {
+            this.setState({
+                isData: false
+            })
+        },4000)
     }
 
     updatePage(num) {
@@ -49,7 +55,7 @@ class OwnerClass extends Component {
     }
 
     render() {
-        const { user, hallData, hallDataArr, start, end } = this.state
+        const { user, hallData, hallDataArr, start, end, isData } = this.state
         return (
             <Owner
                 user={user}
@@ -58,6 +64,7 @@ class OwnerClass extends Component {
                 start={start}
                 end={end}
                 updatePage={this.updatePage}
+                isData={isData}
             />
         );
     }

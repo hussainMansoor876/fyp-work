@@ -117,7 +117,12 @@ class Header extends Component {
                 this.setState({ obj: obj1, disable: false })
                 swal('Signup successfull');
                 window.$('#signupModalCenter').modal('hide');
-                window.location.reload()
+                if (obj1.accountType === "1") {
+                    window.location.href = '/userDashboard'
+                }
+                else {
+                    window.location.href = '/OwnerDashboard'
+                }
             })
                 .catch((error) => {
                     swal('something went wrong' + error);
@@ -142,7 +147,7 @@ class Header extends Component {
                     </button>
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav head_ul" style={{ marginLeft: '35%' }}>
-                            <li>   <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }}>PRIVACY POLICY</button></li>
+                            <li>   <button onClick={() => window.location.href = "/PrivacyPolicy"} style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }}>PRIVACY POLICY</button></li>
                             <li>  <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} data-toggle="modal" data-target="#exampleModalCenter">LOGIN / SIGNUP</button></li>
                         </ul>
                     </div>

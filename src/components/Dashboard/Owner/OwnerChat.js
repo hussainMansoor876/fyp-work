@@ -126,7 +126,7 @@ class OwnerChat extends Component {
         const { data, allMessages, chatUserName, myMsg, loader } = this.state
         return (
             <Layout style={{ minHeight: '100vh' }}>
-                <Sider collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
+                <Sider trigger={null} collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
                     <div className="logo" />
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" onClick={(v) => this.openChat(v)}>
                         <Menu.Item key="1">

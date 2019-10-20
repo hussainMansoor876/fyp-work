@@ -23,7 +23,7 @@ import Deposits from './Deposits';
 import Orders from './Orders';
 import { Button } from '@material-ui/core';
 import 'antd/dist/antd.css';
-import { Card, Pagination, Col, Row, Skeleton } from 'antd';
+import { Card, Pagination, Col, Row, Skeleton, Button as Btn } from 'antd';
 
 const { Meta } = Card;
 
@@ -109,7 +109,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function logout(){
+function logout() {
   sessionStorage.removeItem('user')
   window.location.reload()
 }
@@ -156,13 +156,15 @@ export default function Dashboard(props) {
             &nbsp;
              Owner Dashboard
             </Typography>
-          <Button style={{ color: 'white' }}>Browse Venue</Button>
-          <Button style={{ color: 'white' }}>Manage Venues</Button>
+          {/* <Button style={{ color: 'white' }}>Browse Venue</Button>
+          <Button style={{ color: 'white' }}>Manage Venues</Button> */}
           <Button style={{ color: 'white' }} onClick={() => logout()}>Logout</Button>
 
-          <IconButton style={{ color: '#ffffff' }} title="Message">
-            <Message />
-          </IconButton>
+          <Link to="OwnerDashboard/chat">
+            <IconButton style={{ color: '#ffffff' }} title="Message">
+              <Message />
+            </IconButton>
+          </Link>
 
           <Link to="/RegisterHall">
             <IconButton style={{ color: '#ffffff' }} title="Register Hall">
@@ -172,6 +174,7 @@ export default function Dashboard(props) {
 
 
           <IconButton color="inherit" title="Profile">
+            <Button style={{ color: 'white' }} >{props.user.fName}</Button>
             <UserIcon />
           </IconButton>
 
@@ -207,9 +210,9 @@ export default function Dashboard(props) {
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
           <Grid container spacing={3}>
-            <Grid item xs={12} md={8} lg={9}>
+            <Grid item xs={12} md={12} lg={9}>
               <Paper className={fixedHeightPaper}>
-                {props.hallDataArr.length ? <div style={{ background: '#ECECEC', padding: '30px' }}>
+                {props.hallDataArr.length && props.isData ? <div style={{ background: '#ECECEC', padding: '30px' }}>
                   <Row gutter={16}>
                     {props.hallDataArr.slice(props.start, props.end).map((v, i) => {
                       return <Col span={8}>
@@ -231,15 +234,18 @@ export default function Dashboard(props) {
                     onChange={(e) => props.updatePage(e)}
                     total={props.hallDataArr.length} //total number of card data available
                   />
-                </div> : <Skeleton />}
+                </div> : !props.isData ? <center><Btn type="primary" style={{ textAlign: 'center', marginTop: 200, fontSize: 28, height: 50, width: 200 }} onClick={() => window.location.href = "/RegisterHall"}>
+                  Add Venue
+                </Btn></center>
+                    : <Skeleton />}
               </Paper>
             </Grid>
             {/* Recent Deposits */}
-            <Grid item xs={12} md={4} lg={3}>
+            {/* <Grid item xs={12} md={4} lg={3}>
               <Paper className={fixedHeightPaper}>
                 <Deposits />
               </Paper>
-            </Grid>
+            </Grid> */}
             {/* Recent Orders */}
             <Grid item xs={12}>
               <Paper className={classes.paper}>

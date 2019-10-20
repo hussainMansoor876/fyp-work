@@ -46,7 +46,7 @@ class Header extends Component {
     async login() {
         const { email, password } = this.state
 
-        if (email == '' || password == '') {
+        if (email === '' || password === '') {
             swal('Enter both textfield(s)')
         }
         else {
@@ -115,7 +115,12 @@ class Header extends Component {
                 this.setState({ obj: obj1, disable: false })
                 swal('Signup successfull');
                 window.$('#signupModalCenter').modal('hide');
-                window.location.reload()
+                if (obj1.accountType === "1") {
+                    window.location.href = '/userDashboard'
+                }
+                else {
+                    window.location.href = '/OwnerDashboard'
+                }
             })
                 .catch((error) => {
                     swal('something went wrong' + error);
