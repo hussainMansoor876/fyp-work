@@ -171,25 +171,25 @@ export default function Dashboard(props) {
 
 
           <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-
+            
             <Link> <DotsIcon id="dot_icon" onClick={handleDrawerClose} style={{ color: 'white' }} /></Link>
             &nbsp;
              User Dashboard
             </Typography>
-          <Button style={{ color: 'white' }} onClick={() => logout()}>Logout</Button>
-
-          <IconButton onClick={() => window.location.href = '/userDashboard/chat'} style={{ color: '#ffffff' }} title="Message">
+            <IconButton onClick={() => window.location.href = '/user/chat'} style={{ color: '#ffffff' }} title="Message">
             <Message />
           </IconButton>
+          <Button style={{ color: 'white' }} onClick={() => logout()}>Logout</Button>
 
-          <Link to="/RegisterHall">
+          {/* <Link to="/RegisterHall">
             <IconButton style={{ color: '#ffffff' }} title="Register Hall">
               <RegisterIcon />
             </IconButton>
-          </Link>
+          </Link> */}
 
 
           <IconButton color="inherit" title="Profile">
+          <Button style={{ color: 'white' }} >{props.user.fName}</Button>
             <UserIcon />
           </IconButton>
 

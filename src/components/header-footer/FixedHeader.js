@@ -30,6 +30,16 @@ class Header extends Component {
         window.$('#signupModalCenter').modal('show');
     }
 
+    updateData(e) {
+        const { name, value } = e
+        this.setState({
+            obj: {
+                ...this.state.obj,
+                [name]: value
+            }
+        })
+    }
+
     showLogin() {
         window.$('#signupModalCenter').modal('hide');
         window.$('#exampleModalCenter').modal('show');
@@ -38,7 +48,7 @@ class Header extends Component {
     async login() {
         const { email, password } = this.state
 
-        if (email == '' || password == '') {
+        if (email === '' || password === '') {
             swal('Enter both textfield(s)')
         }
         else {
