@@ -64,10 +64,10 @@ class Header extends Component {
                         swal('login successfull')
                         window.$('#exampleModalCenter').modal('hide');
                         console.log("Hello")
-                        if(val1.accountType === "1"){
+                        if (val1.accountType === "1") {
                             window.location.href = '/userDashboard'
                         }
-                        else{
+                        else {
                             window.location.href = '/OwnerDashboard'
                         }
                     })
@@ -162,9 +162,30 @@ class Header extends Component {
         })
     }
 
-    logout(){
+    logout() {
         sessionStorage.removeItem('user')
         window.location.reload()
+    }
+
+    facebookLogin() {
+        var provider = new firebase.auth.FacebookAuthProvider();
+
+        firebase.auth().signInWithPopup(provider)
+        .then((result) => {
+            var token = result.credential.accessToken;
+            var user = result.user;
+            console.log(user)
+        })
+        .catch(function (error) {
+            // Handle Errors here.
+            var errorCode = error.code;
+            var errorMessage = error.message;
+            // The email of the user's account used.
+            var email = error.email;
+            // The firebase.auth.AuthCredential type that was used.
+            var credential = error.credential;
+            // ...
+        });
     }
 
     render() {
@@ -224,7 +245,7 @@ class Header extends Component {
                                 <div className="modal-body" style={{ textAlign: 'center' }}>
                                     <img style={{ width: '100px', height: '100px' }} src={require('../../resources/images/final.png')} />
                                     <br /><br />
-                                    <FacebookLoginButton />
+                                    <FacebookLoginButton onClick={() => this.facebookLogin()} />
                                     <GoogleLoginButton />
 
                                     <br />
@@ -344,7 +365,7 @@ class Header extends Component {
                             </div>
                         </div>
                     </div>
-                
+
                 </div>
             </div>
 
