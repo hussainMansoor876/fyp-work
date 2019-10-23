@@ -19,6 +19,7 @@ class OwnerClass extends Component {
 
     async componentWillMount() {
         const { user, hallDataArr } = this.state
+        const { hallData } = user
 
         await firebase.database().ref('allHallData').child(`${user.uid}`).on('child_added', (val) => {
             var value = val.val()
@@ -29,7 +30,6 @@ class OwnerClass extends Component {
                 hallDataArr
             })
         })
-        const { hallData } = user
 
         // for (var i in hallData) {
         //     hallDataArr.push(hallData[i])
@@ -39,11 +39,15 @@ class OwnerClass extends Component {
             hallDataArr
         })
 
-        !this.state.hallDataArr.length && setTimeout(() => {
-            this.setState({
-                isData: false
-            })
-        },4000)
+        setTimeout(() => {
+            this.checkData()
+        }, 4000)
+    }
+
+    checkData() {
+        !this.state.hallDataArr.length && this.setState({
+            isData: false
+        })
     }
 
     updatePage(num) {

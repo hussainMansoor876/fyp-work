@@ -10,6 +10,7 @@ class Header extends Component {
     constructor() {
         super()
         this.state = {
+            user: sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : false,
             email: '',
             password: '',
             disable: false,
@@ -130,8 +131,13 @@ class Header extends Component {
         }
     }
 
+    logout(){
+        sessionStorage.removeItem('user')
+        window.location.href = '/'
+    }
+
     render() {
-        const { obj, email, password, disable } = this.state
+        const { obj, email, password, disable, user } = this.state
         return (
 
             <div>
@@ -148,7 +154,8 @@ class Header extends Component {
                     <div className="collapse navbar-collapse" id="navbarNav">
                         <ul className="navbar-nav head_ul" style={{ marginLeft: '35%' }}>
                             <li>   <button onClick={() => window.location.href = "/PrivacyPolicy"} style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }}>PRIVACY POLICY</button></li>
-                            <li>  <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} data-toggle="modal" data-target="#exampleModalCenter">LOGIN / SIGNUP</button></li>
+                            {user ? <li>  <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }}>{user.fName}</button></li> : <li>  <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} data-toggle="modal" data-target="#exampleModalCenter">LOGIN / SIGNUP</button></li>}
+                            {user && <li>  <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} onClick={() => this.logout()} >Logout</button></li>}
                         </ul>
                     </div>
                 </nav>

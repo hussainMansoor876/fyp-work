@@ -16,6 +16,7 @@ import SearchResult from './components/SearchResult/SearchResult'
 import UserDashboard from './components/Dashboard/User/UserClass'
 import UserSetting from './components/Dashboard/User/setting'
 import UserChat from './components/Dashboard/User/UserChat'
+import ViewVenue from './components/ViewVenue/ViewVenue'
 
 
 
@@ -71,7 +72,7 @@ class App extends Component {
           <Route exact path="/searchResult" component={SearchResult} />
           <Route exact path="/OwnerDashboard/Card" component={Card} />
           <Route exact path="/HallDetails" component={HallDetails} />
-          <Route exact path="/viewVenue" component={SearchResult} />
+          <Route exact path="/viewVenue" component={ViewVenue} />
 
 
 
