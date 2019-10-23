@@ -255,6 +255,11 @@ class SearchResult extends Component {
         }
     }
 
+    viewVenue(v){
+        sessionStorage.setItem('view', JSON.stringify(v))
+        window.location.href = '/viewVenue'
+    }
+
 
 
     render() {
@@ -267,7 +272,7 @@ class SearchResult extends Component {
                     <AppBar style={{ background: '#3c3c3c' }} position="fixed">
                         <Toolbar>
                             <Typography component="h1" variant="h6" color="inherit" >
-                                User Dashboard
+                                {user ? "User Dashboard" : "Venue Club"}
           </Typography>
                             <div style={{ marginLeft: 'auto', marginRight: '-12px' }}>
                                 {user ? <div>
@@ -474,6 +479,10 @@ class SearchResult extends Component {
                                             <Btn type="primary" onClick={() => this.venueBooking(v)} block>
                                                 Register
                                         </Btn>
+                                            <br />
+                                            <Btn type="secondary" style={{ marginTop: 10 }} onClick={() => this.viewVenue(v)} block>
+                                                View Venue
+                                        </Btn>
                                         </Card>
                                     </Col>
                                 })}
@@ -498,6 +507,9 @@ class SearchResult extends Component {
                                             <p>Address: {v.address}</p>
                                             <Btn type="primary" onClick={() => this.venueBooking(v)} block>
                                                 Register
+                                        </Btn>
+                                            <Btn type="secondary" style={{ marginTop: 10 }} onClick={() => this.viewVenue(v)} block>
+                                                View Venue
                                         </Btn>
                                         </Card>
                                     </Col>

@@ -71,6 +71,7 @@ class App extends Component {
           <Route exact path="/searchResult" component={SearchResult} />
           <Route exact path="/OwnerDashboard/Card" component={Card} />
           <Route exact path="/HallDetails" component={HallDetails} />
+          <Route exact path="/viewVenue" component={SearchResult} />
 
 
 
