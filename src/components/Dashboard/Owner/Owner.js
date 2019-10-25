@@ -117,7 +117,7 @@ function logout() {
 
 function viewVenue(v) {
   sessionStorage.setItem('view', JSON.stringify(v))
-  window.location.href = '/viewVenue'
+  window.location.href = '/myVenueView'
 }
 
 

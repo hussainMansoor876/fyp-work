@@ -20,6 +20,7 @@ class Register extends Component {
         picture: [],
         venueLocation: '',
         venueType: '',
+        description: ''
       },
       pictureUrl: []
     }
@@ -77,7 +78,7 @@ class Register extends Component {
     // .catch((err) => {
     //   console.log(err)
     // })
-    if (data.hallName === '' || data.address === '' || data.capacity === '' || data.price === '' || data.picture.length === 0 || data.venueLocation === '' || data.venueType === '') {
+    if (data.hallName === '' || data.address === '' || data.capacity === '' || data.price === '' || data.picture.length === 0 || data.venueLocation === '' || data.venueType === '' || data.description === '') {
       swal('Fill All textfield(s)')
     }
     else {
@@ -136,6 +137,11 @@ class Register extends Component {
             <input type="text" className="form-control" id="inputAddress" placeholder="1234 Main St" name="address" value={data.address} onChange={(e) => this.updateData(e.target)} />
           </div>
 
+          <div className="form-group">
+            <label for="inputAddress" style={{ float: 'left' }}>Description</label>
+            <textarea type="text" className="form-control" placeholder="Lorem Ipsum...!!!" name="description" value={data.description} onChange={(e) => this.updateData(e.target)} />
+          </div>
+
           <div className="form-row">
             <div className="col">
               <label for="inputCapacity" style={{ float: 'left' }}>Capacity</label>
@@ -160,7 +166,6 @@ class Register extends Component {
                 <option value="">Select Venue Type</option>
                 <option value="hall">Hall</option>
                 <option value="banquet">Banquet</option>
-                <option value="other">Other</option>
               </select>
             </div>
 
@@ -178,7 +183,6 @@ class Register extends Component {
                 <option value="nazimabad">Nazimabad</option>
                 <option value="north nazimabad">North Nazimabad</option>
                 <option value="defense">Defense</option>
-                <option value="other">Other</option>
               </select>
             </div>
           </div>
