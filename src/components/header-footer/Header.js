@@ -13,6 +13,7 @@ class Header extends Component {
     constructor() {
         super();
         this.state = {
+            DropdownIsVisible: false,
             showLogin: true,
             showSignup: false,
             drawerOpen: false,
@@ -28,7 +29,9 @@ class Header extends Component {
                 phoneNumber: '',
                 password: '',
                 confirmPassword: '',
-                accountType: ''
+                accountType: '',
+                paymentType: '',
+                numberType: ''
             }
         }
     }
@@ -49,9 +52,12 @@ class Header extends Component {
         if (email === '' || password === '') {
             swal('Enter both textfield(s)')
         }
+        else if (email != email || password != password) {
+            swal('Please Enter correct Email or Password')
+        }
         else {
             this.setState({
-                disable: true
+                disable: false
             })
             await firebase.auth().signInWithEmailAndPassword(email, password)
                 .then((res) => {
@@ -78,7 +84,8 @@ class Header extends Component {
                     })
                 })
                 .catch((error) => {
-                    swal('something went wrong' + error);
+                    swal('something went wrong' + error)
+
                 });
         }
     }
@@ -89,8 +96,44 @@ class Header extends Component {
         if (obj.email == '' || obj.password == '' || obj.fName == '' || obj.lName == '' || obj.email == '' || obj.password == '' || obj.phoneNumber == '' || obj.confirmPassword == '' || obj.accountType == '') {
             swal('Fill All textfield(s)')
         }
-        else if (obj.password !== obj.confirmPassword) {
-            swal("Password did not match")
+        else if (obj.accountType == 2) {
+            if (obj.paymentType == '' || obj.numberType == '') {
+                swal('Fill')
+            }
+            else {
+                this.setState({
+                    disable: true
+                })
+                firebase.auth().createUserWithEmailAndPassword(obj.email, obj.password).then((res) => {
+                    obj['uid'] = res.user.uid
+                    delete obj.password
+                    delete obj.confirmPassword
+                    var obj1 = {
+                        fName: '',
+                        lName: '',
+                        email: '',
+                        phoneNumber: '',
+                        password: '',
+                        confirmPassword: '',
+                        accountType: '',
+                        paymentType: '',
+                        numberType: ''
+                    }
+                    console.log(res)
+                    console.log("***")
+                    firebase.database().ref('users').child(`${res.user.uid}/`).set(obj)
+                        .then(() => {
+                            sessionStorage.setItem('user', JSON.stringify(obj))
+                            this.setState({ obj: obj1, disable: false })
+                            swal('Signup successfull');
+                            window.$('#signupModalCenter').modal('hide');
+                            window.location.href = '/OwnerDashboard'
+                        })
+                })
+                    .catch((error) => {
+                        swal('something went wrong' + error);
+                    });
+            }
         }
         else {
             this.setState({
@@ -107,20 +150,21 @@ class Header extends Component {
                     phoneNumber: '',
                     password: '',
                     confirmPassword: '',
-                    accountType: ''
+                    accountType: '',
+                    paymentType: '',
+                    numberType: ''
                 }
                 console.log(res)
+                console.log("***")
                 firebase.database().ref('users').child(`${res.user.uid}/`).set(obj)
-                sessionStorage.setItem('user', JSON.stringify(obj))
-                this.setState({ obj: obj1, disable: false })
-                swal('Signup successfull');
-                window.$('#signupModalCenter').modal('hide');
-                if (obj1.accountType === "1") {
-                    window.location.href = '/userDashboard'
-                }
-                else {
-                    window.location.href = '/OwnerDashboard'
-                }
+                    .then(() => {
+                        sessionStorage.setItem('user', JSON.stringify(obj))
+                        this.setState({ obj: obj1, disable: false })
+                        swal('Signup successfull');
+                        window.$('#signupModalCenter').modal('hide');
+                        window.location.href = '/userDashboard'
+                    })
+
             })
                 .catch((error) => {
                     swal('something went wrong' + error);
@@ -153,12 +197,20 @@ class Header extends Component {
     }
 
     updateData(e) {
-        const { name, value } = e
+        const { name, value } = e;
+        if (value == 2 && name === "accountType") {
+            this.setState({ DropdownIsVisible: true })
+        }
+        else if (value == 1 && name === "accountType") {
+            this.setState({ DropdownIsVisible: false })
+        }
+
         this.setState({
             obj: {
                 ...this.state.obj,
                 [name]: value
-            }
+            },
+
         })
     }
 
@@ -175,32 +227,6 @@ class Header extends Component {
                 var token = result.credential.accessToken;
                 var user = result.user;
                 console.log(user)
-                console.log(result)
-                console.log(result.additionalUserInfo.isNewUser)
-            })
-            .catch(function (error) {
-                // Handle Errors here.
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                // The email of the user's account used.
-                var email = error.email;
-                // The firebase.auth.AuthCredential type that was used.
-                var credential = error.credential;
-                // ...
-            });
-    }
-
-    googleLogin() {
-        var provider = new firebase.auth.GoogleAuthProvider();
-
-        firebase.auth().signInWithPopup(provider)
-            .then((result) => {
-                // This gives you a Google Access Token. You can use it to access the Google API.
-                var token = result.credential.accessToken;
-                // The signed-in user info.
-                var user = result.user;
-                console.log(result)
-                // ...
             })
             .catch(function (error) {
                 // Handle Errors here.
@@ -215,7 +241,7 @@ class Header extends Component {
     }
 
     render() {
-        const { obj, email, password } = this.state;
+        const { obj, email, password, DropdownIsVisible } = this.state;
         return (
             <div>
                 <nav className="navbar navbar-expand-lg navbar-light bck_black fixed-top"
@@ -239,8 +265,9 @@ class Header extends Component {
                             <li>  <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} onClick={() => this.scrollToElement('Categories')}>CATEGORIES</button></li>
                             <li>   <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} onClick={() => this.scrollToElement('AboutUs')}>ABOUT US</button></li>
                             <li>  <Link to="/PrivacyPolicy">   <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }}>PRIVACY POLICY</button></Link></li>
+                            <li>  <Link to="/TermsAndCondition">   <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }}>TERMS & CONDITION</button></Link></li>
                             {!this.state.user ? <li>  <button type="button" style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} data-toggle="modal" data-target="#exampleModalCenter" >LOGIN / SIGNUP</button></li> :
-                                <li>  <button type="button" style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} onClick={() => this.logout()} >Logout</button></li>}
+                                <li>  <button type="button" style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} onClick={() => this.logout()} >LOGOUT</button></li>}
                             {/* <li>  <Link to="/OwnerDashboard"> <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }}>Owner</button></Link></li>
                             <li>  <Link to="/AdminDashboard"><button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} >Admin</button></Link></li> */}
 
@@ -272,7 +299,7 @@ class Header extends Component {
                                     <img style={{ width: '100px', height: '100px' }} src={require('../../resources/images/final.png')} />
                                     <br /><br />
                                     <FacebookLoginButton onClick={() => this.facebookLogin()} />
-                                    <GoogleLoginButton onClick={() => this.googleLogin()} />
+                                    <GoogleLoginButton />
 
                                     <br />
 
@@ -288,7 +315,7 @@ class Header extends Component {
 
 
                                     <div className="d-flex justify-content-end">
-                                        <a style={{ color: 'blue' }}>forgot password?</a>
+                                        <a style={{ color: 'blue' }} onClick={() => window.location.href = '/ForgotPassword'}>forgot password?</a>
                                     </div>
 
                                 </div>
@@ -368,6 +395,20 @@ class Header extends Component {
                                         <option value="1">User</option>
                                         <option value="2">Hall Owner</option>
                                     </select>
+                                    <br /><br />
+                                    {DropdownIsVisible &&
+                                        <div>
+                                            <select className="custom-select mr-sm-2" id="inlineFormCustomSelect" name="paymentType" value={obj.paymentType} onChange={(e) => this.updateData(e.target)}>
+                                                <option selected>Select Payment Method...</option>
+                                                <option value="3">Jazz Cash</option>
+                                                <option value="4">Easy Paisa</option>
+                                            </select><br /><br />
+                                            <div className="form-group">
+                                                <input type="number" name="numberType" value={obj.numberType} onChange={(e) => this.updateData(e.target)} className="form-control" id="numberType1" placeholder="Enter Your Account phone number (0300xxxxxxx)" />
+                                            </div>
+                                        </div>
+
+                                    }
 
                                 </div>
 
@@ -375,9 +416,9 @@ class Header extends Component {
                                     <br />
                                     <div>
 
-                                        <p style={{ color: 'grey' }}>
-                                            By signing up, I agree to Venue Club's Terms of Service, Privacy Policy, Guest Refund Policy, and Host Guarantee Terms.
-                            </p>
+                                        <p style={{ color: 'grey', fontStyle: 'italic' }}>
+                                            By signing up, I agree to Venue Club's <a style={{ color: 'blue', fontWeight: 'bold', textDecorationLine: 'underline' }} onClick={() => window.open('/TermsAndCondition')}>Terms & Condition</a> <br /> and <a style={{ color: 'blue', fontWeight: 'bold', textDecorationLine: 'underline' }} onClick={() => window.open('/PrivacyPolicy')}>Privacy Policy</a>.
+                                        </p>
 
                                         <br />
 

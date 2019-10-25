@@ -1,5 +1,6 @@
 .slider {
     position: relative;
+    float: left;
     width: 100%;
     margin: 0 auto;
     height: 500px;
@@ -50,4 +51,5 @@
   .fa-arrow-right:before, .fa-arrow-left:before {
     color: #222
   }
+
   

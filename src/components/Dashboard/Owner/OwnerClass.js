@@ -58,6 +58,8 @@ class OwnerClass extends Component {
         })
     }
 
+    
+
     render() {
         const { user, hallData, hallDataArr, start, end, isData } = this.state
         return (

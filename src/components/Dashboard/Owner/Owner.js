@@ -105,13 +105,19 @@ const useStyles = makeStyles(theme => ({
     flexDirection: 'column',
   },
   fixedHeight: {
-    height: 500,
+    height: 550,
   },
 }));
 
 function logout() {
   sessionStorage.removeItem('user')
   window.location.reload()
+}
+
+
+function viewVenue(v) {
+  sessionStorage.setItem('view', JSON.stringify(v))
+  window.location.href = '/viewVenue'
 }
 
 
@@ -131,6 +137,10 @@ export default function Dashboard(props) {
     setOpen(false);
   };
   const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
+
+
+
 
 
   return (
@@ -209,8 +219,8 @@ export default function Dashboard(props) {
       <main className={classes.content}>
         <div className={classes.appBarSpacer} />
         <Container maxWidth="lg" className={classes.container}>
-          <Grid container spacing={3}>
-            <Grid item xs={12} md={12} lg={9}>
+          <Grid container spacing={4}>
+            <Grid item xs={12} md={12} lg={12}>
               <Paper className={fixedHeightPaper}>
                 {props.hallDataArr.length && props.isData ? <div style={{ background: '#ECECEC', padding: '30px' }}>
                   <Row gutter={16}>
@@ -221,6 +231,9 @@ export default function Dashboard(props) {
                           cover={<img alt="example" style={{ height: 260 }} src={v.picture} />}
                         >
                           <Meta title={v.hallName} description={`Rs ${v.price}`} />
+                          <Btn type="secondary" style={{ marginTop: 10 }} onClick={() => viewVenue(v)} block>
+                            View Venue
+                                        </Btn>
                         </Card>
                       </Col>
                     })}

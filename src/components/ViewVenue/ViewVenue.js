@@ -18,14 +18,32 @@ import Carrousel from '../featured/Carrousel'
 import Search from '../featured/Search';
 import 'antd/dist/antd.css';
 import firebase from '../../config/firebase'
-import { Card, Col, Row, Skeleton, Button as Btn, Form, Modal, Input, DatePicker } from 'antd';
+import { Card, Col, Row, Skeleton, Button as Btn, Form, Modal, Input, DatePicker, Table, Tag, Divider } from 'antd';
 import swal from 'sweetalert';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import './style.css'
 
 const { Meta } = Card
 
+const { Column, ColumnGroup } = Table;
 
+const data = [
+    {
+        key: '1',
+        firstName: 'John',
+        lastName: 'Brown',
+    },
+    {
+        key: '2',
+        firstName: 'Jim',
+        lastName: 'Green',
+    },
+    {
+        key: '3',
+        firstName: 'Joe',
+        lastName: 'Black',
+    },
+];
 
 
 class ViewVenue extends Component {
@@ -33,7 +51,7 @@ class ViewVenue extends Component {
         super(props)
 
         this.state = {
-            search: sessionStorage.getItem('search') ? JSON.parse(sessionStorage.getItem('search')) : false,
+            view: sessionStorage.getItem('view') ? JSON.parse(sessionStorage.getItem('view')) : false,
             visible: false,
             confirmLoading: false,
             allHallData: [],
@@ -62,43 +80,20 @@ class ViewVenue extends Component {
                 "https://s3.us-east-2.amazonaws.com/dzuz14/thumbnails/tree-of-life.jpg"
             ],
             currentIndex: 0,
-            translateValue: 0
+            translateValue: 0,
+            data: []
+        }
+    }
+
+    componentWillMount(){
+        const { data, view } = this.state
+        for(var key in view){
+            console.log(key)
         }
     }
 
 
-    componentWillMount() {
-        const { search, allHallData } = this.state
-        console.log('user', search)
-        if (search) {
-            firebase.database().ref('allHallData').on('child_added', (val) => {
-                firebase.database().ref('allHallData').child(`${val.key}`).on('child_added', (val1) => {
-                    var value = val1.val()
-                    if (value.hallName.toLowerCase().indexOf(search.vName.toLowerCase()) !== -1 && value.venueLocation.toLowerCase().indexOf(search.vLocation.toLowerCase()) !== -1 && value.venueType.toLowerCase().indexOf(search.vType.toLowerCase()) !== -1) {
-                        value['userUid'] = val.key
-                        value['key'] = val1.key
-                        allHallData.push(value)
-                        this.setState({ allHallData })
-                    }
-                })
-            })
-        }
-        else {
-            firebase.database().ref('allHallData').on('child_added', (val) => {
-                firebase.database().ref('allHallData').child(`${val.key}`).on('child_added', (val1) => {
-                    var value = val1.val()
-                    value['userUid'] = val.key
-                    value['key'] = val1.key
-                    allHallData.push(value)
-                    this.setState({ allHallData })
-                })
-            })
-        }
-    }
 
-    componentDidMount() {
-        sessionStorage.removeItem('search')
-    }
 
     updateData(e) {
         const { name, value } = e
@@ -141,7 +136,7 @@ class ViewVenue extends Component {
     logout() {
         sessionStorage.clear('user')
         sessionStorage.clear('search')
-        window.location.reload()
+        window.location.href = '/'
     }
 
     venueBooking(v) {
@@ -224,7 +219,7 @@ class ViewVenue extends Component {
     signUp() {
         const { obj } = this.state
 
-        if (obj.email == '' || obj.password == '' || obj.fName == '' || obj.lName == '' || obj.email == '' || obj.password == '' || obj.phoneNumber == '' || obj.confirmPassword == '' || obj.accountType == '') {
+        if (obj.email === '' || obj.password === '' || obj.fName === '' || obj.lName === '' || obj.email === '' || obj.password === '' || obj.phoneNumber === '' || obj.confirmPassword === '' || obj.accountType === '') {
             swal('Fill All textfield(s)')
         }
         else if (obj.password !== obj.confirmPassword) {
@@ -496,27 +491,35 @@ class ViewVenue extends Component {
 
                 </Element>
 
-                <div className="slider">
+                <div className="div1" style={{ display: 'flex', flexDirection: 'row', marginTop: 85, marginBottom: 100 }}>
+                    <div className="slider" style={{ flex: 5, marginRight: 10 }} >
 
-                    <div className="slider-wrapper"
-                        style={{
-                            transform: `translateX(${this.state.translateValue}px)`,
-                            transition: 'transform ease-out 0.45s'
-                        }}>
-                        {
-                            this.state.images.map((image, i) => (
-                                <Slide key={i} image={image} />
-                            ))
-                        }
+                        <div className="slider-wrapper"
+                            style={{
+                                transform: `translateX(${this.state.translateValue}px)`,
+                                transition: 'transform ease-out 0.45s'
+                            }}>
+                            {
+                                this.state.images.map((image, i) => (
+                                    <Slide key={i} image={image} />
+                                ))
+                            }
+                        </div>
+
+                        <LeftArrow
+                            goToPrevSlide={this.goToPrevSlide}
+                        />
+
+                        <RightArrow
+                            goToNextSlide={this.goToNextSlide}
+                        />
                     </div>
-
-                    <LeftArrow
-                        goToPrevSlide={this.goToPrevSlide}
-                    />
-
-                    <RightArrow
-                        goToNextSlide={this.goToNextSlide}
-                    />
+                    <div style={{ flex: 3, marginRight: 10 }}>
+                        <Table pagination={false} dataSource={data} style={{ display: 'inline', width: '30%' }}>
+                            <Column title="First Name" dataIndex="firstName" key="firstName" />
+                            <Column title="Last Name" dataIndex="lastName" key="lastName" />
+                        </Table>
+                    </div>
                 </div>
                 < Footer />
 
