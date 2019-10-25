@@ -99,7 +99,7 @@ class Register extends Component {
           }
         })
         .then(() => {
-          window.location.reload()
+          // window.location.reload()
           this.setState({
             data: {
               hallName: '',
@@ -139,7 +139,7 @@ class Register extends Component {
 
           <div className="form-group">
             <label for="inputAddress" style={{ float: 'left' }}>Description</label>
-            <textarea type="text" className="form-control" placeholder="Lorem Ipsum...!!!" name="description" value={data.description} onChange={(e) => this.updateData(e.target)} />
+            <textarea type="text" className="form-control" placeholder="Lorem Ipsum...!" name="description" value={data.description} onChange={(e) => this.updateData(e.target)} />
           </div>
 
           <div className="form-row">

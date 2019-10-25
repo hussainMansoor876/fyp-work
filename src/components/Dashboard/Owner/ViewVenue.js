@@ -64,7 +64,7 @@ class ViewVenue extends Component {
         const { data, view, user } = this.state
         var i = 1
         for (var key in view) {
-            if (key === "picture" || key === "userUid" || key === "key") {
+            if (key === "picture" || key === "userUid" || key === "key" || key === "description") {
                 continue
             }
             else {
@@ -326,7 +326,8 @@ render() {
                         </Typography>
                         <div style={{ marginLeft: 'auto', marginRight: '-12px' }}>
                             {user ? <div>
-                                <Button style={{ color: 'white' }} onClick={() => window.location.href = '/userDashboard'} >Home</Button>
+                                <Button style={{ color: 'white' }} onClick={() => window.location.href = '/OwnerDashboard'} >Home</Button>
+                                <Button style={{ color: 'white' }} onClick={() => window.location.href = '/OwnerDashboard'} >Edit Venue</Button>
                                 {/* <Button style={{ color: 'white' }}>Manage Venues</Button> */}
                                 <Button style={{ color: 'white' }} onClick={() => this.logout()}>Logout</Button>
 
