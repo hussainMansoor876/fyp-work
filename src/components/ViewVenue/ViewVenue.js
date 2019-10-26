@@ -509,7 +509,7 @@ class ViewVenue extends Component {
                 </Element>
 
                 {userData ? <div>
-                    <div style={{ display: 'flex', flexDirection: 'row', marginTop: 35, marginBottom: 10, flex: 1 }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', marginTop: 45, marginBottom: 10, flex: 1 }}>
                         <div className="slider" style={{ flex: 5, marginRight: 10, marginTop: 50 }} >
 
                             <div className="slider-wrapper"
