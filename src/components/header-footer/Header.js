@@ -32,6 +32,15 @@ class Header extends Component {
                 accountType: '',
                 paymentType: '',
                 numberType: ''
+            },
+            obj2: {
+                fName: '',
+                lName: '',
+                email: '',
+                phoneNumber: '',
+                accountType: '',
+                paymentType: '',
+                numberType: ''
             }
         }
     }
@@ -69,7 +78,6 @@ class Header extends Component {
                         sessionStorage.setItem('user', JSON.stringify(val1))
                         swal('login successfull')
                         window.$('#exampleModalCenter').modal('hide');
-                        console.log("Hello")
                         if (val1.accountType === "1") {
                             window.location.href = '/userDashboard'
                         }
@@ -172,6 +180,63 @@ class Header extends Component {
         }
     }
 
+    updateLogin() {
+        const { obj2 } = this.state
+
+        if (obj2.email == '' || obj2.email == '' || obj2.phoneNumber == '' || obj2.accountType == '') {
+            swal('Fill All textfield(s)')
+        }
+        else if (obj2.accountType == 2) {
+            if (obj2.paymentType == '' || obj2.numberType == '') {
+                swal('Fill')
+            }
+            else {
+                this.setState({
+                    disable: true
+                })
+                var obj1 = {
+                    fName: '',
+                    lName: '',
+                    email: '',
+                    phoneNumber: '',
+                    accountType: '',
+                    paymentType: '',
+                    numberType: ''
+                }
+                firebase.database().ref('users').child(`${obj2.uid}/`).set(obj2)
+                    .then(() => {
+                        sessionStorage.setItem('user', JSON.stringify(obj2))
+                        this.setState({ obj2: obj1, disable: false })
+                        swal('Signup successfull');
+                        window.$('#AdditionalInfo').modal('hide');
+                        window.location.href = '/OwnerDashboard'
+                    })
+            }
+        }
+        else {
+            this.setState({
+                disable: true
+            })
+            var obj1 = {
+                fName: '',
+                lName: '',
+                email: '',
+                phoneNumber: '',
+                accountType: '',
+                paymentType: '',
+                numberType: ''
+            }
+            firebase.database().ref('users').child(`${obj2.uid}/`).set(obj2)
+                .then(() => {
+                    sessionStorage.setItem('user', JSON.stringify(obj2))
+                    this.setState({ obj2: obj1, disable: false })
+                    swal('Signup successfull');
+                    window.$('#AdditionalInfo').modal('hide');
+                    window.location.href = '/userDashboard'
+                })
+        }
+    }
+
     scrollToElement = (element) => {
         scroller.scrollTo(element, {
             duration: 1500,
@@ -214,6 +279,24 @@ class Header extends Component {
         })
     }
 
+    updateData1(e) {
+        const { name, value } = e;
+        if (value == 2 && name === "accountType") {
+            this.setState({ DropdownIsVisible: true })
+        }
+        else if (value == 1 && name === "accountType") {
+            this.setState({ DropdownIsVisible: false })
+        }
+
+        this.setState({
+            obj2: {
+                ...this.state.obj2,
+                [name]: value
+            },
+
+        })
+    }
+
     logout() {
         sessionStorage.removeItem('user')
         window.location.reload()
@@ -224,9 +307,36 @@ class Header extends Component {
 
         firebase.auth().signInWithPopup(provider)
             .then((result) => {
-                var token = result.credential.accessToken;
-                var user = result.user;
-                console.log(user)
+                console.log(result.additionalUserInfo.isNewUser)
+                console.log("Hello")
+                if (result.additionalUserInfo.isNewUser) {
+                    window.$('#exampleModalCenter').modal('hide');
+                    window.$('#AdditionalInfo').modal('show');
+                    this.setState({
+                        obj2: {
+                            fName: result.profile.first_name,
+                            lName: result.profile.last_name,
+                            email: result.user.email,
+                            uid: result.user.uid,
+                        }
+                    })
+                }
+                else {
+                    console.log("Hello")
+                    firebase.database().ref('users').child(`${result.user.uid}`).once('value', (value) => {
+                        var val1 = value.val()
+                        val1['key'] = value.key
+                        sessionStorage.setItem('user', JSON.stringify(val1))
+                        swal('login successfull')
+                        window.$('#exampleModalCenter').modal('hide');
+                        if (val1.accountType === "1") {
+                            window.location.href = '/userDashboard'
+                        }
+                        else {
+                            window.location.href = '/OwnerDashboard'
+                        }
+                    })
+                }
             })
             .catch(function (error) {
                 // Handle Errors here.
@@ -241,7 +351,7 @@ class Header extends Component {
     }
 
     render() {
-        const { obj, email, password, DropdownIsVisible } = this.state;
+        const { obj, email, password, DropdownIsVisible, obj2 } = this.state;
         return (
             <div>
                 <nav className="navbar navbar-expand-lg navbar-light bck_black fixed-top"
@@ -265,12 +375,8 @@ class Header extends Component {
                             <li>  <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} onClick={() => this.scrollToElement('Categories')}>CATEGORIES</button></li>
                             <li>   <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} onClick={() => this.scrollToElement('AboutUs')}>ABOUT US</button></li>
                             <li>  <Link to="/PrivacyPolicy">   <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }}>PRIVACY POLICY</button></Link></li>
-                            <li>  <Link to="/TermsAndCondition">   <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }}>TERMS & CONDITION</button></Link></li>
                             {!this.state.user ? <li>  <button type="button" style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} data-toggle="modal" data-target="#exampleModalCenter" >LOGIN / SIGNUP</button></li> :
-                                <li>  <button type="button" style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} onClick={() => this.logout()} >LOGOUT</button></li>}
-                            {/* <li>  <Link to="/OwnerDashboard"> <button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }}>Owner</button></Link></li>
-                            <li>  <Link to="/AdminDashboard"><button style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} >Admin</button></Link></li> */}
-
+                                <li>  <button type="button" style={{ background: 'none', border: 'none', color: '#ffffff', margin: '10px' }} onClick={() => this.logout()} >Logout</button></li>}
                         </ul>
                     </div>
                 </nav>
@@ -357,14 +463,10 @@ class Header extends Component {
 
 
                                 <div className="modal-body" style={{ textAlign: 'center' }}>
-                                    <br /><br />
-                                    <FacebookLoginButton />
-                                    <GoogleLoginButton />
+                                    <img style={{ width: '100px', height: '100px' }} src={require('../../resources/images/final.png')} />
 
                                     <br />
-
-                                    <p style={{ color: 'black' }}>OR</p>
-
+                                    <br />
 
                                     <div className="form-group">
                                         <input className="form-control" id="f_name" name="fName" value={obj.fName} onChange={(e) => this.updateData(e.target)} aria-describedby="emailHelp" placeholder="First name" />
@@ -427,6 +529,66 @@ class Header extends Component {
                                         <br />
                                         <p style={{ color: 'black' }}>Already have an account? <a style={{ color: 'blue' }} onClick={() => { this.showLogin() }} data-toggle="modal" >Login</a>
                                         </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="modal fade" style={{ overflow: 'scroll' }} id="AdditionalInfo" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                        <div className="modal-dialog modal-dialog-centered" role="document">
+                            <div className="modal-content">
+                                <div className="modal-header">
+
+
+
+                                    <div className="d-flex justify-content-center" style={{ width: '100%' }}>
+                                        <h5 style={{ color: 'black' }} className="modal-title" id="exampleModalLongTitle1">Additional Info</h5>
+                                    </div>
+
+                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+
+
+                                <div className="modal-body" style={{ textAlign: 'center' }}>
+
+                                    <br />
+
+                                    {!obj2.email && <div className="form-group">
+                                        <input type="email" className="form-control" name="email" value={obj2.email} onChange={(e) => this.updateData1(e.target)} aria-describedby="emailHelp" placeholder="Enter email" />
+                                    </div>}
+
+                                    {!obj2.phoneNumber && <div className="form-group">
+                                        <input type="number" name="phoneNumber" value={obj2.phoneNumber} onChange={(e) => this.updateData1(e.target)} className="form-control" placeholder="Phone #" />
+                                    </div>}
+
+                                    <select className="custom-select mr-sm-2" name="accountType" value={obj2.accountType} onChange={(e) => this.updateData1(e.target)}>
+                                        <option selected>Select Account Type...</option>
+                                        <option value="1">User</option>
+                                        <option value="2">Hall Owner</option>
+                                    </select>
+                                    <br /><br />
+                                    {DropdownIsVisible &&
+                                        <div>
+                                            <select className="custom-select mr-sm-2" id="inlineFormCustomSelect" name="paymentType" value={obj2.paymentType} onChange={(e) => this.updateData1(e.target)}>
+                                                <option selected>Select Payment Method...</option>
+                                                <option value="3">Jazz Cash</option>
+                                                <option value="4">Easy Paisa</option>
+                                            </select><br /><br />
+                                            <div className="form-group">
+                                                <input type="number" name="numberType" value={obj2.numberType} onChange={(e) => this.updateData1(e.target)} className="form-control" id="numberType1" placeholder="Enter Your Account phone number (0300xxxxxxx)" />
+                                            </div>
+                                        </div>
+
+                                    }
+
+                                </div>
+                                <div className="modal-footer d-flex justify-content-center" style={{ textAlign: 'center' }}>
+                                    <br />
+                                    <div>
+                                        <button disabled={this.state.disable} type="button" className="btn btn-success" onClick={() => this.updateLogin()}>Update</button>
                                     </div>
                                 </div>
                             </div>
