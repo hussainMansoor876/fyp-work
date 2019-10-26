@@ -124,16 +124,16 @@ class ViewVenue extends Component {
     }
 
     handleSubmit = (e) => {
-        const { selectedHall, user } = this.state
+        const { view, user } = this.state
         e.preventDefault();
         this.props.form.validateFields((err, fieldsValue) => {
             if (err) {
                 return;
             }
             fieldsValue['date-time-picker'] = fieldsValue['date-time-picker'].format('YYYY-MM-DD HH:mm:ss')
-            fieldsValue['hallData'] = selectedHall
+            fieldsValue['hallData'] = view
             fieldsValue['customerUid'] = user.uid
-            fieldsValue['advance'] = selectedHall.price / 10
+            fieldsValue['advance'] = view.price / 10
             fieldsValue['status'] = 'pending'
 
             firebase.database().ref('users').child(`${user.uid}/sentBooking/`).push(fieldsValue)
@@ -143,10 +143,14 @@ class ViewVenue extends Component {
                         title: "successfully!",
                         text: "Send the Booking Request",
                         icon: "success",
-                        // button: "OK",
-                    });
+                    })
                     this.props.form.resetFields()
-                    firebase.database().ref('users').child(`${selectedHall.userUid}/recBooking/${snap.key}`).set(fieldsValue)
+                    firebase.database().ref('users').child(`${view.userUid}/recBooking/${snap.key}`).set(fieldsValue)
+                        .then(() => {
+                            setTimeout(() => {
+                                window.location.href = '/searchResult'
+                            },1000)
+                        })
                 })
         })
     }
