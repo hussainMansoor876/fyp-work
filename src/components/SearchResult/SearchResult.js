@@ -547,7 +547,7 @@ class SearchResult extends Component {
                             {getFieldDecorator('date-time-picker', {
                                 rules: [{ type: 'object', required: true, message: 'Please select time!' }]
                             })(
-                                <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" block />
+                                <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" block style={{ float: 'left' }} />
                             )}
                         </Form.Item>
                     </Form>

@@ -160,7 +160,7 @@ img {
 
 .card1 {
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-  width: 60%;
+  width: 100%;
   background-color: #f9f9f9;
   cursor: pointer;
   /* margin: auto; */
@@ -169,6 +169,19 @@ img {
   font-family: arial;
   padding-left: 20px;
   margin-top: 50px;
+  margin-left: 2px;
+}
+
+.card2 {
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+  width: 100%;
+  background-color: #f9f9f9;
+  /* margin: auto; */
+  /* margin-right: 100px; */
+  text-align: left;
+  font-family: arial;
+  margin-bottom: 100px;
+  padding: 20px;
   margin-left: 2px;
 }
 

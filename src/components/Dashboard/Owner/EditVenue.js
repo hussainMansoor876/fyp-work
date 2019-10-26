@@ -262,8 +262,8 @@ class ViewVenue extends Component {
     }
 
     updateServer() {
-        const { view } = this.state
-        firebase.database().ref('allHallData').child(`${view['key']}`).update(view)
+        const { view, user } = this.state
+        firebase.database().ref('allHallData').child(`${user.uid}/${view['key']}`).update(view)
     }
 
     signUp() {

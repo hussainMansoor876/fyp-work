@@ -18,7 +18,7 @@ import Carrousel from '../featured/Carrousel'
 import Search from '../featured/Search';
 import 'antd/dist/antd.css';
 import firebase from '../../config/firebase'
-import { Card, Skeleton, Table } from 'antd';
+import { Card, Skeleton, Table, Button as Btn, Form, Modal, Input, DatePicker } from 'antd';
 import swal from 'sweetalert';
 import { FacebookLoginButton, GoogleLoginButton } from "react-social-login-buttons";
 import './style.css'
@@ -68,7 +68,7 @@ class ViewVenue extends Component {
             var val1 = value.val()
             val1['key'] = value.key
             for (var key in view) {
-                if (key === "picture" || key === "userUid" || key === "key") {
+                if (key === "picture" || key === "userUid" || key === "key" || key === "description") {
                     continue
                 }
                 else {
@@ -84,7 +84,7 @@ class ViewVenue extends Component {
                 if (key1 === "email") {
                     data.push({
                         key: i,
-                        name: key,
+                        name: "email",
                         value: val1[key1]
                     })
                     i++;
@@ -318,9 +318,29 @@ class ViewVenue extends Component {
         return document.querySelector('.slide').clientWidth
     }
 
+    venueBooking() {
+        const { user, view } = this.state
+        if (user) {
+            this.setState({ visible: true }, () => {
+                this.props.form.setFieldsValue({
+                    hallName: view.hallName,
+                    name: user.fName
+                })
+            })
+        }
+        else {
+            this.props.form.setFieldsValue({
+                hallName: view.hallName
+            })
+            this.showLogin()
+        }
+    }
+
 
     render() {
-        const { data, userData, obj, email, password, user, showDescription, view } = this.state
+        const { data, userData, obj, email, password, user, showDescription, view, visible } = this.state
+        const { getFieldDecorator } = this.props.form;
+
         return (
             <div>
                 <Element name="Home">
@@ -539,17 +559,58 @@ class ViewVenue extends Component {
                             </Table>
                         </div>
                     </div>
-                    <div className="card1" onClick={() => this.setState({ showDescription: !showDescription })}>
-                        <p className="title"><i className="fa fa-list-ul"></i> &nbsp; Description</p>
+                    <div style={{ display: 'flex', flex: 1, flexDirection: 'row', marginRight: 10, marginLeft: 10 }}>
+                        <div style={{ flex: 3 }}>
+                            <div className="card1" onClick={() => this.setState({ showDescription: !showDescription })}>
+                                <p className="title"><i className="fa fa-list-ul"></i> &nbsp; Description</p>
+                            </div>
+                            {showDescription && <div className="card2">
+                                <p className="title">{view.description}
+                                </p>
+                            </div>}
+                        </div>
+                        <div style={{ flex: 1, marginTop: 50, marginLeft: 10 }}>
+                            <Btn type="primary" onClick={() => this.venueBooking()} block>
+                                Register this Venue
+                                        </Btn>
+                        </div>
                     </div>
-                    {showDescription && <div className="card">
-                        <p className="title">{view.description}
-                    </p>
-                    </div>}
                 </div>
                     : <div style={{ marginTop: 85 }}><Skeleton /></div>}
                 < Footer />
 
+                <Modal
+                    visible={visible}
+                    title="Create a new collection"
+                    okText="Submit"
+                    onCancel={() => this.setState({ visible: false })}
+                    onOk={this.handleSubmit}
+                >
+                    <Form layout="vertical">
+                        <Form.Item label="Name">
+                            {getFieldDecorator('name', {
+                                rules: [{ required: true, message: 'Please input the title of collection!' }],
+                            })(<Input placeholder="Enter your Name Here..." readOnly />)}
+                        </Form.Item>
+                        <Form.Item label="Phone Number">
+                            {getFieldDecorator('number', {
+                                rules: [{ required: true, message: 'Please input the title of collection!' }],
+                            })(<Input type="number" placeholder="Enter your Number Here..." />)}
+                        </Form.Item>
+                        <Form.Item label="Hall Name">
+                            {getFieldDecorator('hallName', {
+                                rules: [{ required: true, message: 'Please input the title of collection!' }],
+                            })(<Input placeholder="Enter your Number Here..." readOnly />)}
+                        </Form.Item>
+                        <Form.Item label="Date and Time">
+                            {getFieldDecorator('date-time-picker', {
+                                rules: [{ type: 'object', required: true, message: 'Please select time!' }]
+                            })(
+                                <DatePicker showTime format="YYYY-MM-DD HH:mm:ss" block style={{ float: 'left' }} />
+                            )}
+                        </Form.Item>
+                    </Form>
+                </Modal>
             </div >
 
 
@@ -585,5 +646,6 @@ const RightArrow = (props) => {
     );
 }
 
+const SearchResultForm = Form.create({ name: 'form_in_modal' })(ViewVenue);
 
-export default ViewVenue;
+export default SearchResultForm;
