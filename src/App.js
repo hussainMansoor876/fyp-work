@@ -18,7 +18,7 @@ import UserSetting from './components/Dashboard/User/setting'
 import UserChat from './components/Dashboard/User/UserChat'
 import ViewVenue from './components/ViewVenue/ViewVenue'
 import myVenueView from './components/Dashboard/Owner/ViewVenue'
-
+import EditVenue from './components/Dashboard/Owner/EditVenue'
 
 
 function PrivateRoute({ component: Component, isLoggedIn, ...rest }) {
@@ -65,6 +65,7 @@ class App extends Component {
           <PrivateRoute isLoggedIn={(this.props.isLoggedIn || this.state.isLoggedIn)} exact path="/userDashboard" component={UserDashboard} />
           <PrivateRoute isLoggedIn={(this.props.isLoggedIn || this.state.isLoggedIn)} exact path="/OwnerDashboard/booking" component={OwnerBooking} />
           <PrivateRoute isLoggedIn={(this.props.isLoggedIn || this.state.isLoggedIn)} exact path="/myVenueView" component={myVenueView} />
+          <PrivateRoute isLoggedIn={(this.props.isLoggedIn || this.state.isLoggedIn)} exact path="/editVenue" component={EditVenue} />
           <PrivateRoute isLoggedIn={(this.props.isLoggedIn || this.state.isLoggedIn)} exact path="/OwnerDashboard/chat" component={OwnerChat} />
           <PrivateRoute isLoggedIn={(this.props.isLoggedIn || this.state.isLoggedIn)} exact path="/user/chat" component={UserChat} />
           <Route exact path="/AdminDashboard" component={Admin} />

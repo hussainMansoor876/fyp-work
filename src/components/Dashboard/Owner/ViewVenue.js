@@ -327,13 +327,8 @@ render() {
                         <div style={{ marginLeft: 'auto', marginRight: '-12px' }}>
                             {user ? <div>
                                 <Button style={{ color: 'white' }} onClick={() => window.location.href = '/OwnerDashboard'} >Home</Button>
-                                <Button style={{ color: 'white' }} onClick={() => window.location.href = '/OwnerDashboard'} >Edit Venue</Button>
-                                {/* <Button style={{ color: 'white' }}>Manage Venues</Button> */}
+                                <Button style={{ color: 'white' }} onClick={() => window.location.href = '/editVenue'} >Edit Venue</Button>
                                 <Button style={{ color: 'white' }} onClick={() => this.logout()}>Logout</Button>
-
-                                {/* <IconButton style={{ color: '#ffffff' }} title="Message">
-                                    <Message />
-                                </IconButton> */}
 
                                 <Button style={{ color: 'white' }}>
                                     {user.fName}
@@ -505,7 +500,7 @@ render() {
             </Element>
 
             {user ? <div>
-                <div style={{ display: 'flex', flexDirection: 'row', marginTop: 35, marginBottom: 10, flex: 1 }}>
+                <div style={{ display: 'flex', flexDirection: 'row', marginTop: 45, marginBottom: 10, flex: 1 }}>
                     <div className="slider" style={{ flex: 5, marginRight: 10, marginTop: 50 }} >
 
                         <div className="slider-wrapper"

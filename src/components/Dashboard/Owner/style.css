@@ -215,26 +215,44 @@ textarea {
   transition: background-color .25s ease-in, box-shadow .25s ease-in;
 }
 
-/*- Social links -*/
-.social-links {
-  padding: 0;
-  margin-top: 32px;
-  display: flex;
-  justify-content: center;
-  list-style-type: none;
-  
-  li:nth-of-type(n+2) {
-    margin-left: 24px;
-  }
-  
-  a {
-    color: #212121;
-    transition: opacity .25s ease-in;
-  }
-  
-  i {
-    font-size: 24px;
-  }
+@import url(https://fonts.googleapis.com/css?family=Open+Sans:400,600);
+
+body{
+  font-family: 'Open Sans', sans-serif;
+  height:100%;
+  text-align:center;
+  position:relative;
 }
 
-  
+.button-wrapper {
+  position: relative;
+  width: 150px;
+  text-align: center;
+  margin: 20% auto;
+  margin-right: 20px;
+}
+
+.button-wrapper span.label {
+  position: relative;
+  z-index: 0;
+  display: inline-block;
+  width: 100%;
+  background: #00bfff;
+  cursor: pointer;
+  color: #fff;
+  padding: 10px 0;
+  text-transform:uppercase;
+  font-size:12px;
+}
+
+#upload {
+    display: inline-block;
+    position: absolute;
+    z-index: 1;
+    width: 100%;
+    height: 50px;
+    top: 0;
+    left: 0;
+    opacity: 0;
+    cursor: pointer;
+}
