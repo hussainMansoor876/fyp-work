@@ -32,6 +32,7 @@ class SearchResult extends Component {
         super(props)
 
         this.state = {
+            DropdownIsVisible: false,
             search: sessionStorage.getItem('search') ? JSON.parse(sessionStorage.getItem('search')) : false,
             visible: false,
             confirmLoading: false,
@@ -98,12 +99,38 @@ class SearchResult extends Component {
     }
 
     updateData(e) {
-        const { name, value } = e
+        const { name, value } = e;
+        if (value == 2 && name === "accountType") {
+            this.setState({ DropdownIsVisible: true })
+        }
+        else if (value == 1 && name === "accountType") {
+            this.setState({ DropdownIsVisible: false })
+        }
+
         this.setState({
             obj: {
                 ...this.state.obj,
                 [name]: value
-            }
+            },
+
+        })
+    }
+
+    updateData1(e) {
+        const { name, value } = e;
+        if (value == 2 && name === "accountType") {
+            this.setState({ DropdownIsVisible: true })
+        }
+        else if (value == 1 && name === "accountType") {
+            this.setState({ DropdownIsVisible: false })
+        }
+
+        this.setState({
+            obj2: {
+                ...this.state.obj2,
+                [name]: value
+            },
+
         })
     }
 
@@ -191,7 +218,6 @@ class SearchResult extends Component {
                         sessionStorage.setItem('user', JSON.stringify(val1))
                         swal('login successfull')
                         window.$('#exampleModalCenter').modal('hide');
-                        console.log("Hello")
                         if (val1.accountType === "2") {
                             window.location.href = '/OwnerDashboard'
                         }
@@ -227,6 +253,43 @@ class SearchResult extends Component {
         else if (obj.password !== obj.confirmPassword) {
             swal("Password did not match")
         }
+        else if (obj.accountType == 2) {
+            if (obj.paymentType == '' || obj.numberType == '') {
+                swal('Fill')
+            }
+            else {
+                this.setState({
+                    disable: true
+                })
+                firebase.auth().createUserWithEmailAndPassword(obj.email, obj.password).then((res) => {
+                    obj['uid'] = res.user.uid
+                    delete obj.password
+                    delete obj.confirmPassword
+                    var obj1 = {
+                        fName: '',
+                        lName: '',
+                        email: '',
+                        phoneNumber: '',
+                        password: '',
+                        confirmPassword: '',
+                        accountType: '',
+                        paymentType: '',
+                        numberType: ''
+                    }
+                    firebase.database().ref('users').child(`${res.user.uid}/`).set(obj)
+                        .then(() => {
+                            sessionStorage.setItem('user', JSON.stringify(obj))
+                            this.setState({ obj: obj1, disable: false })
+                            swal('Signup successfull');
+                            window.$('#signupModalCenter').modal('hide');
+                            window.location.href = '/OwnerDashboard'
+                        })
+                })
+                    .catch((error) => {
+                        swal('something went wrong' + error);
+                    });
+            }
+        }
         else {
             this.setState({
                 disable: true
@@ -242,22 +305,19 @@ class SearchResult extends Component {
                     phoneNumber: '',
                     password: '',
                     confirmPassword: '',
-                    accountType: ''
+                    accountType: '',
+                    paymentType: '',
+                    numberType: ''
                 }
-                console.log(res)
                 firebase.database().ref('users').child(`${res.user.uid}/`).set(obj)
-                sessionStorage.setItem('user', JSON.stringify(obj))
-                swal('Signup successfull');
-                window.$('#signupModalCenter').modal('hide');
-                if (obj.accountType === "2") {
-                    window.location.href = '/OwnerDashboard'
-                }
-                else {
-                    this.props.form.setFieldsValue({
-                        name: obj1.fName
+                    .then(() => {
+                        sessionStorage.setItem('user', JSON.stringify(obj))
+                        this.setState({ obj: obj1, disable: false })
+                        swal('Signup successfull');
+                        window.$('#signupModalCenter').modal('hide');
+                        window.location.href = '/userDashboard'
                     })
-                    this.setState({ user: obj1, visible: true })
-                }
+
             })
                 .catch((error) => {
                     swal('something went wrong' + error);
@@ -363,10 +423,74 @@ class SearchResult extends Component {
             });
     }
 
+    updateLogin() {
+        const { obj2 } = this.state
+
+        if (obj2.email == '' || obj2.email == '' || obj2.phoneNumber == '' || obj2.accountType == '') {
+            swal('Fill All textfield(s)')
+        }
+        else if (obj2.accountType == 2) {
+            if (obj2.paymentType == '' || obj2.numberType == '') {
+                swal('Fill')
+            }
+            else {
+                this.setState({
+                    disable: true
+                })
+                var obj1 = {
+                    fName: '',
+                    lName: '',
+                    email: '',
+                    phoneNumber: '',
+                    accountType: '',
+                    paymentType: '',
+                    numberType: ''
+                }
+                firebase.database().ref('users').child(`${obj2.uid}/`).set(obj2)
+                    .then(() => {
+                        sessionStorage.setItem('user', JSON.stringify(obj2))
+                        this.setState({ obj2: obj1, disable: false })
+                        swal('Signup successfull');
+                        window.$('#AdditionalInfo').modal('hide');
+                        window.location.href = '/OwnerDashboard'
+                    })
+            }
+        }
+        else {
+            this.setState({
+                disable: true
+            })
+            var obj1 = {
+                fName: '',
+                lName: '',
+                email: '',
+                phoneNumber: '',
+                accountType: '',
+                paymentType: '',
+                numberType: ''
+            }
+            firebase.database().ref('users').child(`${obj2.uid}/`).set(obj2)
+                .then(() => {
+                    sessionStorage.setItem('user', JSON.stringify(obj2))
+                    this.setState({ obj2: obj1, disable: false })
+                    swal('Signup successfull');
+                    window.$('#AdditionalInfo').modal('hide');
+                    this.props.form.setFieldsValue({
+                        name: obj2.fName
+                    })
+
+                    this.setState({
+                        user: obj2,
+                        visible: true
+                    })
+                })
+        }
+    }
+
 
 
     render() {
-        const { allHallData, visible, search, user, obj, email, password } = this.state
+        const { allHallData, visible, search, user, obj, email, password, obj2, phoneNumber, DropdownIsVisible } = this.state
         const { getFieldDecorator } = this.props.form;
         return (
             <div>
