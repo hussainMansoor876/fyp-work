@@ -20,6 +20,7 @@ class Header extends Component {
             headerShow: false,
             email: '',
             password: '',
+            phoneNumber: '',
             disable: false,
             user: sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : false,
             obj: {
@@ -307,19 +308,16 @@ class Header extends Component {
 
         firebase.auth().signInWithPopup(provider)
             .then((result) => {
-                console.log(result.additionalUserInfo.isNewUser)
-                console.log("Hello")
-                console.log(result)
-                console.log(result.user.email)
-                console.log(result.user.uid)
                 if (result.additionalUserInfo.isNewUser) {
                     this.setState({
                         obj2: {
-                            fName: result.profile.first_name,
-                            lName: result.profile.last_name,
+                            fName: result.additionalUserInfo.profile.first_name,
+                            lName: result.additionalUserInfo.profile.last_name,
                             email: result.user.email,
                             uid: result.user.uid,
-                        }
+                        },
+                        email: result.user.email,
+                        phoneNumber: result.user.phoneNumber
                     }, () => {
                         window.$('#exampleModalCenter').modal('hide');
                         window.$('#AdditionalInfo').modal('show');
@@ -354,8 +352,24 @@ class Header extends Component {
             });
     }
 
+    googleLogin() {
+        var provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider)
+            .then((result) => {
+                var token = result.credential.accessToken;
+                var user = result.user;
+                console.log(result)
+            })
+            .catch((error) => {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                var email = error.email;
+                var credential = error.credential;
+            });
+    }
+
     render() {
-        const { obj, email, password, DropdownIsVisible, obj2 } = this.state;
+        const { obj, email, password, DropdownIsVisible, obj2, phoneNumber } = this.state;
         return (
             <div>
                 <nav className="navbar navbar-expand-lg navbar-light bck_black fixed-top"
@@ -409,7 +423,7 @@ class Header extends Component {
                                     <img style={{ width: '100px', height: '100px' }} src={require('../../resources/images/final.png')} />
                                     <br /><br />
                                     <FacebookLoginButton onClick={() => this.facebookLogin()} />
-                                    <GoogleLoginButton />
+                                    <GoogleLoginButton onClick={() => this.googleLogin()} />
 
                                     <br />
 
@@ -560,11 +574,11 @@ class Header extends Component {
 
                                     <br />
 
-                                    {!obj2.email && <div className="form-group">
+                                    {!email && <div className="form-group">
                                         <input type="email" className="form-control" name="email" value={obj2.email} onChange={(e) => this.updateData1(e.target)} aria-describedby="emailHelp" placeholder="Enter email" />
                                     </div>}
 
-                                    {!obj2.phoneNumber && <div className="form-group">
+                                    {!phoneNumber && <div className="form-group">
                                         <input type="number" name="phoneNumber" value={obj2.phoneNumber} onChange={(e) => this.updateData1(e.target)} className="form-control" placeholder="Phone #" />
                                     </div>}
 
