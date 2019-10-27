@@ -753,7 +753,19 @@ class SearchResult extends Component {
                                                         <option value="1">User</option>
                                                         <option value="2">Hall Owner</option>
                                                     </select>
-
+                                                    <br /><br />
+                                                    {DropdownIsVisible &&
+                                                        <div>
+                                                            <select className="custom-select mr-sm-2" id="inlineFormCustomSelect" name="paymentType" value={obj.paymentType} onChange={(e) => this.updateData(e.target)}>
+                                                                <option selected>Select Payment Method...</option>
+                                                                <option value="3">Jazz Cash</option>
+                                                                <option value="4">Easy Paisa</option>
+                                                            </select><br /><br />
+                                                            <div className="form-group">
+                                                                <input type="number" name="numberType" value={obj.numberType} onChange={(e) => this.updateData(e.target)} className="form-control" id="numberType1" placeholder="Enter Your Account phone number (0300xxxxxxx)" />
+                                                            </div>
+                                                        </div>
+                                                    }
                                                 </div>
 
                                                 <div className="modal-footer d-flex justify-content-center" style={{ textAlign: 'center' }}>

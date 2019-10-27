@@ -553,7 +553,6 @@ class Header extends Component {
                                                 <input type="number" name="numberType" value={obj.numberType} onChange={(e) => this.updateData(e.target)} className="form-control" id="numberType1" placeholder="Enter Your Account phone number (0300xxxxxxx)" />
                                             </div>
                                         </div>
-
                                     }
 
                                 </div>
