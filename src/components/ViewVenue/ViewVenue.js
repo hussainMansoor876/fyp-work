@@ -160,7 +160,7 @@ class ViewVenue extends Component {
                         .then(() => {
                             setTimeout(() => {
                                 window.location.href = '/searchResult'
-                            },1000)
+                            }, 1000)
                         })
                 })
         })
@@ -727,6 +727,19 @@ class ViewVenue extends Component {
                                                         <option value="1">User</option>
                                                         <option value="2">Hall Owner</option>
                                                     </select>
+                                                    <br /><br />
+                                                    {DropdownIsVisible &&
+                                                        <div>
+                                                            <select className="custom-select mr-sm-2" id="inlineFormCustomSelect" name="paymentType" value={obj.paymentType} onChange={(e) => this.updateData(e.target)}>
+                                                                <option selected>Select Payment Method...</option>
+                                                                <option value="3">Jazz Cash</option>
+                                                                <option value="4">Easy Paisa</option>
+                                                            </select><br /><br />
+                                                            <div className="form-group">
+                                                                <input type="number" name="numberType" value={obj.numberType} onChange={(e) => this.updateData(e.target)} className="form-control" id="numberType1" placeholder="Enter Your Account phone number (0300xxxxxxx)" />
+                                                            </div>
+                                                        </div>
+                                                    }
 
                                                 </div>
 
@@ -752,64 +765,64 @@ class ViewVenue extends Component {
                                     </div>
 
                                     <div className="modal fade" style={{ overflow: 'scroll' }} id="AdditionalInfo" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                                            <div className="modal-dialog modal-dialog-centered" role="document">
-                                                <div className="modal-content">
-                                                    <div className="modal-header">
+                                        <div className="modal-dialog modal-dialog-centered" role="document">
+                                            <div className="modal-content">
+                                                <div className="modal-header">
 
 
 
-                                                        <div className="d-flex justify-content-center" style={{ width: '100%' }}>
-                                                            <h5 style={{ color: 'black' }} className="modal-title" id="exampleModalLongTitle1">Additional Info</h5>
-                                                        </div>
-
-                                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
-                                                            <span aria-hidden="true">&times;</span>
-                                                        </button>
+                                                    <div className="d-flex justify-content-center" style={{ width: '100%' }}>
+                                                        <h5 style={{ color: 'black' }} className="modal-title" id="exampleModalLongTitle1">Additional Info</h5>
                                                     </div>
 
+                                                    <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                                        <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                </div>
 
-                                                    <div className="modal-body" style={{ textAlign: 'center' }}>
 
-                                                        <br />
+                                                <div className="modal-body" style={{ textAlign: 'center' }}>
 
-                                                        {!email && <div className="form-group">
-                                                            <input type="email" className="form-control" name="email" value={obj2.email} onChange={(e) => this.updateData1(e.target)} aria-describedby="emailHelp" placeholder="Enter email" />
-                                                        </div>}
+                                                    <br />
 
-                                                        {!phoneNumber && <div className="form-group">
-                                                            <input type="number" name="phoneNumber" value={obj2.phoneNumber} onChange={(e) => this.updateData1(e.target)} className="form-control" placeholder="Phone #" />
-                                                        </div>}
+                                                    {!email && <div className="form-group">
+                                                        <input type="email" className="form-control" name="email" value={obj2.email} onChange={(e) => this.updateData1(e.target)} aria-describedby="emailHelp" placeholder="Enter email" />
+                                                    </div>}
 
-                                                        <select className="custom-select mr-sm-2" name="accountType" value={obj2.accountType} onChange={(e) => this.updateData1(e.target)}>
-                                                            <option selected>Select Account Type...</option>
-                                                            <option value="1">User</option>
-                                                            <option value="2">Hall Owner</option>
-                                                        </select>
-                                                        <br /><br />
-                                                        {DropdownIsVisible &&
-                                                            <div>
-                                                                <select className="custom-select mr-sm-2" id="inlineFormCustomSelect" name="paymentType" value={obj2.paymentType} onChange={(e) => this.updateData1(e.target)}>
-                                                                    <option selected>Select Payment Method...</option>
-                                                                    <option value="3">Jazz Cash</option>
-                                                                    <option value="4">Easy Paisa</option>
-                                                                </select><br /><br />
-                                                                <div className="form-group">
-                                                                    <input type="number" name="numberType" value={obj2.numberType} onChange={(e) => this.updateData1(e.target)} className="form-control" id="numberType1" placeholder="Enter Your Account phone number (0300xxxxxxx)" />
-                                                                </div>
-                                                            </div>
+                                                    {!phoneNumber && <div className="form-group">
+                                                        <input type="number" name="phoneNumber" value={obj2.phoneNumber} onChange={(e) => this.updateData1(e.target)} className="form-control" placeholder="Phone #" />
+                                                    </div>}
 
-                                                        }
-
-                                                    </div>
-                                                    <div className="modal-footer d-flex justify-content-center" style={{ textAlign: 'center' }}>
-                                                        <br />
+                                                    <select className="custom-select mr-sm-2" name="accountType" value={obj2.accountType} onChange={(e) => this.updateData1(e.target)}>
+                                                        <option selected>Select Account Type...</option>
+                                                        <option value="1">User</option>
+                                                        <option value="2">Hall Owner</option>
+                                                    </select>
+                                                    <br /><br />
+                                                    {DropdownIsVisible &&
                                                         <div>
-                                                            <button disabled={this.state.disable} type="button" className="btn btn-success" onClick={() => this.updateLogin()}>Update</button>
+                                                            <select className="custom-select mr-sm-2" id="inlineFormCustomSelect" name="paymentType" value={obj2.paymentType} onChange={(e) => this.updateData1(e.target)}>
+                                                                <option selected>Select Payment Method...</option>
+                                                                <option value="3">Jazz Cash</option>
+                                                                <option value="4">Easy Paisa</option>
+                                                            </select><br /><br />
+                                                            <div className="form-group">
+                                                                <input type="number" name="numberType" value={obj2.numberType} onChange={(e) => this.updateData1(e.target)} className="form-control" id="numberType1" placeholder="Enter Your Account phone number (0300xxxxxxx)" />
+                                                            </div>
                                                         </div>
+
+                                                    }
+
+                                                </div>
+                                                <div className="modal-footer d-flex justify-content-center" style={{ textAlign: 'center' }}>
+                                                    <br />
+                                                    <div>
+                                                        <button disabled={this.state.disable} type="button" className="btn btn-success" onClick={() => this.updateLogin()}>Update</button>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
+                                    </div>
                                 </div>
                             </div>
 
