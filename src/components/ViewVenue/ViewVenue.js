@@ -382,24 +382,6 @@ class ViewVenue extends Component {
         return document.querySelector('.slide').clientWidth
     }
 
-    venueBooking() {
-        const { user, view } = this.state
-        if (user) {
-            this.setState({ visible: true }, () => {
-                this.props.form.setFieldsValue({
-                    hallName: view.hallName,
-                    name: user.fName
-                })
-            })
-        }
-        else {
-            this.props.form.setFieldsValue({
-                hallName: view.hallName
-            })
-            this.showLogin()
-        }
-    }
-
     facebookLogin() {
         var provider = new firebase.auth.FacebookAuthProvider();
 
