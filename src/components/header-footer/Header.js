@@ -163,8 +163,6 @@ class Header extends Component {
                     paymentType: '',
                     numberType: ''
                 }
-                console.log(res)
-                console.log("***")
                 firebase.database().ref('users').child(`${res.user.uid}/`).set(obj)
                     .then(() => {
                         sessionStorage.setItem('user', JSON.stringify(obj))

@@ -12,7 +12,9 @@ class Header extends Component {
         this.state = {
             user: sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : false,
             email: '',
+            DropdownIsVisible: false,
             password: '',
+            phoneNumber: '',
             disable: false,
             obj: {
                 fName: '',
@@ -21,7 +23,18 @@ class Header extends Component {
                 phoneNumber: '',
                 password: '',
                 confirmPassword: '',
-                accountType: ''
+                accountType: '',
+                paymentType: '',
+                numberType: ''
+            },
+            obj2: {
+                fName: '',
+                lName: '',
+                email: '',
+                phoneNumber: '',
+                accountType: '',
+                paymentType: '',
+                numberType: ''
             }
         }
     }
@@ -31,19 +44,14 @@ class Header extends Component {
         window.$('#signupModalCenter').modal('show');
     }
 
-    updateData(e) {
-        const { name, value } = e
-        this.setState({
-            obj: {
-                ...this.state.obj,
-                [name]: value
-            }
-        })
-    }
-
     showLogin() {
         window.$('#signupModalCenter').modal('hide');
         window.$('#exampleModalCenter').modal('show');
+    }
+
+    logout() {
+        sessionStorage.removeItem('user')
+        window.location.href = '/'
     }
 
     async login() {
@@ -52,9 +60,12 @@ class Header extends Component {
         if (email === '' || password === '') {
             swal('Enter both textfield(s)')
         }
+        else if (email != email || password != password) {
+            swal('Please Enter correct Email or Password')
+        }
         else {
             this.setState({
-                disable: true
+                disable: false
             })
             await firebase.auth().signInWithEmailAndPassword(email, password)
                 .then((res) => {
@@ -66,7 +77,6 @@ class Header extends Component {
                         sessionStorage.setItem('user', JSON.stringify(val1))
                         swal('login successfull')
                         window.$('#exampleModalCenter').modal('hide');
-                        console.log("Hello")
                         if (val1.accountType === "1") {
                             window.location.href = '/userDashboard'
                         }
@@ -81,7 +91,8 @@ class Header extends Component {
                     })
                 })
                 .catch((error) => {
-                    swal('something went wrong' + error);
+                    swal('something went wrong' + error)
+
                 });
         }
     }
@@ -89,11 +100,47 @@ class Header extends Component {
     signUp() {
         const { obj } = this.state
 
-        if (obj.email === '' || obj.password === '' || obj.fName === '' || obj.lName === '' || obj.email === '' || obj.password === '' || obj.phoneNumber === '' || obj.confirmPassword === '' || obj.accountType === '') {
+        if (obj.email == '' || obj.password == '' || obj.fName == '' || obj.lName == '' || obj.email == '' || obj.password == '' || obj.phoneNumber == '' || obj.confirmPassword == '' || obj.accountType == '') {
             swal('Fill All textfield(s)')
         }
-        else if (obj.password !== obj.confirmPassword) {
-            swal("Password did not match")
+        else if (obj.accountType == 2) {
+            if (obj.paymentType == '' || obj.numberType == '') {
+                swal('Fill')
+            }
+            else {
+                this.setState({
+                    disable: true
+                })
+                firebase.auth().createUserWithEmailAndPassword(obj.email, obj.password).then((res) => {
+                    obj['uid'] = res.user.uid
+                    delete obj.password
+                    delete obj.confirmPassword
+                    var obj1 = {
+                        fName: '',
+                        lName: '',
+                        email: '',
+                        phoneNumber: '',
+                        password: '',
+                        confirmPassword: '',
+                        accountType: '',
+                        paymentType: '',
+                        numberType: ''
+                    }
+                    console.log(res)
+                    console.log("***")
+                    firebase.database().ref('users').child(`${res.user.uid}/`).set(obj)
+                        .then(() => {
+                            sessionStorage.setItem('user', JSON.stringify(obj))
+                            this.setState({ obj: obj1, disable: false })
+                            swal('Signup successfull');
+                            window.$('#signupModalCenter').modal('hide');
+                            window.location.href = '/OwnerDashboard'
+                        })
+                })
+                    .catch((error) => {
+                        swal('something went wrong' + error);
+                    });
+            }
         }
         else {
             this.setState({
@@ -110,20 +157,21 @@ class Header extends Component {
                     phoneNumber: '',
                     password: '',
                     confirmPassword: '',
-                    accountType: ''
+                    accountType: '',
+                    paymentType: '',
+                    numberType: ''
                 }
                 console.log(res)
+                console.log("***")
                 firebase.database().ref('users').child(`${res.user.uid}/`).set(obj)
-                sessionStorage.setItem('user', JSON.stringify(obj))
-                this.setState({ obj: obj1, disable: false })
-                swal('Signup successfull');
-                window.$('#signupModalCenter').modal('hide');
-                if (obj1.accountType === "1") {
-                    window.location.href = '/userDashboard'
-                }
-                else {
-                    window.location.href = '/OwnerDashboard'
-                }
+                    .then(() => {
+                        sessionStorage.setItem('user', JSON.stringify(obj))
+                        this.setState({ obj: obj1, disable: false })
+                        swal('Signup successfull');
+                        window.$('#signupModalCenter').modal('hide');
+                        window.location.href = '/userDashboard'
+                    })
+
             })
                 .catch((error) => {
                     swal('something went wrong' + error);
@@ -131,13 +179,194 @@ class Header extends Component {
         }
     }
 
-    logout(){
-        sessionStorage.removeItem('user')
-        window.location.href = '/'
+    updateLogin() {
+        const { obj2 } = this.state
+
+        if (obj2.email == '' || obj2.email == '' || obj2.phoneNumber == '' || obj2.accountType == '') {
+            swal('Fill All textfield(s)')
+        }
+        else if (obj2.accountType == 2) {
+            if (obj2.paymentType == '' || obj2.numberType == '') {
+                swal('Fill')
+            }
+            else {
+                this.setState({
+                    disable: true
+                })
+                var obj1 = {
+                    fName: '',
+                    lName: '',
+                    email: '',
+                    phoneNumber: '',
+                    accountType: '',
+                    paymentType: '',
+                    numberType: ''
+                }
+                firebase.database().ref('users').child(`${obj2.uid}/`).set(obj2)
+                    .then(() => {
+                        sessionStorage.setItem('user', JSON.stringify(obj2))
+                        this.setState({ obj2: obj1, disable: false })
+                        swal('Signup successfull');
+                        window.$('#AdditionalInfo').modal('hide');
+                        window.location.href = '/OwnerDashboard'
+                    })
+            }
+        }
+        else {
+            this.setState({
+                disable: true
+            })
+            var obj1 = {
+                fName: '',
+                lName: '',
+                email: '',
+                phoneNumber: '',
+                accountType: '',
+                paymentType: '',
+                numberType: ''
+            }
+            firebase.database().ref('users').child(`${obj2.uid}/`).set(obj2)
+                .then(() => {
+                    sessionStorage.setItem('user', JSON.stringify(obj2))
+                    this.setState({ obj2: obj1, disable: false })
+                    swal('Signup successfull');
+                    window.$('#AdditionalInfo').modal('hide');
+                    window.location.href = '/userDashboard'
+                })
+        }
+    }
+
+    updateData(e) {
+        const { name, value } = e;
+        if (value == 2 && name === "accountType") {
+            this.setState({ DropdownIsVisible: true })
+        }
+        else if (value == 1 && name === "accountType") {
+            this.setState({ DropdownIsVisible: false })
+        }
+
+        this.setState({
+            obj: {
+                ...this.state.obj,
+                [name]: value
+            },
+
+        })
+    }
+
+    updateData1(e) {
+        const { name, value } = e;
+        if (value == 2 && name === "accountType") {
+            this.setState({ DropdownIsVisible: true })
+        }
+        else if (value == 1 && name === "accountType") {
+            this.setState({ DropdownIsVisible: false })
+        }
+
+        this.setState({
+            obj2: {
+                ...this.state.obj2,
+                [name]: value
+            },
+
+        })
+    }
+
+    facebookLogin() {
+        var provider = new firebase.auth.FacebookAuthProvider();
+
+        firebase.auth().signInWithPopup(provider)
+            .then((result) => {
+                if (result.additionalUserInfo.isNewUser) {
+                    this.setState({
+                        obj2: {
+                            fName: result.additionalUserInfo.profile.first_name,
+                            lName: result.additionalUserInfo.profile.last_name,
+                            email: result.user.email,
+                            uid: result.user.uid,
+                        },
+                        email: result.user.email,
+                        phoneNumber: result.user.phoneNumber
+                    }, () => {
+                        window.$('#exampleModalCenter').modal('hide');
+                        window.$('#AdditionalInfo').modal('show');
+                    })
+                }
+                else {
+                    firebase.database().ref('users').child(`${result.user.uid}`).once('value', (value) => {
+                        var val1 = value.val()
+                        val1['key'] = value.key
+                        sessionStorage.setItem('user', JSON.stringify(val1))
+                        swal('login successfull')
+                        window.$('#exampleModalCenter').modal('hide');
+                        if (val1.accountType === "1") {
+                            window.location.href = '/userDashboard'
+                        }
+                        else {
+                            window.location.href = '/OwnerDashboard'
+                        }
+                    })
+                }
+            })
+            .catch(function (error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                swal(errorMessage)
+                // The email of the user's account used.
+                var email = error.email;
+                // The firebase.auth.AuthCredential type that was used.
+                var credential = error.credential;
+                // ...
+            });
+    }
+
+    googleLogin() {
+        var provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider)
+            .then((result) => {
+                if (result.additionalUserInfo.isNewUser) {
+                    this.setState({
+                        obj2: {
+                            fName: result.additionalUserInfo.profile.given_name,
+                            lName: result.additionalUserInfo.profile.family_name,
+                            email: result.user.email,
+                            uid: result.user.uid,
+                        },
+                        email: result.user.email,
+                        phoneNumber: result.user.phoneNumber
+                    }, () => {
+                        window.$('#exampleModalCenter').modal('hide');
+                        window.$('#AdditionalInfo').modal('show');
+                    })
+                }
+                else {
+                    firebase.database().ref('users').child(`${result.user.uid}`).once('value', (value) => {
+                        var val1 = value.val()
+                        val1['key'] = value.key
+                        sessionStorage.setItem('user', JSON.stringify(val1))
+                        swal('login successfull')
+                        window.$('#exampleModalCenter').modal('hide');
+                        if (val1.accountType === "1") {
+                            window.location.href = '/userDashboard'
+                        }
+                        else {
+                            window.location.href = '/OwnerDashboard'
+                        }
+                    })
+                }
+            })
+            .catch((error) => {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                swal(errorMessage)
+                var email = error.email;
+                var credential = error.credential;
+            });
     }
 
     render() {
-        const { obj, email, password, disable, user } = this.state
+        const { obj, email, password, disable, user, obj2, DropdownIsVisible, phoneNumber } = this.state
         return (
 
             <div>
@@ -184,8 +413,8 @@ class Header extends Component {
                                 <div className="modal-body" style={{ textAlign: 'center' }}>
                                     <img style={{ width: '100px', height: '100px' }} src={require('../../resources/images/final.png')} />
                                     <br /><br />
-                                    <FacebookLoginButton />
-                                    <GoogleLoginButton />
+                                    <FacebookLoginButton onClick={() => this.facebookLogin()} />
+                                    <GoogleLoginButton onClick={() => this.googleLogin()} />
 
                                     <br />
 
@@ -281,7 +510,19 @@ class Header extends Component {
                                         <option value="1">User</option>
                                         <option value="2">Hall Owner</option>
                                     </select>
-
+                                    <br /><br />
+                                    {DropdownIsVisible &&
+                                        <div>
+                                            <select className="custom-select mr-sm-2" id="inlineFormCustomSelect" name="paymentType" value={obj.paymentType} onChange={(e) => this.updateData(e.target)}>
+                                                <option selected>Select Payment Method...</option>
+                                                <option value="3">Jazz Cash</option>
+                                                <option value="4">Easy Paisa</option>
+                                            </select><br /><br />
+                                            <div className="form-group">
+                                                <input type="number" name="numberType" value={obj.numberType} onChange={(e) => this.updateData(e.target)} className="form-control" id="numberType1" placeholder="Enter Your Account phone number (0300xxxxxxx)" />
+                                            </div>
+                                        </div>
+                                    }
                                 </div>
 
                                 <div className="modal-footer d-flex justify-content-center" style={{ textAlign: 'center' }}>

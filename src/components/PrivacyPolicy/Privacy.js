@@ -23,7 +23,7 @@ class Privacy extends Component {
                     <h1 className="font_righteous">Privacy Policy</h1>
                 </div>
                 <br/>
-                <div style={{marginLeft:"200px",marginRight:"200px"}}>
+                <div style={{marginLeft:"200px",marginRight:"200px", textAlign: 'initial'}}>
 
                  <p>This page informs you of our policies regarding the collection, use, and
                 disclosure of personal data when you use our Service and the choices you have
