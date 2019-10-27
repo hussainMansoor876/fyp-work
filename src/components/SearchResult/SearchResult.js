@@ -39,6 +39,7 @@ class SearchResult extends Component {
             selectedHall: '',
             email: '',
             password: '',
+            phoneNumber: '',
             disable: false,
             user: sessionStorage.getItem('user') ? JSON.parse(sessionStorage.getItem('user')) : false,
             obj: {
@@ -49,6 +50,15 @@ class SearchResult extends Component {
                 password: '',
                 confirmPassword: '',
                 accountType: ''
+            },
+            obj2: {
+                fName: '',
+                lName: '',
+                email: '',
+                phoneNumber: '',
+                accountType: '',
+                paymentType: '',
+                numberType: ''
             }
         }
     }
@@ -255,9 +265,102 @@ class SearchResult extends Component {
         }
     }
 
-    viewVenue(v){
+    viewVenue(v) {
         sessionStorage.setItem('view', JSON.stringify(v))
         window.location.href = '/viewVenue'
+    }
+
+    facebookLogin() {
+        var provider = new firebase.auth.FacebookAuthProvider();
+
+        firebase.auth().signInWithPopup(provider)
+            .then((result) => {
+                if (result.additionalUserInfo.isNewUser) {
+                    this.setState({
+                        obj2: {
+                            fName: result.additionalUserInfo.profile.first_name,
+                            lName: result.additionalUserInfo.profile.last_name,
+                            email: result.user.email,
+                            uid: result.user.uid,
+                        },
+                        email: result.user.email,
+                        phoneNumber: result.user.phoneNumber
+                    }, () => {
+                        window.$('#exampleModalCenter').modal('hide');
+                        window.$('#AdditionalInfo').modal('show');
+                    })
+                }
+                else {
+                    firebase.database().ref('users').child(`${result.user.uid}`).once('value', (value) => {
+                        var val1 = value.val()
+                        val1['key'] = value.key
+                        sessionStorage.setItem('user', JSON.stringify(val1))
+                        swal('login successfull')
+                        window.$('#exampleModalCenter').modal('hide');
+                        if (val1.accountType === "1") {
+                            window.location.href = '/userDashboard'
+                        }
+                        else {
+                            window.location.href = '/OwnerDashboard'
+                        }
+                    })
+                }
+            })
+            .catch(function (error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                swal(errorMessage)
+                // The email of the user's account used.
+                var email = error.email;
+                // The firebase.auth.AuthCredential type that was used.
+                var credential = error.credential;
+                // ...
+            });
+    }
+
+    googleLogin() {
+        var provider = new firebase.auth.GoogleAuthProvider();
+        firebase.auth().signInWithPopup(provider)
+            .then((result) => {
+                if (result.additionalUserInfo.isNewUser) {
+                    this.setState({
+                        obj2: {
+                            fName: result.additionalUserInfo.profile.given_name,
+                            lName: result.additionalUserInfo.profile.family_name,
+                            email: result.user.email,
+                            uid: result.user.uid,
+                        },
+                        email: result.user.email,
+                        phoneNumber: result.user.phoneNumber
+                    }, () => {
+                        window.$('#exampleModalCenter').modal('hide');
+                        window.$('#AdditionalInfo').modal('show');
+                    })
+                }
+                else {
+                    firebase.database().ref('users').child(`${result.user.uid}`).once('value', (value) => {
+                        var val1 = value.val()
+                        val1['key'] = value.key
+                        sessionStorage.setItem('user', JSON.stringify(val1))
+                        swal('login successfull')
+                        window.$('#exampleModalCenter').modal('hide');
+                        if (val1.accountType === "1") {
+                            window.location.href = '/userDashboard'
+                        }
+                        else {
+                            window.location.href = '/OwnerDashboard'
+                        }
+                    })
+                }
+            })
+            .catch((error) => {
+                var errorCode = error.code;
+                var errorMessage = error.message;
+                swal(errorMessage)
+                var email = error.email;
+                var credential = error.credential;
+            });
     }
 
 
@@ -273,7 +376,7 @@ class SearchResult extends Component {
                         <Toolbar>
                             <Typography component="h1" variant="h6" color="inherit" >
                                 {user ? "User Dashboard" : "Venue Club"}
-          </Typography>
+                            </Typography>
                             <div style={{ marginLeft: 'auto', marginRight: '-12px' }}>
                                 {user ? <div>
                                     <Button style={{ color: 'white' }} onClick={() => window.location.href = '/userDashboard'} >Home</Button>
@@ -324,8 +427,8 @@ class SearchResult extends Component {
                                                 <div className="modal-body" style={{ textAlign: 'center' }}>
                                                     <img style={{ width: '100px', height: '100px' }} src={require('../../resources/images/final.png')} />
                                                     <br /><br />
-                                                    <FacebookLoginButton />
-                                                    <GoogleLoginButton />
+                                                    <FacebookLoginButton onClick={() => this.facebookLogin()} />
+                                                    <GoogleLoginButton onClick={() => this.googleLogin()} />
 
                                                     <br />
 
@@ -355,6 +458,66 @@ class SearchResult extends Component {
                                                         <p style={{ color: 'black' }}>Don't have an account? <a style={{ color: 'blue' }} onClick={() => { this.showSignup() }} data-toggle="modal" >Sign up</a>
                                                         </p>
 
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div className="modal fade" style={{ overflow: 'scroll' }} id="AdditionalInfo" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                                            <div className="modal-dialog modal-dialog-centered" role="document">
+                                                <div className="modal-content">
+                                                    <div className="modal-header">
+
+
+
+                                                        <div className="d-flex justify-content-center" style={{ width: '100%' }}>
+                                                            <h5 style={{ color: 'black' }} className="modal-title" id="exampleModalLongTitle1">Additional Info</h5>
+                                                        </div>
+
+                                                        <button type="button" className="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                    </div>
+
+
+                                                    <div className="modal-body" style={{ textAlign: 'center' }}>
+
+                                                        <br />
+
+                                                        {!email && <div className="form-group">
+                                                            <input type="email" className="form-control" name="email" value={obj2.email} onChange={(e) => this.updateData1(e.target)} aria-describedby="emailHelp" placeholder="Enter email" />
+                                                        </div>}
+
+                                                        {!phoneNumber && <div className="form-group">
+                                                            <input type="number" name="phoneNumber" value={obj2.phoneNumber} onChange={(e) => this.updateData1(e.target)} className="form-control" placeholder="Phone #" />
+                                                        </div>}
+
+                                                        <select className="custom-select mr-sm-2" name="accountType" value={obj2.accountType} onChange={(e) => this.updateData1(e.target)}>
+                                                            <option selected>Select Account Type...</option>
+                                                            <option value="1">User</option>
+                                                            <option value="2">Hall Owner</option>
+                                                        </select>
+                                                        <br /><br />
+                                                        {DropdownIsVisible &&
+                                                            <div>
+                                                                <select className="custom-select mr-sm-2" id="inlineFormCustomSelect" name="paymentType" value={obj2.paymentType} onChange={(e) => this.updateData1(e.target)}>
+                                                                    <option selected>Select Payment Method...</option>
+                                                                    <option value="3">Jazz Cash</option>
+                                                                    <option value="4">Easy Paisa</option>
+                                                                </select><br /><br />
+                                                                <div className="form-group">
+                                                                    <input type="number" name="numberType" value={obj2.numberType} onChange={(e) => this.updateData1(e.target)} className="form-control" id="numberType1" placeholder="Enter Your Account phone number (0300xxxxxxx)" />
+                                                                </div>
+                                                            </div>
+
+                                                        }
+
+                                                    </div>
+                                                    <div className="modal-footer d-flex justify-content-center" style={{ textAlign: 'center' }}>
+                                                        <br />
+                                                        <div>
+                                                            <button disabled={this.state.disable} type="button" className="btn btn-success" onClick={() => this.updateLogin()}>Update</button>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

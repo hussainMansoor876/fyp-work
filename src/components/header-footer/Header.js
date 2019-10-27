@@ -324,7 +324,6 @@ class Header extends Component {
                     })
                 }
                 else {
-                    console.log("Hello")
                     firebase.database().ref('users').child(`${result.user.uid}`).once('value', (value) => {
                         var val1 = value.val()
                         val1['key'] = value.key
@@ -344,6 +343,7 @@ class Header extends Component {
                 // Handle Errors here.
                 var errorCode = error.code;
                 var errorMessage = error.message;
+                swal(errorMessage)
                 // The email of the user's account used.
                 var email = error.email;
                 // The firebase.auth.AuthCredential type that was used.
@@ -356,13 +356,41 @@ class Header extends Component {
         var provider = new firebase.auth.GoogleAuthProvider();
         firebase.auth().signInWithPopup(provider)
             .then((result) => {
-                var token = result.credential.accessToken;
-                var user = result.user;
-                console.log(result)
+                if (result.additionalUserInfo.isNewUser) {
+                    this.setState({
+                        obj2: {
+                            fName: result.additionalUserInfo.profile.given_name,
+                            lName: result.additionalUserInfo.profile.family_name,
+                            email: result.user.email,
+                            uid: result.user.uid,
+                        },
+                        email: result.user.email,
+                        phoneNumber: result.user.phoneNumber
+                    }, () => {
+                        window.$('#exampleModalCenter').modal('hide');
+                        window.$('#AdditionalInfo').modal('show');
+                    })
+                }
+                else {
+                    firebase.database().ref('users').child(`${result.user.uid}`).once('value', (value) => {
+                        var val1 = value.val()
+                        val1['key'] = value.key
+                        sessionStorage.setItem('user', JSON.stringify(val1))
+                        swal('login successfull')
+                        window.$('#exampleModalCenter').modal('hide');
+                        if (val1.accountType === "1") {
+                            window.location.href = '/userDashboard'
+                        }
+                        else {
+                            window.location.href = '/OwnerDashboard'
+                        }
+                    })
+                }
             })
             .catch((error) => {
                 var errorCode = error.code;
                 var errorMessage = error.message;
+                swal(errorMessage)
                 var email = error.email;
                 var credential = error.credential;
             });
