@@ -103,7 +103,7 @@ class Register extends Component {
     const { user, newPassword, confirm } = this.state
     return (
       <div>
-        <AppBar style={{ background: '#3c3c3c' }} position="absolute">
+        <AppBar style={{ background: '#3c3c3c', marginTop: -100 }} position="absolute">
           <Toolbar>
             <Typography component="h1" variant="h6" color="inherit" >
               User Dashboard

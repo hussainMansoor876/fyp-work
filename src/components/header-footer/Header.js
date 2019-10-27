@@ -309,9 +309,10 @@ class Header extends Component {
             .then((result) => {
                 console.log(result.additionalUserInfo.isNewUser)
                 console.log("Hello")
+                console.log(result)
+                console.log(result.user.email)
+                console.log(result.user.uid)
                 if (result.additionalUserInfo.isNewUser) {
-                    window.$('#exampleModalCenter').modal('hide');
-                    window.$('#AdditionalInfo').modal('show');
                     this.setState({
                         obj2: {
                             fName: result.profile.first_name,
@@ -319,6 +320,9 @@ class Header extends Component {
                             email: result.user.email,
                             uid: result.user.uid,
                         }
+                    }, () => {
+                        window.$('#exampleModalCenter').modal('hide');
+                        window.$('#AdditionalInfo').modal('show');
                     })
                 }
                 else {

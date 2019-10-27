@@ -129,12 +129,12 @@ class OwnerChat extends Component {
                 <Sider trigger={null} collapsible collapsed={this.state.collapsed} onCollapse={this.onCollapse}>
                     <div className="logo" />
                     <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline" onClick={(v) => this.openChat(v)}>
-                        <Menu.Item key="1">
+                        <Menu.Item key="1" style={{ textAlign: 'initial' }}>
                             <Icon type="user" />
                             <span>All Users</span>
                         </Menu.Item>
                         {data.length && data.map((v, i) => {
-                            return <Menu.Item key={v.uid}>
+                            return <Menu.Item key={v.uid} style={{ textAlign: 'initial' }}>
                                 <Icon type="user" />
                                 <span>{v.name}</span>
                             </Menu.Item>
@@ -152,9 +152,9 @@ class OwnerChat extends Component {
                         <div style={{ padding: 24, background: '#fff', minHeight: 360, }}>
                             {allMessages.length && !loader ? allMessages.map((v, i) => {
                                 if (v.data.recName) {
-                                    return < Alert
+                                    return <Alert
                                         key={i}
-                                        style={{ marginBottom: 10, width: '70%', marginLeft: '30%' }}
+                                        style={{ marginBottom: 10, width: '70%', marginLeft: '30%', textAlign: 'initial' }}
                                         message="Me"
                                         description={v.data.msg}
                                         type="success"
@@ -164,13 +164,13 @@ class OwnerChat extends Component {
                                     message={v.data.senderName}
                                     description={v.data.msg}
                                     type="info"
-                                    style={{ marginBottom: 10, width: '70%' }}
+                                    style={{ marginBottom: 10, width: '70%', textAlign: 'initial' }}
                                 />
-                            }) : loader ? <Skeleton /> : <Title style={{ textAlign: 'center', marginTop: 100 }}>Select a Conversation</Title>}
+                            }) : loader ? <Skeleton /> : <Title style={{ textAlign: 'center', marginTop: 100,  textAlign: 'initial' }}>Select a Conversation</Title>}
                         </div>
 
                     </Content>
-                    {allMessages.length && !loader && <Footer style={{ width: '100%', padding: 24 }}>
+                    {allMessages.length && !loader ? <Footer style={{ width: '100%', padding: 24 }}>
                         <div style={{ display: 'flex' }}>
                             <TextArea
                                 placeholder="Autosize height with minimum and maximum number of lines"
@@ -180,7 +180,7 @@ class OwnerChat extends Component {
                             />
                             <Button type="primary" shape="circle" style={{ textAlign: 'center', height: 55, width: 65, paddingBottom: 10, marginLeft: 1 }} icon="right" disabled={myMsg ? false : true} onClick={() => this.sendMsg()} />
                         </div>
-                    </Footer>}
+                    </Footer> : null}
                 </Layout>
             </Layout>
 
