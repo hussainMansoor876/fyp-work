@@ -221,7 +221,7 @@ class SearchResult extends Component {
                         if (val1.accountType === "2") {
                             window.location.href = '/OwnerDashboard'
                         }
-                        else {
+                        else if (this.state.selectedHall) {
                             this.props.form.setFieldsValue({
                                 name: val1.fName
                             })
@@ -229,6 +229,11 @@ class SearchResult extends Component {
                             this.setState({
                                 user: val1,
                                 visible: true
+                            })
+                        }
+                        else {
+                            this.setState({
+                                user: val1,
                             })
                         }
                     })
@@ -249,9 +254,6 @@ class SearchResult extends Component {
 
         if (obj.email == '' || obj.password == '' || obj.fName == '' || obj.lName == '' || obj.email == '' || obj.password == '' || obj.phoneNumber == '' || obj.confirmPassword == '' || obj.accountType == '') {
             swal('Fill All textfield(s)')
-        }
-        else if (obj.password !== obj.confirmPassword) {
-            swal("Password did not match")
         }
         else if (obj.accountType == 2) {
             if (obj.paymentType == '' || obj.numberType == '') {
@@ -312,10 +314,25 @@ class SearchResult extends Component {
                 firebase.database().ref('users').child(`${res.user.uid}/`).set(obj)
                     .then(() => {
                         sessionStorage.setItem('user', JSON.stringify(obj))
-                        this.setState({ obj: obj1, disable: false })
                         swal('Signup successfull');
                         window.$('#signupModalCenter').modal('hide');
-                        window.location.href = '/userDashboard'
+                        if (this.state.selectedHall) {
+                            this.props.form.setFieldsValue({
+                                name: obj.fName
+                            })
+
+                            this.setState({
+                                user: obj,
+                                visible: true,
+                                disable: false
+                            })
+                        }
+                        else {
+                            this.setState({
+                                user: obj,
+                                disable: false
+                            })
+                        }
                     })
 
             })
@@ -357,11 +374,25 @@ class SearchResult extends Component {
                         sessionStorage.setItem('user', JSON.stringify(val1))
                         swal('login successfull')
                         window.$('#exampleModalCenter').modal('hide');
-                        if (val1.accountType === "1") {
-                            window.location.href = '/userDashboard'
+                        if (val1.accountType === "2") {
+                            window.location.href = '/OwnerDashboard'
+                        }
+                        else if (this.state.selectedHall) {
+                            this.props.form.setFieldsValue({
+                                name: val1.fName
+                            })
+
+                            this.setState({
+                                user: val1,
+                                visible: true,
+                                disable: false
+                            })
                         }
                         else {
-                            window.location.href = '/OwnerDashboard'
+                            this.setState({
+                                user: val1,
+                                disable: false
+                            })
                         }
                     })
                 }
@@ -405,11 +436,25 @@ class SearchResult extends Component {
                         sessionStorage.setItem('user', JSON.stringify(val1))
                         swal('login successfull')
                         window.$('#exampleModalCenter').modal('hide');
-                        if (val1.accountType === "1") {
-                            window.location.href = '/userDashboard'
+                        if (val1.accountType === "2") {
+                            window.location.href = '/OwnerDashboard'
+                        }
+                        else if (this.state.selectedHall) {
+                            this.props.form.setFieldsValue({
+                                name: val1.fName
+                            })
+
+                            this.setState({
+                                user: val1,
+                                visible: true,
+                                disable: false
+                            })
                         }
                         else {
-                            window.location.href = '/OwnerDashboard'
+                            this.setState({
+                                user: val1,
+                                disable: false
+                            })
                         }
                     })
                 }
