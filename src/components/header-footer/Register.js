@@ -83,18 +83,16 @@ class Register extends Component {
     }
     else {
       this.setState({ disable: true })
-
       firebase.database().ref('allHallData').child(`${user.uid}`).push(data)
         .then(async (snap) => {
           for (var i = 0; i < data.picture.length; i++) {
+            console.log('this', i)
             var storageRef = firebase.storage().ref(`${user.uid}/${snap.key}/${data.picture[i].name}`)
             await storageRef.put(data.picture[i])
             storageRef.getDownloadURL()
               .then((url) => {
-                console.log(url)
                 pictureUrl.push(url)
-                data.picture = pictureUrl
-                firebase.database().ref('allHallData').child(`${user.uid}/${snap.key}/`).update(data)
+                firebase.database().ref('allHallData').child(`${user.uid}/${snap.key}/picture/`).set(pictureUrl)
               })
           }
         })
